@@ -146,7 +146,8 @@ class Notebook extends CI_Controller {
 
 		}
 		
-		$this->load->view('test_json.php',$data);
+		//$this->load->view('test_json.php',$data);
+		echo $data['json'];
 		
 	}
 	
