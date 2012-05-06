@@ -10,7 +10,7 @@ Ext.define('Notebook.store.Product',{
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: '/notebook/test_data/product.json',
+        url: 'notebook/get_categories',
         reader: {
             type: 'json',
             root: 'product'
@@ -25,7 +25,7 @@ Ext.define('Notebook.store.Product',{
         append: function (thisNode, newNode, nodeIndex, eOpts){            
             if( !newNode.isRoot() ) {  
                 //alert(newNode.get('name'));
-                if (newNode.get('haschildren')==1) {
+                if (newNode.get('id').substr(0,1)=='c') {
                     //alert(thisNode.get('name'));
                     newNode.set('leaf', false);
                     newNode.set('expandable', true);
