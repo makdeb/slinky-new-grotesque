@@ -17,6 +17,16 @@ class Notebook extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
+	 
+	public function __construct() {
+		
+		parent::__construct();
+
+		$this->load->database();
+		$this->load->helper(array('form', 'url'));
+
+	}  
+	 
 	public function index()
 	{
 		$this->load->helper('url');
