@@ -35,6 +35,8 @@ class Notebook extends CI_Controller {
 	
 	public function get_categories($node=0) {
 		$node = $this->input->get('node');	// принимаем параметр родительской категории из url
+		// для начала преобразуем строку формата "сID" из url в строку с номером родительской категории	
+		$node = preg_replace("/[^0-9]/", '', $node);
 		$data = array();
 		
 		// если parentID не указан, то выбираем все корневые категории
@@ -85,10 +87,7 @@ class Notebook extends CI_Controller {
 			   а также все заказы CategoryID которых равен данному параметру. 	
 			*/
 			
-			// для начала преобразуем строку формата "сID" из url в строку с номером родительской категории	
-			
-				$id = preg_replace("/[^0-9]/", '', $node);
-				
+							
 			// записываем список id существующих корневых категорий в массив $data['categories']
 		    // и подсчитываем ихнее количество
 					
