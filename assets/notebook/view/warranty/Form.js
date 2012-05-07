@@ -33,7 +33,11 @@ Ext.define('Notebook.view.warranty.Form',{
                         xtype: 'combobox',
                         fieldLabel: 'Категорія',
                         labelWidth: 60,
-                        width: 160                        
+                        width: 160,
+                        store: 'Category',
+                        displayField: 'name',
+                        valueField: 'id'
+                        
                     },
                     {
                         xtype: 'datefield',
@@ -383,7 +387,10 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'combobox',
-                        fieldLabel: 'Майстер'
+                        fieldLabel: 'Майстер',
+                        store: 'Master',
+                        displayField: 'name',
+                        valueField: 'id'                        
                     },
                     {
                         xtype: 'textfield',

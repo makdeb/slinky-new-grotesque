@@ -1,10 +1,10 @@
 Ext.application({
     name: 'Notebook',
     appFolder: '/slinky-new-grotesque/assets/notebook',
-    autoCreateViewport: true,
+    autoCreateViewport: true,  
     controllers: [
-        'Warranty',
-        'Product'        
+        'Product', 
+        'Warranty'               
     ],
     launch: function() {
         //application launch
