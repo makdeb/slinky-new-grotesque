@@ -29,10 +29,70 @@ class Notebook extends CI_Controller {
 	 
 	public function index()
 	{
-		$this->load->helper('url');
 		$this->load->view('index');
 	}
 	
+	// функция check_cat() , возвращающая json-строку из всех существующих категорий  
+	
+	public function check_cat() {
+		
+		$data = array();
+		
+		$this->db->select('idCategories as id,name');
+		$this->db->from('categories');
+		
+		$query = $this->db->get();
+		
+		$data['records'] = json_encode($query->result());
+		$data['error'] = json_last_error();
+		
+		if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"result":' .$data['records'] .'}';
+				
+			} else  $data['json'] = '{"success":true,"result":' .$data['records'] .'}';
+				
+	
+		// вивід результату
+		// $this->load->view('test_json.php',$data);
+		echo $data['json'];
+		
+		
+	}
+	
+	// функция check_masters() , возвращающая json-строку из всех существующих мастеров
+	
+	public function check_masters() {
+		
+		$data = array();
+		
+		$this->db->select('idMasters as id,name');
+		$this->db->from('masters');
+		
+		$query = $this->db->get();
+		
+		$data['records'] = json_encode($query->result());
+		$data['error'] = json_last_error();
+		
+		if (($data['error'] !== JSON_ERROR_NONE)) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"result":' .$data['records'] .'}';
+				
+			} else  $data['json'] = '{"success":true,"result":' .$data['records'] .'}';
+				
+	
+		// вивід результату
+		// $this->load->view('test_json.php',$data);
+		echo $data['json'];
+		
+		
+	}
+	
+	// функция get_categories() , возвращающая json-строку дерева категорий и заказов 
+	// по указанному id родительской категории
+		
 	public function get_categories($node=0) {
 		$node = $this->input->get('node');	// принимаем параметр родительской категории из url
 		// для начала преобразуем строку формата "сID" из url в строку с номером родительской категории	
