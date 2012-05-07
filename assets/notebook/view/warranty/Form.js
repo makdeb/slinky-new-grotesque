@@ -21,25 +21,31 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'textfield',
-                        fieldLabel: 'Виріб',
-                        width: 300                        
-                    },
-                    {
-                        xtype: 'textfield',
                         fieldLabel: '№ п\п',
                         width: 150                        
+                    },                    
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: 'Виріб',
+                        width: 260                        
+                    },
+                    {
+                        xtype: 'combobox',
+                        fieldLabel: 'Категорія',
+                        labelWidth: 60,
+                        width: 160                        
                     },
                     {
                         xtype: 'datefield',
                         fieldLabel: 'Прийнято',
                         labelWidth: 60,
-                        width: 200 
+                        width: 160
                     },
                     {
                         xtype: 'datefield',
                         fieldLabel: 'Видано',
                         labelWidth: 60,
-                        width: 200 
+                        width: 160 
                     }                    
                 ]
             },  
@@ -371,7 +377,7 @@ Ext.define('Notebook.view.warranty.Form',{
                 },
                 margin: '5 0 0 0',
                 defaults: {
-                    margin: '0 0 0 5',
+                    margin: '0 0 0 0',
                     labelWidth: 70
                 },
                 items: [
@@ -382,17 +388,19 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'textfield',
                         fieldLabel: 'Запчастини',
-                        width: 203                                           
+                        margin: '0 0 0 5',
+                        width: 237                                           
                     }, 
                     {
                         xtype: 'textfield',
                         fieldLabel: 'Робота',
-                        margin: '0 0 0 13',
-                        width: 200                                           
+                        margin: '0 0 0 5',
+                        width: 237                                           
                     },                     
                     {
                         xtype: 'datefield',
                         fieldLabel: 'Гарантія до',
+                        margin: '0 0 0 5',
                         width: 200                                           
                     }                   
                 ]
@@ -404,7 +412,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     type: 'hbox'
                 },
                 style: {
-                    borderTop: '1px solid #0B486B',
+                    //borderTop: '1px solid #0B486B',
                     marginTop: '5px',
                     paddingTop: '5px'
                 },
