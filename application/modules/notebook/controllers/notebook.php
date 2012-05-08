@@ -49,9 +49,9 @@ class Notebook extends CI_Controller {
 		if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"result":' .$data['records'] .'}';
+				$data['json'] = '{"success":false,"category":' .$data['records'] .'}';
 				
-			} else  $data['json'] = '{"success":true,"result":' .$data['records'] .'}';
+			} else  $data['json'] = '{"success":true,"category":' .$data['records'] .'}';
 				
 	
 		// вивід результату
@@ -78,9 +78,9 @@ class Notebook extends CI_Controller {
 		if (($data['error'] !== JSON_ERROR_NONE)) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"result":' .$data['records'] .'}';
+				$data['json'] = '{"success":false,"master":' .$data['records'] .'}';
 				
-			} else  $data['json'] = '{"success":true,"result":' .$data['records'] .'}';
+			} else  $data['json'] = '{"success":true,"master":' .$data['records'] .'}';
 				
 	
 		// вивід результату
