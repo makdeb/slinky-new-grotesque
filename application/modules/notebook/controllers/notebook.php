@@ -210,6 +210,55 @@ class Notebook extends CI_Controller {
 		
 	}
 	
+	// функция add_cat(), добавляющая новую категорию
+	// * принимает в качестве параметра id родительской категории, либо 0 в случае создания корневого каталога
+	// функция возвращает id новосозданной категории, либо False в случае ошибки
+	public function add_cat($parent=0) {
+		$return='';
+		$data = array();
+		
+		$data['parentID']  = $parent;
+		$data['name']  = $this->input->post('category');
+		
+		$query = $this->db->insert('categories',$data);
+	
+			if ($query===TRUE)
+			{
+				$return = $this->db->insert_id();;
+			} else
+			{
+				$return = FALSE;
+			}
+		
+		return $return;
+		
+	}
+	
+	// функция update_cat(), позволяющая переименовать существующую категорию
+	// * принимает в качестве параметра id категории
+	// функция возвращает id переименованной категории, либо False в случае ошибки
+	public function update_cat($id='') {
+	
+		if (!$id) return FALSE;
+		$return='';
+		$data = array();
+		
+		$data['name']  = $this->input->post('category');
+		
+		$this->db->where('idCategories', $id);
+		$query = $this->db->update('categories', $data);
+		
+		if ($query===TRUE)
+			{
+				$return = $id;
+			} else
+			{
+				$return = FALSE;
+			}
+		
+		return $return;		
+	}
+	
 	
 	
 }
