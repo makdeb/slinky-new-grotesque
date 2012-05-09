@@ -210,6 +210,68 @@ class Notebook extends CI_Controller {
 		
 	}
 	
+	// функция add_cat(), добавляющая новую категорию
+	// * принимает в качестве параметра имя и id родительской категории, либо 0 в случае создания корневого каталога
+	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
+	public function add_category($name='',$parent=0) {
+		
+		$name = $this->input->get('name');
+		$parent = $this->input->get('parent');
+		
+		if (!$name)
+		{
+			echo '{"success":false,"message":"Помилка при створенні категорії"}';
+			return;
+		}
+				
+		$return='';
+		$data = array();
+		
+		$data['parentID']  = $parent;
+		$data['name']  = $name;
+		
+		$query = $this->db->insert('categories',$data);
+	
+			if ($query===TRUE)
+			{
+				$return = '{"success":true,"message":"Категорія була успішно створена"}';
+			} else
+			{
+				$return = '{"success:false,"message":"Помилка при створенні категорії"}';
+			}
+		
+		echo $return;
+		
+	}
+	
+	// функция update_cat(), позволяющая переименовать существующую категорию
+	// * принимает в качестве параметра новое имя и id категории
+	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
+	public function update_category($name='',$id='') {
+		
+		$name = $this->input->get('name');
+		$id = $this->input->get('id');
+	
+		if ((!$id)||(!$name)) { echo '{"success":false,"message":"Помилка при перейменуванні категорії"}'; return;}
+		$return='';
+		$data = array();
+		
+		$data['name']  = $name;
+		
+		$this->db->where('idCategories', $id);
+		$query = $this->db->update('categories', $data);
+		
+		if ($query===TRUE)
+			{
+				$return = '{"success":true,"message":"Категорія була успішно перейменована"}';
+			} else
+			{
+				$return = '{"success:false,"message":"Помилка при перейменуванні категорії"}';
+			}
+		
+		echo $return;		
+	}
+	
 	
 	
 }
