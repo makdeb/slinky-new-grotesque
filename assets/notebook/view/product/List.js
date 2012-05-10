@@ -10,27 +10,25 @@ Ext.define('Notebook.view.product.List', {
     },
     initComponent: function () {
         this.items=[
-            {
-                xtype: 'buttongroup',
-                items: [
+            Ext.create('Ext.tree.Panel', {
+                id: 'nb-product-tree',
+                tbar: [
                     {
-                        id: 'test',
+                        id: 'nb-add-cat',
                         text: 'Додати запис'
                     },
                     {
+                        id: 'nb-edit-cat',
                         text: 'Редагувати запис'
                     },
                     {
+                        id: 'nb-del-cat',
                         text: 'Видалити запис'
-                    }            
-                ]
-            },
-            Ext.create('Ext.tree.Panel', {
-                id: 'nb-product-tree',
-                title: 'Simple Tree',
+                    }                      
+                ],
                 flex: 1,
                 store: 'Product',
-                rootVisible: true
+                rootVisible: false
             })
         ];
         this.callParent();
