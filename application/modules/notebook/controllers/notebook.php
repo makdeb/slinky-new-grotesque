@@ -284,10 +284,13 @@ class Notebook extends CI_Controller {
 		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории	
 		
 		// в случае отсутствия параметра - ошибка
-		if (!$id) {
+		if ((!$id)||($id==100)) {
 			echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
 			return;
 		}
+		
+		$data = array();
+		$data['categoryId']  = 100; // id корзины
 		
 		// записываем в свойство deletions класса Notebook id удаляемой категории
 		$this->deletions[]=$id;
@@ -299,8 +302,9 @@ class Notebook extends CI_Controller {
 		// для всех значений id из массива-свойства $deletions удаляем все заказы,	
 		// для которых id категории совпадает с данным значением
 		foreach ($this->deletions as $record) {
-
-			$query1 = $this->db->delete('orders', array('categoryId' => $record));
+			
+			$this->db->where('categoryId', $record);
+			$query1 = $this->db->update('orders', $data);
 				if ($query1===FALSE) {
 					echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
 					return;
@@ -348,6 +352,27 @@ class Notebook extends CI_Controller {
 				}
 				
 				
+	}
+	
+	// функция remove_order(), позволяющая удалить (перенести в корзину) существующий заказ
+	public function remove_order($id='') {
+		$id = $this->input->get('id');
+		$id = preg_replace("/[^0-9]/", '', $id);
+		
+		if (!$id) { echo '{"success":false,"message":"Помилка при видаленні замовлення"}'; return;}
+		
+		$data = array();
+		$data['categoryId']  = 100;
+		
+		$this->db->where('idOrders', $id);
+		$query = $this->db->update('orders', $data);
+				if ($query===FALSE) {
+					echo '{"success":false,"message":"Помилка при видаленні замовлення"}'; 
+					return;
+				}
+		
+		echo '{"success":true,"message":"Замовлення було успішно перенесено до корзини"}';	
+		
 	}
 	
 	
