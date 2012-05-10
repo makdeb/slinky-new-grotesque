@@ -14,13 +14,15 @@ Ext.define('Notebook.view.product.List', {
                 id: 'nb-product-tree',
                 tbar: [
                     {
-                        id: 'test',
+                        id: 'nb-add-cat',
                         text: 'Додати запис'
                     },
                     {
+                        id: 'nb-edit-cat',
                         text: 'Редагувати запис'
                     },
                     {
+                        id: 'nb-del-cat',
                         text: 'Видалити запис'
                     }                      
                 ],

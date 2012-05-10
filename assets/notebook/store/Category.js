@@ -5,7 +5,7 @@ Ext.define('Notebook.store.Category',{
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: '/slinky-new-grotesque/json/cat.json',
+        url: 'notebook/check_cat',
         reader: {
             type: 'json',
             root: 'category'
