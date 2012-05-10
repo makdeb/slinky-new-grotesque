@@ -17,6 +17,8 @@ class Notebook extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
+	
+	private $deletions=array();  // свойство класса Notebook, которое импользуется для удаления категорий
 	 
 	public function __construct() {
 		
@@ -210,6 +212,143 @@ class Notebook extends CI_Controller {
 		
 	}
 	
+	// функция add_cat(), добавляющая новую категорию
+	// * принимает в качестве параметра имя и id родительской категории, либо 0 в случае создания корневого каталога
+	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
+	public function add_category($name='',$parent=0) {
+		
+		$name = $this->input->get('name');
+		$parent = $this->input->get('parent');
+		$parent = preg_replace("/[^0-9]/", '', $parent); // преобразуем строку формата "сParentID" из url в строку с номером родительской категории
+		
+		if (!$name)
+		{
+			echo '{"success":false,"message":"Помилка при створенні категорії"}';
+			return;
+		}
+				
+		$return='';
+		$data = array();
+		
+		$data['parentID']  = $parent;
+		$data['name']  = $name;
+		
+		$query = $this->db->insert('categories',$data);
+	
+			if ($query===TRUE)
+			{
+				$return = '{"success":true,"message":"Категорія була успішно створена"}';
+			} else
+			{
+				$return = '{"success:false,"message":"Помилка при створенні категорії"}';
+			}
+		
+		echo $return;
+		
+	}
+	
+	// функция update_cat(), позволяющая переименовать существующую категорию
+	// * принимает в качестве параметра новое имя и id категории
+	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
+	public function update_category($name='',$id='') {
+		
+		$name = $this->input->get('name');
+		$id = $this->input->get('id');
+		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории
+		
+		if ((!$id)||(!$name)) { echo '{"success":false,"message":"Помилка при перейменуванні категорії"}'; return;}
+		$return='';
+		$data = array();
+		
+		$data['name']  = $name;
+		
+		$this->db->where('idCategories', $id);
+		$query = $this->db->update('categories', $data);
+		
+		if ($query===TRUE)
+			{
+				$return = '{"success":true,"message":"Категорія була успішно перейменована"}';
+			} else
+			{
+				$return = '{"success:false,"message":"Помилка при перейменуванні категорії"}';
+			}
+		
+		echo $return;		
+	}
+	
+	// функция remove_category(), позволяющая удалить существующую категорию, а также
+	// все подкатегории и заказы с подзаказами
+	public function remove_category($id='') {
+	
+		$id = $this->input->get('id'); // принимаем параметр категории из url
+		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории	
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) {
+			echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
+			return;
+		}
+		
+		// записываем в свойство deletions класса Notebook id удаляемой категории
+		$this->deletions[]=$id;
+		
+		// обращаемся к вспомагательной приватной функции _find_category(), передавая ей
+		// в качестве параметра id удаляемой категории
+		$this->_find_category($id);
+	
+		// для всех значений id из массива-свойства $deletions удаляем все заказы,	
+		// для которых id категории совпадает с данным значением
+		foreach ($this->deletions as $record) {
+
+			$query1 = $this->db->delete('orders', array('categoryId' => $record));
+				if ($query1===FALSE) {
+					echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
+					return;
+				}
+			
+				}
+		
+		// для всех значений id из массива-свойства $deletions удаляем все категории
+		foreach ($this->deletions as $record) {
+
+			$query2 = $this->db->delete('categories', array('idCategories' => $record));
+			
+				if ($query2===FALSE) {
+						echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
+						return;
+					}
+				
+				}
+		
+		echo '{"success":true,"message":"Категорія та всі її підкатегорії були успішно видалені"}';
+		
+		
+	}
+	
+	private function _find_category($node='') {
+		
+		// находим в таблице категорий все, у которых id родительской категории
+		// совпадает с принимаемым параметром
+		
+		$this->db->select('idCategories');
+		$query = $this->db->get_where('categories',array('parentID'=>$node));
+		$data['categories'] = $query->result_array();
+		
+		/* для каждой такой категории берем значение id и записываем в массив $deletions,
+		   являющийся свойством класса Notebook,
+		   после чего рекурсивно обращаемся к фунции _find_category(), 
+		   передавая ей в качестве параметра id текущей категории
+		*/
+		foreach ($data['categories'] as $category) {
+						
+					foreach ($category as $field => $value) {
+							$this->deletions[]=$value;
+							$this->_find_category($value);
+						}			
+				}
+				
+				
+	}
 	
 	
 }
