@@ -1,3 +1,7 @@
+Ext.require([
+    'Ext.window.MessageBox'
+]);
+
 Ext.application({
     name: 'Notebook',
     appFolder: '/slinky-new-grotesque/assets/notebook',

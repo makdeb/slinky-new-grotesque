@@ -8,6 +8,7 @@ Ext.define('Notebook.store.Product',{
     requires: 'Notebook.model.Product', 
     model: 'Notebook.model.Product',
     autoLoad: true,
+    clearOnLoad: true,
     proxy: {
         type: 'ajax',
         url: 'notebook/get_categories',
@@ -17,7 +18,7 @@ Ext.define('Notebook.store.Product',{
         }        
     },
     root: {
-        expanded: false,
+        expanded: true,
         text: 'root',
         leaf: false
     },

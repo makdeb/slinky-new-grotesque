@@ -5,7 +5,7 @@ Ext.define('Notebook.store.Master',{
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: '/slinky-new-grotesque/json/mas.json',
+        url: 'notebook/check_masters',
         reader: {
             type: 'json',
             root: 'master'
