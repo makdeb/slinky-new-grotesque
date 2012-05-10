@@ -19,18 +19,21 @@ Ext.define('Notebook.controller.Product', {
             '#nb-edit-cat': {
                 click: this.editCatList
             },  
-            '#nb-cat-win-save': {
-                click: this.catWinSave
+            '#nb-cat-edt-win-save': {
+                click: this.catEdtWinSave
             },             
-            '#nb-cat-win-cancel': {
-                click: this.catWinCancel
+            '#nb-cat-edt-win-cancel': {
+                click: this.catEdtWinCancel
             },  
             '#nb-del-cat': {
                 click: this.delCat
             },              
-            '#nb-cat-del-ok': {
-                click: this.catDelOk
+            '#nb-cat-del-win-ok': {
+                click: this.catDelWinOk
             },
+            '#nb-cat-del-win-cancel': {
+                click: this.catDelWinCancel
+            },            
             '#nb-product-tree': {
                 itemclick: function () {
                     alert('click');
@@ -48,53 +51,53 @@ Ext.define('Notebook.controller.Product', {
     },
     editCatList: function (button) {
         //створюємо екземпляр вюшки для додання\редагування категорії
-        this.catWin=this.getView('product.Edit').create(); 
+        this.catEdtWin=this.getView('product.Edit').create(); 
         //отримуємо nb-cat-win-container крнтейнер
-        var catWinCont=this.catWin.getComponent('nb-cat-win-container');
+        var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
-        this.catWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
         //в залкжності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
         if (button.id=='nb-add-cat') {
-            this.catWin.catAdd=true;            
-            catWinCont.getComponent('nb-cat-win-message')
+            this.catEdtWin.catAdd=true;            
+            catEdtWinCont.getComponent('nb-cat-edt-win-message')
                             .update('Додати нову підкатегорію в категорію');
         }
         else {
             //якщо вибраний вузел категорія, то встановлюємо значення відповідного поля у вюшці
-            if (this.catWin.selCat!=undefined && this.catWin.selCat.get('id').substr(0,1)=='c') {
-                catWinCont.getComponent('nb-cat-win-cat-name')
-                                .setRawValue(this.catWin.selCat.get('name'));
+            if (this.catEdtWin.selCat!=undefined && this.catEdtWin.selCat.get('id').substr(0,1)=='c') {
+                catEdtWinCont.getComponent('nb-cat-edt-win-cat-name')
+                                .setRawValue(this.catEdtWin.selCat.get('name'));
             }
             else {
                 Ext.Msg.alert('Повідомлення','Виберіть категорію');
-                this.catWin.close();
+                this.catEdtWin.close();
                 return;
             }              
-            this.catWin.catAdd=false;            
-            catWinCont.getComponent('nb-cat-win-message')
+            this.catEdtWin.catAdd=false;            
+            catEdtWinCont.getComponent('nb-cat-edt-win-message')
                             .update('Редагувати підкатегорію в категорії');                               
         }   
         //відображаємо вюшку
-        this.catWin.show();
+        this.catEdtWin.show();
     },
-    catWinSave: function () {
+    catEdtWinSave: function () {
         //отримуємо nb-cat-win-container крнтейнер
-        var catWinCont=this.catWin.getComponent('nb-cat-win-container');   
+        var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');   
         //перевіряємо на валідність поле вводу назви категорії
-        if (catWinCont.getComponent('nb-cat-win-cat-name').isValid()) {
-            //створюємо обєкт-конфігурацію для аякс
+        if (catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').isValid()) {
+            //створюємо обєкт-конфігурацію для аякс запиту
             var ajaxConf={
                 method: 'GET'
             };
             ajaxConf.thisController=this;
-            if (this.catWin.catAdd) {
+            if (this.catEdtWin.catAdd) {
                 ajaxConf.url='notebook/add_category';
                 ajaxConf.params={};
-                ajaxConf.params.name=catWinCont.getComponent('nb-cat-win-cat-name').getValue();
-                if (this.catWin.selCat!=undefined) {
-                    ajaxConf.params.parent=this.catWin.selCat.get('id');
+                ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
+                if (this.catEdtWin.selCat!=undefined) {
+                    ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
                 }
                 else {
                     ajaxConf.params.parent=0;
@@ -103,9 +106,9 @@ Ext.define('Notebook.controller.Product', {
             else {
                 ajaxConf.url='notebook/update_category';
                 ajaxConf.params={};
-                ajaxConf.params.name=catWinCont.getComponent('nb-cat-win-cat-name').getValue();
-                if (this.catWin.selCat!==undefined) {
-                    ajaxConf.params.id=this.catWin.selCat.get('id');
+                ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
+                if (this.catEdtWin.selCat!==undefined) {
+                    ajaxConf.params.id=this.catEdtWin.selCat.get('id');
                 }
                 else {
                     ajaxConf.params.id=0;
@@ -125,52 +128,34 @@ Ext.define('Notebook.controller.Product', {
             ajaxConf.failure=function () {
                 Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
             }
-            Ext.Ajax.request(ajaxConf);
-//            if (this.catWin.selCat==undefined) {
-//                this.cleanUpProductList('root');
-//                Ext.getCmp('nb-product-tree').getStore().load();
-//            }
-//            else {
-//                if (this.catWin.catAdd) {
-//                    this.cleanUpProductList(this.catWin.selCat.get('id'));
-//                    Ext.getCmp('nb-product-tree').getStore().load({node: this.catWin.selCat});
-//                }
-//                else {
-//                    if (this.catWin.selCat.parentNode.get('id')!='root') {
-//                        //alert(this.catWin.selCat.parentNode.get('name'));
-//                        this.catWin.selCat.parentNode.collapse();
-//                        this.cleanUpProductList(this.catWin.selCat.parentNode.get('id'));
-//                        Ext.getCmp('nb-product-tree').getStore().load({node: this.catWin.selCat.parentNode});
-//                    }
-//                    else {
-//                        this.cleanUpProductList('root');
-//                        Ext.getCmp('nb-product-tree').getStore().load();
-//                    }
-//                }                
-//            }             
+            Ext.Ajax.request(ajaxConf);            
         }
-        this.catWin.close();
+        this.catEdtWin.close();
     },
-    catWinCancel: function () {
-        this.catWin.close();
+    catEdtWinCancel: function () {
+        this.catEdtWin.close();
     },
     delCat: function () {
         var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
         if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {        
-            this.catDel=this.getView('product.Delete').create();
-            this.catDel.selCat=selCat;
-            this.catDel.getComponent('nb-cat-del-container').getComponent('nb-cat-del-message').update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
-            this.catDel.show();
+            this.catDelWin=this.getView('product.Delete').create();
+            this.catDelWin.selCat=selCat;
+            this.catDelWin.getComponent('nb-cat-del-win-container').getComponent('nb-cat-del-win-message').update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
+            this.catDelWin.show();
+        }
+        else {
+            Ext.Msg.alert('Повідомлення','Виберіть категорію');
+            this.catDelWin.close();
         }
     },
-    catDelOk: function () {
+    catDelWinOk: function () {
         var ajaxConf={
             method: 'GET'
         };
         ajaxConf.thisController=this;
         ajaxConf.url='notebook/remove_category';
         ajaxConf.params={};
-        ajaxConf.params.id=this.catDel.selCat.get('id');
+        ajaxConf.params.id=this.catDelWin.selCat.get('id');
         ajaxConf.success=function (resp,opts) {
             var json=Ext.decode(resp.responseText);
             if (json.success) {    
@@ -186,6 +171,9 @@ Ext.define('Notebook.controller.Product', {
             Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
         }
         Ext.Ajax.request(ajaxConf);
-        this.catDel.close();
+        this.catDelWin.close();
+    },
+    catDelWinCancel: function () {
+        this.catDelWin.close();
     }
 });

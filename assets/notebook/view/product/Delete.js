@@ -10,13 +10,13 @@ Ext.define('Notebook.view.product.Delete',{
     items: [
         {
             xtype: 'container',
-            id: 'nb-cat-del-container',
+            id: 'nb-cat-del-win-container',
             layout: 'fit', 
             margin: 5,
             items: [
                 {
                     xtype: 'container',
-                    id: 'nb-cat-del-message',
+                    id: 'nb-cat-del-win-message',
                     html: ''
                 }
             ]
@@ -25,12 +25,12 @@ Ext.define('Notebook.view.product.Delete',{
     buttonAlign: 'right',
     buttons: [
         {
-            id: 'nb-cat-del-ok',
-            text: 'Зберегти'
+            id: 'nb-cat-del-win-ok',
+            text: 'Так'
         },
         {
-            id: 'nb-cat-del-cancel',
-            text: 'Відмінити'
+            id: 'nb-cat-del-win-cancel',
+            text: 'Ні'
         }
     ]
 });

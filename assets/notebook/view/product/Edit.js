@@ -10,7 +10,7 @@ Ext.define('Notebook.view.product.Edit',{
     items: [
         {
             xtype: 'container',
-            id: 'nb-cat-win-container',
+            id: 'nb-cat-edt-win-container',
             layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -19,7 +19,7 @@ Ext.define('Notebook.view.product.Edit',{
             items: [
                 {
                     xtype: 'container',
-                    id: 'nb-cat-win-message',
+                    id: 'nb-cat-edt-win-message',
                     padding: '0 0 5 0',
                     style: {
                         color: '#bcbcbc'
@@ -28,7 +28,7 @@ Ext.define('Notebook.view.product.Edit',{
                 },
                 {
                     xtype: 'textfield',
-                    id: 'nb-cat-win-cat-name',
+                    id: 'nb-cat-edt-win-cat-name',
                     width: 100,
                     labelWidth: 40,
                     fieldLabel: 'Назва',
@@ -41,11 +41,11 @@ Ext.define('Notebook.view.product.Edit',{
     buttonAlign: 'right',
     buttons: [
         {
-            id: 'nb-cat-win-save',
+            id: 'nb-cat-edt-win-save',
             text: 'Зберегти'
         },
         {
-            id: 'nb-cat-win-cancel',
+            id: 'nb-cat-edt-win-cancel',
             text: 'Відмінити'
         }
     ]

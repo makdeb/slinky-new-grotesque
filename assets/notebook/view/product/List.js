@@ -28,7 +28,7 @@ Ext.define('Notebook.view.product.List', {
                 ],
                 flex: 1,
                 store: 'Product',
-                rootVisible: true
+                rootVisible: false
             })
         ];
         this.callParent();
