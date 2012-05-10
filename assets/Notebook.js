@@ -11,7 +11,13 @@ Ext.application({
         'Warranty'               
     ],
     launch: function() {
-        //application launch
+        Ext.apply(Ext.form.field.VTypes, {
+            cyralphanum:  function(val) {
+                return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s]{1,}$/.test(val);
+            },
+            cyralphanumText: 'Допустимі символи кирилиці, латині та цифри',
+            cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
+        });
     }
 });
 

@@ -33,7 +33,7 @@ Ext.define('Notebook.view.product.Edit',{
                     labelWidth: 40,
                     fieldLabel: 'Назва',
                     allowBlank: false,
-                    vtype: 'alphanum'
+                    vtype: 'cyralphanum'
                 }
             ]
         }
