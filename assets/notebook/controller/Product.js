@@ -11,7 +11,7 @@ Ext.define('Notebook.controller.Product', {
         'product.Edit',
         'product.Delete'
     ],
-    init: function () {
+    init: function () {        
         this.control({
             '#nb-add-cat': {
                 click: this.editCatList
@@ -36,12 +36,12 @@ Ext.define('Notebook.controller.Product', {
             },            
             '#nb-product-tree': {
                 itemclick: function () {
-                    alert('click');
+                    //alert('click');
                 }
             }           
         });
     },
-    //фікс для бага в ExtJs: не спрацьовує метод load при завантаженні даних для root 
+    //фікс для бага в ExtJs: не спрацьовує метод load при завантаженні даних для node 
     cleanUpProductList: function (nodeId) {
         var delNode;
         var selNode=Ext.getCmp('nb-product-tree').getStore().getNodeById(nodeId);
@@ -118,7 +118,8 @@ Ext.define('Notebook.controller.Product', {
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {    
                     ajaxConf.thisController.cleanUpProductList('root');
-                    Ext.getCmp('nb-product-tree').getStore().load();                    
+                    Ext.getCmp('nb-product-tree').getStore().load();                                       
+                    Ext.getCmp('nb-warranty-cat').getStore().load();                     
                     Ext.Msg.alert('Повідомлення',json.message);
                 }
                 else {
@@ -160,7 +161,8 @@ Ext.define('Notebook.controller.Product', {
             var json=Ext.decode(resp.responseText);
             if (json.success) {    
                 ajaxConf.thisController.cleanUpProductList('root');
-                Ext.getCmp('nb-product-tree').getStore().load();                    
+                Ext.getCmp('nb-product-tree').getStore().load(); 
+                Ext.getCmp('nb-warranty-cat').getStore().load();
                 Ext.Msg.alert('Повідомлення',json.message);
             }
             else {
