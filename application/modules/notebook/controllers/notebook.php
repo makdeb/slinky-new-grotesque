@@ -240,7 +240,7 @@ class Notebook extends CI_Controller {
 				$return = '{"success":true,"message":"Категорія була успішно створена"}';
 			} else
 			{
-				$return = '{"success:false,"message":"Помилка при створенні категорії"}';
+				$return = '{"success":false,"message":"Помилка при створенні категорії"}';
 			}
 		
 		echo $return;
@@ -270,7 +270,7 @@ class Notebook extends CI_Controller {
 				$return = '{"success":true,"message":"Категорія була успішно перейменована"}';
 			} else
 			{
-				$return = '{"success:false,"message":"Помилка при перейменуванні категорії"}';
+				$return = '{"success":false,"message":"Помилка при перейменуванні категорії"}';
 			}
 		
 		echo $return;		
