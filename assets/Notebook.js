@@ -1,3 +1,5 @@
+var icons_path='assets/extjs/resources/themes/images/custom/';
+
 Ext.require([
     'Ext.window.MessageBox'
 ]);
@@ -11,6 +13,8 @@ Ext.application({
         'Warranty'               
     ],
     launch: function() {
+        Ext.tip.QuickTipManager.init();
+        
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanum:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s]{1,}$/.test(val);
