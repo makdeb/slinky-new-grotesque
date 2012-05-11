@@ -1,3 +1,4 @@
+//шлях до іконок
 var icons_path='assets/extjs/resources/themes/images/custom/';
 
 Ext.require([
@@ -13,8 +14,9 @@ Ext.application({
         'Warranty'               
     ],
     launch: function() {
-        Ext.tip.QuickTipManager.init();
-        
+        //ініціалізація менеджера підказок
+        Ext.tip.QuickTipManager.init();        
+        //типи валідації полів
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanum:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s]{1,}$/.test(val);
@@ -22,6 +24,13 @@ Ext.application({
             cyralphanumText: 'Допустимі символи кирилиці, латині та цифри',
             cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
         });
+        Ext.apply(Ext.form.field.VTypes, {
+            phone:  function(val) {
+                return /^[\d\(\)\-]{1,}$/.test(val);
+            },
+            phoneText: 'Допустимі символи цифри, знаки (,) та -',
+            phoneMask: /[\d\(\)\-]/
+        });        
     }
 });
 

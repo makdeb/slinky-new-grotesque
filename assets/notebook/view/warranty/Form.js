@@ -22,12 +22,14 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'textfield',
                         fieldLabel: '№ п\п',
-                        width: 120                        
+                        width: 120,
+                        readOnly: true
                     },                    
                     {
                         xtype: 'textfield',
                         fieldLabel: 'Виріб',
-                        width: 230                        
+                        width: 230,
+                        vtype: 'cyralphanum'
                     },
                     {
                         xtype: 'combobox',
@@ -83,17 +85,20 @@ Ext.define('Notebook.view.warranty.Form',{
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Домашній тел.',
-                                width: 435                                           
+                                width: 435,
+                                vtype: 'phone'
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Робочій тел.',
-                                width: 435                                           
+                                width: 435,
+                                vtype: 'phone'
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Мобільний тел.',
-                                width: 435 
+                                width: 435,
+                                vtype: 'phone'
                             },
                             {
                                 xtype: 'datefield',
@@ -428,7 +433,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'button',
                         text: 'Прийом',
-                        id: 'ololo'
+                        id: 'nb-'
                     },
                     {
                         xtype: 'button',
