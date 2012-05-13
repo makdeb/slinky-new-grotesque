@@ -41,7 +41,6 @@ Ext.define('Notebook.controller.Product', {
             }           
         });
     },
-    //фікс для бага в ExtJs: не спрацьовує метод load при завантаженні даних для node 
     cleanUpProductList: function (nodeId) {
         var delNode;
         var selNode=Ext.getCmp('nb-product-tree').getStore().getNodeById(nodeId);
@@ -91,33 +90,30 @@ Ext.define('Notebook.controller.Product', {
             var ajaxConf={
                 method: 'GET'
             };
+            //вказівник на контроллер 
             ajaxConf.thisController=this;
+            //залежно від того, чи додаємо ми категорію чи редагуємо, налаштовується конфігурація AJAX запиту
             if (this.catEdtWin.catAdd) {
                 ajaxConf.url='notebook/add_category';
-                ajaxConf.params={};
-                ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
-                if (this.catEdtWin.selCat!=undefined) {
-                    ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
-                }
-                else {
-                    ajaxConf.params.parent=0;
-                }
             }
             else {
-                ajaxConf.url='notebook/update_category';
-                ajaxConf.params={};
-                ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
-                if (this.catEdtWin.selCat!==undefined) {
-                    ajaxConf.params.id=this.catEdtWin.selCat.get('id');
-                }
-                else {
-                    ajaxConf.params.id=0;
-                }                
+                ajaxConf.url='notebook/update_category';              
             }
+            ajaxConf.params={};
+            ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
+            //якшо при доданні не вибрана батьківська категорія, то передаємо в parent значення 0
+            if (this.catEdtWin.selCat!=undefined) {
+                ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
+            }
+            else {
+                ajaxConf.params.parent=0;
+            }               
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
+                //якшо серввер повернув повідомлення про успішне виконання
                 if (json.success) {    
                     ajaxConf.thisController.cleanUpProductList('root');
+                    //перезавантажуємо Store...
                     Ext.getCmp('nb-product-tree').getStore().load();                                       
                     Ext.getCmp('nb-warranty-cat').getStore().load();                     
                     Ext.Msg.alert('Повідомлення',json.message);
@@ -129,6 +125,7 @@ Ext.define('Notebook.controller.Product', {
             ajaxConf.failure=function () {
                 Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
             }
+            //виконуємо запит
             Ext.Ajax.request(ajaxConf);            
         }
         this.catEdtWin.close();
@@ -137,11 +134,15 @@ Ext.define('Notebook.controller.Product', {
         this.catEdtWin.close();
     },
     delCat: function () {
+        //отримуємо вибраний вузол
         var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        //якшо вибраний вузол - категорія, то відображаємо повідомлення про видалення
         if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {        
             this.catDelWin=this.getView('product.Delete').create();
             this.catDelWin.selCat=selCat;
-            this.catDelWin.getComponent('nb-cat-del-win-container').getComponent('nb-cat-del-win-message').update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
+            this.catDelWin.getComponent('nb-cat-del-win-container')
+                                .getComponent('nb-cat-del-win-message')
+                                    .update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
             this.catDelWin.show();
         }
         else {
@@ -150,6 +151,7 @@ Ext.define('Notebook.controller.Product', {
         }
     },
     catDelWinOk: function () {
+        //якщо видалення категорії підтверджено, то відправляємо запит на видалення
         var ajaxConf={
             method: 'GET'
         };
@@ -172,6 +174,7 @@ Ext.define('Notebook.controller.Product', {
         ajaxConf.failure=function () {
             Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
         }
+        //виконуємо запит
         Ext.Ajax.request(ajaxConf);
         this.catDelWin.close();
     },
