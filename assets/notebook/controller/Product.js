@@ -56,7 +56,7 @@ Ext.define('Notebook.controller.Product', {
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
         this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
-        //в залкжності від того, додаємо нову чи редагуємо існуючу категорію,
+        //в залежності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
         if (button.id=='nb-add-cat') {

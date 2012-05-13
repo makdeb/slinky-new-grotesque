@@ -21,11 +21,13 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'textfield',
+                        id: 'nb-warranty-id',
                         fieldLabel: '№ п\п',
                         width: 120                        
                     },                    
                     {
                         xtype: 'textfield',
+                        id: 'nb-warranty-prod',
                         fieldLabel: 'Виріб',
                         width: 230                        
                     },
