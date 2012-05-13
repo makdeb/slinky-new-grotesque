@@ -92,6 +92,35 @@ class Notebook extends CI_Controller {
 		
 	}
 	
+	// функция check_guarantee() , возвращающая json-строку из всех существующих гарантий
+	
+	public function check_guarantee() {
+		
+		$data = array();
+		
+		$this->db->select('idGuarantee as id,name');
+		$this->db->from('guarantee');
+		
+		$query = $this->db->get();
+		
+		$data['records'] = json_encode($query->result());
+		$data['error'] = json_last_error();
+		
+		if (($data['error'] !== JSON_ERROR_NONE)) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"guarantee":' .$data['records'] .'}';
+				
+			} else  $data['json'] = '{"success":true,"guarantee":' .$data['records'] .'}';
+				
+	
+		// вивід результату
+		// $this->load->view('test_json.php',$data);
+		echo $data['json'];
+		
+		
+	}	
+	
 	// функция get_categories() , возвращающая json-строку дерева категорий и заказов 
 	// по указанному id родительской категории
 		
