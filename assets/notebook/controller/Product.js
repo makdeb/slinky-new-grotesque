@@ -227,7 +227,7 @@ Ext.define('Notebook.controller.Product', {
 //                    wphone: ""                    
                     var json=Ext.decode(resp.responseText);
                     if (json.success) {
-                        //erer
+                        //
                     }
                     else {
                         Ext.Msg.alert('Повідомлення',json.message);
