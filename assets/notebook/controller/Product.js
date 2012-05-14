@@ -35,9 +35,7 @@ Ext.define('Notebook.controller.Product', {
                 click: this.catDelWinCancel
             },            
             '#nb-product-tree': {
-                itemclick: function () {
-                    //alert('click');
-                }
+                itemclick: this.warLoad
             }           
         });
     },
@@ -101,13 +99,23 @@ Ext.define('Notebook.controller.Product', {
             }
             ajaxConf.params={};
             ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
-            //якшо при доданні не вибрана батьківська категорія, то передаємо в parent значення 0
-            if (this.catEdtWin.selCat!=undefined) {
-                ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
+            if (this.catEdtWin.catAdd){
+                //якшо при доданні не вибрана батьківська категорія, то передаємо в parent значення 0
+                if (this.catEdtWin.selCat!=undefined) {
+                    ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
+                }
+                else {
+                    ajaxConf.params.parent=0;
+                }                
             }
             else {
-                ajaxConf.params.parent=0;
-            }               
+                if (this.catEdtWin.selCat!=undefined) {
+                    ajaxConf.params.id=this.catEdtWin.selCat.get('id');
+                }
+                else {
+                    ajaxConf.params.id=0;
+                }                
+            }
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
                 //якшо серввер повернув повідомлення про успішне виконання
@@ -115,7 +123,7 @@ Ext.define('Notebook.controller.Product', {
                     ajaxConf.thisController.cleanUpProductList('root');
                     //перезавантажуємо Store...
                     Ext.getCmp('nb-product-tree').getStore().load();                                       
-                    Ext.getCmp('nb-warranty-cat').getStore().load();                     
+                    Ext.getCmp('nb-war-cat').getStore().load();                     
                     Ext.Msg.alert('Повідомлення',json.message);
                 }
                 else {
@@ -164,7 +172,7 @@ Ext.define('Notebook.controller.Product', {
             if (json.success) {    
                 ajaxConf.thisController.cleanUpProductList('root');
                 Ext.getCmp('nb-product-tree').getStore().load(); 
-                Ext.getCmp('nb-warranty-cat').getStore().load();
+                Ext.getCmp('nb-war-cat').getStore().load();
                 Ext.Msg.alert('Повідомлення',json.message);
             }
             else {
@@ -180,5 +188,55 @@ Ext.define('Notebook.controller.Product', {
     },
     catDelWinCancel: function () {
         this.catDelWin.close();
+    },
+    warLoad: function (view,record,item,index,e,eOpts) {
+        var warId=record.get('id');
+        //перевіряємо чи клікнули по замовленню, а не по категорії
+        if (warId.substr(0,1)=='p') {
+            Ext.Ajax.request({
+                method: 'GET',
+                url: 'notebook/fill_order',
+                params: {
+                    id: warId
+                },
+                success: function (resp,opts) {
+//                    address: "Чоп Зализничников 2/34"
+//                    category: "С/М"
+//                    certificate: ""
+//                    comments: "19.07.2005"
+//                    complaints: "Заклинило барабан"
+//                    customer: "Кульчинский Олег Иванович"
+//                    date_end: "2005-10-05"
+//                    date_start: "2005-10-03"
+//                    details: ""
+//                    gdate: ""
+//                    guarantee: ""
+//                    hphone: "711451"
+//                    id: "4"
+//                    master: "Алекс"
+//                    notes: "!!! В барабане застряло белье, не могут вынуть Леше отмечено"
+//                    notified: ""
+//                    penddate: ""
+//                    performance: "Расклинивание по гарантии"
+//                    phone: "80506611910"
+//                    posted: ""
+//                    product: "С/М INDESIT"
+//                    pstartdate: ""
+//                    sum: "38"
+//                    type: "0"
+//                    wphone: ""                    
+                    var json=Ext.decode(resp.responseText);
+                    if (json.success) {
+                        //
+                    }
+                    else {
+                        Ext.Msg.alert('Повідомлення',json.message);
+                    }
+                },
+                failure: function () {
+                    Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
+                }
+            });
+        }
     }
 });
