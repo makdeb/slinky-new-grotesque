@@ -1,5 +1,5 @@
 //шлях до іконок
-var icons_path='assets/extjs/resources/themes/images/custom/';
+var icons_path='http://localhost/slinky-new-grotesque/assets/extjs/resources/themes/images/custom/';
 
 Ext.require([
     'Ext.window.MessageBox'

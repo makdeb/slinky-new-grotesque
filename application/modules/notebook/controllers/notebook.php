@@ -92,6 +92,35 @@ class Notebook extends CI_Controller {
 		
 	}
 	
+	// функция check_guarantee() , возвращающая json-строку из всех существующих гарантий
+	
+	public function check_guarantee() {
+		
+		$data = array();
+		
+		$this->db->select('idGuarantee as id,name');
+		$this->db->from('guarantee');
+		
+		$query = $this->db->get();
+		
+		$data['records'] = json_encode($query->result());
+		$data['error'] = json_last_error();
+		
+		if (($data['error'] !== JSON_ERROR_NONE)) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"guarantee":' .$data['records'] .'}';
+				
+			} else  $data['json'] = '{"success":true,"guarantee":' .$data['records'] .'}';
+				
+	
+		// вивід результату
+		// $this->load->view('test_json.php',$data);
+		echo $data['json'];
+		
+		
+	}	
+	
 	// функция get_categories() , возвращающая json-строку дерева категорий и заказов 
 	// по указанному id родительской категории
 		
@@ -257,6 +286,8 @@ class Notebook extends CI_Controller {
 		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории
 		
 		if ((!$id)||(!$name)) { echo '{"success":false,"message":"Помилка при перейменуванні категорії"}'; return;}
+		if ($id==1) { echo '{"success":false,"message":"Помилка при перейменуванні категорії"}'; return;} // запрет переименования Корзины
+		
 		$return='';
 		$data = array();
 		
@@ -283,11 +314,14 @@ class Notebook extends CI_Controller {
 		$id = $this->input->get('id'); // принимаем параметр категории из url
 		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории	
 		
-		// в случае отсутствия параметра - ошибка
-		if (!$id) {
+		// в случае отсутствия параметра или попытки удалить Корзину - ошибка
+		if ((!$id)||($id==1)) {
 			echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
 			return;
 		}
+		
+		$data = array();
+		$data['categoryId']  = 1; // id корзины
 		
 		// записываем в свойство deletions класса Notebook id удаляемой категории
 		$this->deletions[]=$id;
@@ -299,8 +333,9 @@ class Notebook extends CI_Controller {
 		// для всех значений id из массива-свойства $deletions удаляем все заказы,	
 		// для которых id категории совпадает с данным значением
 		foreach ($this->deletions as $record) {
-
-			$query1 = $this->db->delete('orders', array('categoryId' => $record));
+			
+			$this->db->where('categoryId', $record);
+			$query1 = $this->db->update('orders', $data);
 				if ($query1===FALSE) {
 					echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
 					return;
@@ -348,6 +383,72 @@ class Notebook extends CI_Controller {
 				}
 				
 				
+	}
+	
+	// функция remove_order(), позволяющая удалить (перенести в корзину) существующий заказ
+	public function remove_order($id=0) {
+		$id = $this->input->get('id');  // принимаем параметр заказа из url
+		$id = preg_replace("/[^0-9]/", '', $id);  // преобразуем строку формата "рID" из url в строку с номером заказа
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) { echo '{"success":false,"message":"Помилка при видаленні замовлення"}'; return;}
+		
+		$data = array();
+		$data['categoryId']  = 1; // id корзины
+		
+		// для заданного id удаляем заказ
+		$this->db->where('idOrders', $id);
+		$query = $this->db->update('orders', $data);
+				if ($query===FALSE) {
+					echo '{"success":false,"message":"Помилка при видаленні замовлення"}'; 
+					return;
+				}
+		// вывод json-строки
+		echo '{"success":true,"message":"Замовлення було успішно перенесено до корзини"}';	
+		
+	}
+	
+	
+	// функция fill_order(), реализующая автозаполнение формы
+	public function fill_order($id=0) {
+		$id = $this->input->get('id');  // принимаем параметр заказа из url
+		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
+		
+		$data = array();
+		
+		//вибір замовлення із заданим id
+		
+		if (!$id) {
+			{ echo '{"success":false,"message":"Помилка отримання данних"}'; return;}
+		} else {
+				$this->db->where('orders.idOrders', $id); 
+				
+			// вибір тільки потрібних полів	і об'єднання з іншими таблицями
+				$this->db->select('idOrders as id,type,date_start,date_end,product,categories.name as category,customers.name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,masters.name as master,guarantee.name as guarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified');
+				// 'idOrders as id,type,date_start,date_end,product,categoryID,name as category,customerID,name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,masterID,name as master,guaranteeID,name as guarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified,num'
+				$this->db->from('orders');
+				$this->db->join('categories', 'categories.idCategories = orders.categoryID');
+				$this->db->join('customers', 'customers.idCustomers = orders.customerID');
+				$this->db->join('masters', 'masters.idMasters = orders.masterID');
+				$this->db->join('guarantee', 'guarantee.idGuarantee = orders.guaranteeID');
+
+			$query = $this->db->get();
+			$data['records'] = json_encode($query->row());	
+			$data['error'] = json_last_error();
+			
+		// перевірка помилок, або відсутності запису під даним id
+		// якщо є помилки або відсутній запис з даним id, стираємо масив і записуємо у нього строкове значення '[]'
+		// після чого формуємо json-строку зі значенням false	
+			if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"message":"Помилка отримання данних"}';
+		// якщо помилок немає і запис знайдено, то формуємо json-строку зі значенням true 		
+			} else { $data['json'] = '{"success":true,"order":' .$data['records'] .'}';
+					$data['json'] = str_replace(':null',':""',$data['json']);
+				}
+		} 
+		echo $data['json'];
 	}
 	
 	

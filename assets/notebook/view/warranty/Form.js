@@ -23,7 +23,8 @@ Ext.define('Notebook.view.warranty.Form',{
                         xtype: 'textfield',
                         id: 'nb-war-num',
                         fieldLabel: '№ п\п',
-                        width: 120                       
+                        width: 120,
+                        readOnly: true
                     },                    
                     {
                         xtype: 'textfield',
@@ -193,6 +194,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 items: [                                
                                     {
                                         xtype: 'textarea',
+                                        id: 'nb-war-comm',
                                         fieldLabel: 'Примітки',
                                         labelWidth: 70,
                                         width: 435,
