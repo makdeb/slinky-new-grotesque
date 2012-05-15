@@ -41,7 +41,8 @@ Ext.define('Notebook.view.warranty.Form',{
                         width: 220,
                         store: 'Category',
                         displayField: 'name',
-                        valueField: 'id'
+                        valueField: 'id',
+                        forceSelection: true
                     },
                     {
                         xtype: 'datefield',
@@ -171,14 +172,14 @@ Ext.define('Notebook.view.warranty.Form',{
                             align: 'stretchmax'
                         },                        
                         title: 'Відомості про гарантію',
-                        width: 930,
+                        width: 925,
                         items: [
                             {
                                 xtype: 'container',
-                                margin: '0 17 0 0',
+                                margin: '0 27 0 0',
                                 items: [
                                     {
-                                        xtype: 'textfield',
+                                        xtype: 'combobox',
                                         id:'nb-war-guar',
                                         fieldLabel: 'Гарантія',
                                         labelWidth: 70,
@@ -186,7 +187,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                     },
                                     {
                                         xtype: 'textfield',
-                                        id:'nb-war-guar-id',
+                                        id:'nb-war-guar-cer',
                                         fieldLabel: 'Свідоцтво',
                                         labelWidth: 70,
                                         width: 435                                 
@@ -198,7 +199,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 items: [                                
                                     {
                                         xtype: 'textarea',
-                                        id: 'nb-war-comm',
+                                        id: 'nb-war-guar-comm',
                                         fieldLabel: 'Примітки',
                                         labelWidth: 70,
                                         width: 435,
@@ -217,20 +218,22 @@ Ext.define('Notebook.view.warranty.Form',{
                     type: 'hbox',
                     align: 'stretchmax'
                 },
-                defaults: {
-                    margin: '0 5 0 0'
-                },
+                margin: '0 5 0 0',
+//                defaults: {
+//                    margin: '10 5 0 0'
+//                },
                 items: [
                     {
                         xtype: 'fieldset',
                         title: 'Комплектність',
-                        width: 460,
+                        width: 460,                        
                         items: [
                             {
                                 xtype: 'container',
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -249,6 +252,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -267,6 +271,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -285,6 +290,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -331,7 +337,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 items: [
                                     {
                                         xtype: 'textfield',
-                                        margin: '0 0 0 11',
+                                        margin: '0 0 0 17',
                                         fieldLabel: 'Мобільний телефон',
                                         labelWidth: 150,
                                         width: 415                                           
@@ -346,6 +352,7 @@ Ext.define('Notebook.view.warranty.Form',{
                         layout: {
                             type: 'vbox'
                         },
+                        margin: '0 0 0 5',
                         defaults: {
                             labelWidth: 80
                         },
@@ -356,39 +363,43 @@ Ext.define('Notebook.view.warranty.Form',{
                                 width: 460,
                                 items: [
                                     {
-                                        xtype: 'combobox',
+                                        xtype: 'textfield',
+                                        id: 'nb-war-post',
                                         fieldLabel: 'Відправлено',
                                         width: 435                                           
                                     },
                                     {
                                         xtype: 'datefield',
+                                        id: 'nb-war-psdate',
                                         fieldLabel: 'Відправлено',
                                         width: 200                                           
                                     } ,
                                     {
                                         xtype: 'datefield',
+                                        id: 'nb-war-pedate',
                                         fieldLabel: 'Отримано',
                                         width: 200                                           
                                     },                                            
                                     {
                                         xtype: 'radiogroup',
+                                        id: 'nb-war-type',
                                         columns: 1,
-                                        margin: '15 0 0 0',
+                                        margin: '13 0 0 0',
                                         items: [
                                             {
                                                 boxLabel: 'Платний ремонт',
-                                                inputValue: 1,
-                                                name: 'rb'
+                                                inputValue: 0,
+                                                name: 'nb-war-type-rb'
                                             },
                                             {
                                                 boxLabel: 'Гарантійний ремонт',
-                                                inputValue: 2,
-                                                name: 'rb'
+                                                inputValue: 1,
+                                                name: 'nb-war-type-rb'
                                             },
                                             {
                                                 boxLabel: 'В очікуванні',
-                                                inputValue: 3,
-                                                name: 'rb'
+                                                inputValue: 2,
+                                                name: 'nb-war-type-rb'
                                             }                                            
                                         ]
                                     }                                    
@@ -412,6 +423,7 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'combobox',
+                        id: 'nb-war-mas',
                         fieldLabel: 'Майстер',
                         width: 255,
                         store: 'Master',
@@ -420,18 +432,21 @@ Ext.define('Notebook.view.warranty.Form',{
                     },
                     {
                         xtype: 'textfield',
+                        id: 'nb-war-det',
                         fieldLabel: 'Запчастини',
                         margin: '0 0 0 5',
                         width: 237                                           
                     }, 
                     {
                         xtype: 'textfield',
+                        id: 'nb-war-work',
                         fieldLabel: 'Робота',
                         margin: '0 0 0 5',
                         width: 237                                           
                     },                     
                     {
                         xtype: 'datefield',
+                        id: 'nb-war-wdate',
                         fieldLabel: 'Гарантія до',
                         margin: '0 0 0 5',
                         width: 170                                          
@@ -452,8 +467,8 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'button',
-                        text: 'Прийом',
-                        id: 'nb-rec-warranty'
+                        id: 'nb-rec-warranty',
+                        text: 'Прийом'                        
                     },
                     {
                         xtype: 'button',
@@ -461,8 +476,13 @@ Ext.define('Notebook.view.warranty.Form',{
                     },
                     {
                         xtype: 'button',
-                        text: 'Пошук',
-                    }                  
+                        text: 'Пошук'
+                    },
+                    {
+                        xtype: 'button',
+                        id: 'nb-print-warranty',
+                        text: 'Друк'
+                    }                    
                 ]
             }
         ];
