@@ -424,7 +424,7 @@ class Notebook extends CI_Controller {
 				$this->db->where('orders.idOrders', $id); 
 				
 			// вибір тільки потрібних полів	і об'єднання з іншими таблицями
-				$this->db->select('idOrders as id,type,date_start,date_end,product,categories.name as category,customers.name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,masters.name as master,guarantee.name as guarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified');
+				$this->db->select('idOrders as id,type,date_start,date_end,product,idCategories,customers.name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,idMasters,idGuarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified');
 				// 'idOrders as id,type,date_start,date_end,product,categoryID,name as category,customerID,name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,masterID,name as master,guaranteeID,name as guarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified,num'
 				$this->db->from('orders');
 				$this->db->join('categories', 'categories.idCategories = orders.categoryID');

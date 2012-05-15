@@ -18,6 +18,7 @@ Ext.define('Notebook.store.Category',{
                 if (successful && Ext.typeOf(cboxPicker.loadMask) !== "boolean") {
                     cboxPicker.loadMask.hide();
                 }
+                //Ext.getCmp('nb-war-cat').setValue(1);
         }
     }
 });

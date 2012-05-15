@@ -1,7 +1,7 @@
 Ext.define('Notebook.view.warranty.Form',{
     extend: 'Ext.container.Container',
     alias: 'widget.warranty-form',
-    region: 'center',    
+    region: 'center', 
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -21,7 +21,7 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'textfield',
-                        id: 'nb-war-num',
+                        id: 'nb-war-id',
                         fieldLabel: '№ п\п',
                         width: 120,
                         readOnly: true
@@ -46,16 +46,20 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'datefield',
                         id:'nb-war-date-start',
+                        format: 'd.m.Y',
                         fieldLabel: 'Прийнято',
                         labelWidth: 60,
-                        width: 160
+                        width: 160,
+                        readOnly: true
                     },
                     {
                         xtype: 'datefield',
                         id:'nb-war-date-end',
+                        format: 'd.m.Y',
                         fieldLabel: 'Видано',
                         labelWidth: 60,
-                        width: 160 
+                        width: 160,
+                        readOnly: true 
                     }                    
                 ]
             },  
@@ -457,7 +461,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     },
                     {
                         xtype: 'button',
-                        text: 'Пошук'
+                        text: 'Пошук',
                     }                  
                 ]
             }
