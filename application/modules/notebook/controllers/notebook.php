@@ -424,8 +424,7 @@ class Notebook extends CI_Controller {
 				$this->db->where('orders.idOrders', $id); 
 				
 			// вибір тільки потрібних полів	і об'єднання з іншими таблицями
-				$this->db->select('idOrders as id,type,date_start,date_end,product,categories.name as category,customers.name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,masters.name as master,guarantee.name as guarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified');
-				// 'idOrders as id,type,date_start,date_end,product,categoryID,name as category,customerID,name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,masterID,name as master,guaranteeID,name as guarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified,num'
+				$this->db->select('idOrders as id,type,date_start,date_end,product,idCategories,customers.name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,idMasters,idGuarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified');
 				$this->db->from('orders');
 				$this->db->join('categories', 'categories.idCategories = orders.categoryID');
 				$this->db->join('customers', 'customers.idCustomers = orders.customerID');
@@ -450,6 +449,106 @@ class Notebook extends CI_Controller {
 		} 
 		echo $data['json'];
 	}
+	
+	
+	// функция update_order(), реализующая изменение данных заказа
+	public function update_order($id=0) {
+		$id = $this->input->get('id'); // принимаем параметр заказа из url
+		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
+		
+		// в случае отсутствия id заказа - ошибка
+		if (!$id) {
+			echo '{"success":false,"message":"Помилка збереження данних"}'; 
+			return;
+		}
+		
+		$data = array();
+		$new = array();
+			
+		// заполняем массив $data данными из формы
+		$data['type']  = $this->input->post('type');
+		$data['product']  = $this->input->post('product');
+		$data['categoryID']  = $this->input->post('categoryID');
+		$data['complaints']  = $this->input->post('complaints');
+		$data['performance']  = $this->input->post('performance');
+		$data['notes']  = $this->input->post('notes');
+		$data['sum']  = $this->input->post('sum');
+		$data['details']  = $this->input->post('details');
+		$data['masterID']  = $this->input->post('masterID');
+		$data['guaranteeID']  = $this->input->post('guaranteeID');
+		$data['certificate']  = $this->input->post('certificate');
+		$data['comments']  = $this->input->post('comments');
+		$data['posted']  = $this->input->post('posted');
+	
+		// для полей типа date производим проверку наличия значения в поле.
+		// При отсутствии такого значения записываем NULL,
+		// при наличии - преобразованное из строки в тип date значение
+		if (!$this->input->post('gdate')) {
+			$data['gdate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('gdate'));
+			$data['gdate']  = $date->format('Y-m-d');
+		}
+		
+		if (!$this->input->post('pstartdate')) {
+			$data['pstartdate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('pstartdate'));
+			$data['pstartdate']  = $date->format('Y-m-d');
+		}
+		
+		if (!$this->input->post('penddate')) {
+			$data['penddate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('penddate'));
+			$data['penddate']  = $date->format('Y-m-d');
+		}
+		
+		if (!$this->input->post('notified')) {
+			$data['notified'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('notified'));
+			$data['notified']  = $date->format('Y-m-d');
+		}
+	
+		// выбираем id заказчика данного заказа	
+		$query = $this->db->get_where('orders', array('idOrders' => $id));
+		$row  = $query->row();
+		$new['customer'] = $row->customerID;
+		
+		// обновляем данные
+		$this->db->where('idOrders', $id);
+		$query = $this->db->update('orders', $data);
+		
+			if ($query===FALSE) {
+					echo '{"success":false,"message":"Помилка збереження данних"}'; 
+					return;
+				}
+		
+		// очистка массива для записи новых данных
+		unset($data);
+		$data = array();
+		
+		// наполнение массива данными, относящимися только к заказчику
+		$data['name']  = $this->input->post('name');
+		$data['address']  = $this->input->post('address');
+		$data['phone']  = $this->input->post('phone');
+		$data['wphone']  = $this->input->post('wphone');
+		$data['hphone']  = $this->input->post('hphone');
+		
+		// обновляем данные заказчика
+		$this->db->where('idCustomers', $new['customer']);
+		$query = $this->db->update('customers', $data);
+		
+			if ($query===FALSE) {
+						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+						return;
+					}
+					
+		// вывод json-строки
+		echo '{"success":true,"message":"Замовлення було успішно змінено"}';	
+		
+	}	
 	
 	
 }
