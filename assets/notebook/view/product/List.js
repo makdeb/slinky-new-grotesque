@@ -14,17 +14,25 @@ Ext.define('Notebook.view.product.List', {
                 id: 'nb-product-tree',
                 tbar: [
                     {
-                        id: 'nb-add-cat',
-                        text: 'Додати запис'
+                        id: 'nb-add-cat',                        
+                        icon: icons_path+'cat-add.png',
+                        tooltip: 'Додати категорію'
                     },
                     {
                         id: 'nb-edit-cat',
-                        text: 'Редагувати запис'
+                        icon: icons_path+'cat-edit.png',
+                        tooltip: 'Редагувати категорію'
                     },
                     {
                         id: 'nb-del-cat',
-                        text: 'Видалити запис'
-                    }                      
+                        icon: icons_path+'cat-delete.png',
+                        tooltip: 'Видалити категорію'
+                    },
+                    {
+                        id: 'nb-del-order',
+                        icon: icons_path+'order-delete.png',
+                        tooltip: 'Видалити замовлення (тимчасово не працює)'
+                    }                     
                 ],
                 flex: 1,
                 store: 'Product',

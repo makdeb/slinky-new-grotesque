@@ -30,6 +30,9 @@ Ext.define('Notebook.store.Product',{
                     //alert(thisNode.get('name'));
                     newNode.set('leaf', false);
                     newNode.set('expandable', true);
+                    if (newNode.get('id')=='c1') {
+                        newNode.set('icon',icons_path+'cat-bin.png');
+                    }
                 }
                 else {
                     newNode.set('leaf', true);

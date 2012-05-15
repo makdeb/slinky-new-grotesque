@@ -35,13 +35,10 @@ Ext.define('Notebook.controller.Product', {
                 click: this.catDelWinCancel
             },            
             '#nb-product-tree': {
-                itemclick: function () {
-                    //alert('click');
-                }
+                itemclick: this.warLoad
             }           
         });
     },
-    //фікс для бага в ExtJs: не спрацьовує метод load при завантаженні даних для node 
     cleanUpProductList: function (nodeId) {
         var delNode;
         var selNode=Ext.getCmp('nb-product-tree').getStore().getNodeById(nodeId);
@@ -56,7 +53,7 @@ Ext.define('Notebook.controller.Product', {
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
         this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
-        //в залкжності від того, додаємо нову чи редагуємо існуючу категорію,
+        //в залежності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
         if (button.id=='nb-add-cat') {
@@ -91,23 +88,28 @@ Ext.define('Notebook.controller.Product', {
             var ajaxConf={
                 method: 'GET'
             };
+            //вказівник на контроллер 
             ajaxConf.thisController=this;
+            //залежно від того, чи додаємо ми категорію чи редагуємо, налаштовується конфігурація AJAX запиту
             if (this.catEdtWin.catAdd) {
                 ajaxConf.url='notebook/add_category';
-                ajaxConf.params={};
-                ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
+            }
+            else {
+                ajaxConf.url='notebook/update_category';              
+            }
+            ajaxConf.params={};
+            ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
+            if (this.catEdtWin.catAdd){
+                //якшо при доданні не вибрана батьківська категорія, то передаємо в parent значення 0
                 if (this.catEdtWin.selCat!=undefined) {
                     ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
                 }
                 else {
                     ajaxConf.params.parent=0;
-                }
+                }                
             }
             else {
-                ajaxConf.url='notebook/update_category';
-                ajaxConf.params={};
-                ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
-                if (this.catEdtWin.selCat!==undefined) {
+                if (this.catEdtWin.selCat!=undefined) {
                     ajaxConf.params.id=this.catEdtWin.selCat.get('id');
                 }
                 else {
@@ -116,10 +118,12 @@ Ext.define('Notebook.controller.Product', {
             }
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
+                //якшо серввер повернув повідомлення про успішне виконання
                 if (json.success) {    
                     ajaxConf.thisController.cleanUpProductList('root');
+                    //перезавантажуємо Store...
                     Ext.getCmp('nb-product-tree').getStore().load();                                       
-                    Ext.getCmp('nb-warranty-cat').getStore().load();                     
+                    Ext.getCmp('nb-war-cat').getStore().load();                     
                     Ext.Msg.alert('Повідомлення',json.message);
                 }
                 else {
@@ -129,6 +133,7 @@ Ext.define('Notebook.controller.Product', {
             ajaxConf.failure=function () {
                 Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
             }
+            //виконуємо запит
             Ext.Ajax.request(ajaxConf);            
         }
         this.catEdtWin.close();
@@ -137,11 +142,15 @@ Ext.define('Notebook.controller.Product', {
         this.catEdtWin.close();
     },
     delCat: function () {
+        //отримуємо вибраний вузол
         var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        //якшо вибраний вузол - категорія, то відображаємо повідомлення про видалення
         if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {        
             this.catDelWin=this.getView('product.Delete').create();
             this.catDelWin.selCat=selCat;
-            this.catDelWin.getComponent('nb-cat-del-win-container').getComponent('nb-cat-del-win-message').update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
+            this.catDelWin.getComponent('nb-cat-del-win-container')
+                                .getComponent('nb-cat-del-win-message')
+                                    .update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
             this.catDelWin.show();
         }
         else {
@@ -150,6 +159,7 @@ Ext.define('Notebook.controller.Product', {
         }
     },
     catDelWinOk: function () {
+        //якщо видалення категорії підтверджено, то відправляємо запит на видалення
         var ajaxConf={
             method: 'GET'
         };
@@ -162,7 +172,7 @@ Ext.define('Notebook.controller.Product', {
             if (json.success) {    
                 ajaxConf.thisController.cleanUpProductList('root');
                 Ext.getCmp('nb-product-tree').getStore().load(); 
-                Ext.getCmp('nb-warranty-cat').getStore().load();
+                Ext.getCmp('nb-war-cat').getStore().load();
                 Ext.Msg.alert('Повідомлення',json.message);
             }
             else {
@@ -172,10 +182,61 @@ Ext.define('Notebook.controller.Product', {
         ajaxConf.failure=function () {
             Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
         }
+        //виконуємо запит
         Ext.Ajax.request(ajaxConf);
         this.catDelWin.close();
     },
     catDelWinCancel: function () {
         this.catDelWin.close();
+    },
+    warLoad: function (view,record,item,index,e,eOpts) {
+        var warId=record.get('id');
+        //перевіряємо чи клікнули по замовленню, а не по категорії
+        if (warId.substr(0,1)=='p') {
+            Ext.Ajax.request({
+                method: 'GET',
+                url: 'notebook/fill_order',
+                params: {
+                    id: warId
+                },
+                success: function (resp,opts) {
+//                    address: "Чоп Зализничников 2/34"
+//                    category: "С/М"
+//                    certificate: ""
+//                    comments: "19.07.2005"
+//                    complaints: "Заклинило барабан"
+//                    customer: "Кульчинский Олег Иванович"
+//                    date_end: "2005-10-05"
+//                    date_start: "2005-10-03"
+//                    details: ""
+//                    gdate: ""
+//                    guarantee: ""
+//                    hphone: "711451"
+//                    id: "4"
+//                    master: "Алекс"
+//                    notes: "!!! В барабане застряло белье, не могут вынуть Леше отмечено"
+//                    notified: ""
+//                    penddate: ""
+//                    performance: "Расклинивание по гарантии"
+//                    phone: "80506611910"
+//                    posted: ""
+//                    product: "С/М INDESIT"
+//                    pstartdate: ""
+//                    sum: "38"
+//                    type: "0"
+//                    wphone: ""                    
+                    var json=Ext.decode(resp.responseText);
+                    if (json.success) {
+                        //
+                    }
+                    else {
+                        Ext.Msg.alert('Повідомлення',json.message);
+                    }
+                },
+                failure: function () {
+                    Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
+                }
+            });
+        }
     }
 });
