@@ -77,7 +77,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-psdate').setValue(Ext.Date.parse(json.order.pstartdate,'Y-m-d'));
                     Ext.getCmp('nb-war-pedate').setValue(Ext.Date.parse(json.order.penddate,'Y-m-d'));
                     Ext.getCmp('nb-war-type').items.items[json.order.type].setValue(true);
-                    Ext.getCmp('nb-war-mas').setValue(json.order.master);                    
+                    Ext.getCmp('nb-war-mas').setValue(json.order.idMasters);                    
                     Ext.getCmp('nb-war-det').setValue(json.order.details); 
                     Ext.getCmp('nb-war-work').setValue(json.order.sum); 
                     Ext.getCmp('nb-war-wdate').setValue(json.order.gdate); 
