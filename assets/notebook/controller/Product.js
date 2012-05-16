@@ -39,13 +39,6 @@ Ext.define('Notebook.controller.Product', {
             }           
         });
     },
-    cleanUpProductList: function (nodeId) {
-        var delNode;
-        var selNode=Ext.getCmp('nb-product-tree').getStore().getNodeById(nodeId);
-        while (delNode = selNode.childNodes[0]) {
-            selNode.removeChild(delNode);
-        }        
-    },
     editCatList: function (button) {
         //створюємо екземпляр вюшки для додання\редагування категорії
         this.catEdtWin=this.getView('product.Edit').create(); 
@@ -88,8 +81,6 @@ Ext.define('Notebook.controller.Product', {
             var ajaxConf={
                 method: 'GET'
             };
-            //вказівник на контроллер 
-            ajaxConf.thisController=this;
             //залежно від того, чи додаємо ми категорію чи редагуємо, налаштовується конфігурація AJAX запиту
             if (this.catEdtWin.catAdd) {
                 ajaxConf.url='notebook/add_category';
@@ -120,7 +111,6 @@ Ext.define('Notebook.controller.Product', {
                 var json=Ext.decode(resp.responseText);
                 //якшо серввер повернув повідомлення про успішне виконання
                 if (json.success) {    
-                    ajaxConf.thisController.cleanUpProductList('root');
                     //перезавантажуємо Store...
                     Ext.getCmp('nb-product-tree').getStore().load();                                       
                     Ext.getCmp('nb-war-cat').getStore().load();                     
@@ -163,14 +153,12 @@ Ext.define('Notebook.controller.Product', {
         var ajaxConf={
             method: 'GET'
         };
-        ajaxConf.thisController=this;
         ajaxConf.url='notebook/remove_category';
         ajaxConf.params={};
         ajaxConf.params.id=this.catDelWin.selCat.get('id');
         ajaxConf.success=function (resp,opts) {
             var json=Ext.decode(resp.responseText);
             if (json.success) {    
-                ajaxConf.thisController.cleanUpProductList('root');
                 Ext.getCmp('nb-product-tree').getStore().load(); 
                 Ext.getCmp('nb-war-cat').getStore().load();
                 Ext.Msg.alert('Повідомлення',json.message);
@@ -193,50 +181,8 @@ Ext.define('Notebook.controller.Product', {
         var warId=record.get('id');
         //перевіряємо чи клікнули по замовленню, а не по категорії
         if (warId.substr(0,1)=='p') {
-            Ext.Ajax.request({
-                method: 'GET',
-                url: 'notebook/fill_order',
-                params: {
-                    id: warId
-                },
-                success: function (resp,opts) {
-//                    address: "Чоп Зализничников 2/34"
-//                    category: "С/М"
-//                    certificate: ""
-//                    comments: "19.07.2005"
-//                    complaints: "Заклинило барабан"
-//                    customer: "Кульчинский Олег Иванович"
-//                    date_end: "2005-10-05"
-//                    date_start: "2005-10-03"
-//                    details: ""
-//                    gdate: ""
-//                    guarantee: ""
-//                    hphone: "711451"
-//                    id: "4"
-//                    master: "Алекс"
-//                    notes: "!!! В барабане застряло белье, не могут вынуть Леше отмечено"
-//                    notified: ""
-//                    penddate: ""
-//                    performance: "Расклинивание по гарантии"
-//                    phone: "80506611910"
-//                    posted: ""
-//                    product: "С/М INDESIT"
-//                    pstartdate: ""
-//                    sum: "38"
-//                    type: "0"
-//                    wphone: ""                    
-                    var json=Ext.decode(resp.responseText);
-                    if (json.success) {
-                        //
-                    }
-                    else {
-                        Ext.Msg.alert('Повідомлення',json.message);
-                    }
-                },
-                failure: function () {
-                    Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
-                }
-            });
+            //викликаємо метод контроллера, що заповнює форму
+            this.getController('Warranty').fillForm(warId);
         }
     }
 });
