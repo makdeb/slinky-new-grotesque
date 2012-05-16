@@ -2,11 +2,13 @@ Ext.define('Notebook.controller.Warranty',{
     extend: 'Ext.app.Controller',
     models: [
         'Category',
-        'Master'
+        'Master',
+        'Guarantee'
     ],
     stores: [
         'Category',
-        'Master'
+        'Master',
+        'Guarantee'
     ],    
     views: [
         'warranty.Form'
@@ -70,9 +72,9 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
-                    //Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
-                    //Ext.getCmp('nb-war-guar-cer').setValue(json.order.certificate);
-                    //Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);
+                    Ext.getCmp('nb-war-guar').setValue(json.order.idGuarantee);
+                    Ext.getCmp('nb-war-guar-cer').setValue(json.order.certificate);
+                    Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);
                     Ext.getCmp('nb-war-post').setValue(json.order.posted);
                     Ext.getCmp('nb-war-psdate').setValue(Ext.Date.parse(json.order.pstartdate,'Y-m-d'));
                     Ext.getCmp('nb-war-pedate').setValue(Ext.Date.parse(json.order.penddate,'Y-m-d'));
