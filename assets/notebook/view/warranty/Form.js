@@ -218,10 +218,6 @@ Ext.define('Notebook.view.warranty.Form',{
                     type: 'hbox',
                     align: 'stretchmax'
                 },
-                margin: '0 5 0 0',
-//                defaults: {
-//                    margin: '10 5 0 0'
-//                },
                 items: [
                     {
                         xtype: 'fieldset',
@@ -233,7 +229,6 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
-                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -252,7 +247,6 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
-                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -271,7 +265,6 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
-                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -290,7 +283,6 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
-                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -309,7 +301,6 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
-                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -333,11 +324,11 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
-                                margin: '0 0 5 0',
+                                margin: '5 0 5 0',
                                 items: [
                                     {
                                         xtype: 'textfield',
-                                        margin: '0 0 0 17',
+                                        margin: '0 0 0 12',
                                         fieldLabel: 'Мобільний телефон',
                                         labelWidth: 150,
                                         width: 415                                           
@@ -384,7 +375,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                         xtype: 'radiogroup',
                                         id: 'nb-war-type',
                                         columns: 1,
-                                        margin: '13 0 0 0',
+                                        margin: '15 0 0 0',
                                         items: [
                                             {
                                                 boxLabel: 'Платний ремонт',
@@ -415,9 +406,9 @@ Ext.define('Notebook.view.warranty.Form',{
                 layout: {
                     type: 'hbox'
                 },
-                margin: '5 0 0 0',
+                margin: '0 0 0 0',
                 defaults: {
-                    margin: '0 0 0 0',
+                    //margin: '0 0 0 0',
                     labelWidth: 70
                 },
                 items: [
