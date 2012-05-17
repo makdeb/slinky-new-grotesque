@@ -458,7 +458,7 @@ class Notebook extends CI_Controller {
 		
 		// в случае отсутствия id заказа - ошибка
 		if (!$id) {
-			echo '{"success":false,"message":"Помилка збереження данних"}'; 
+			echo '{"success":false,"message":"Помилка збереження данних1"}'; 
 			return;
 		}
 		
@@ -521,7 +521,7 @@ class Notebook extends CI_Controller {
 		$query = $this->db->update('orders', $data);
 		
 			if ($query===FALSE) {
-					echo '{"success":false,"message":"Помилка збереження данних"}'; 
+					echo '{"success":false,"message":"Помилка збереження данних2"}'; 
 					return;
 				}
 		
@@ -541,7 +541,7 @@ class Notebook extends CI_Controller {
 		$query = $this->db->update('customers', $data);
 		
 			if ($query===FALSE) {
-						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+						echo '{"success":false,"message":"Помилка збереження данних3"}'; 
 						return;
 					}
 					
