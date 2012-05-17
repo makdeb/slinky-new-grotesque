@@ -31,7 +31,8 @@ Ext.define('Notebook.view.warranty.Form',{
                         id: 'nb-war-prod',
                         fieldLabel: 'Виріб',
                         width: 220,
-                        vtype: 'cyralphanum'
+                        vtype: 'cyralphanumplus',
+                        allowBlank: false
                     },
                     {
                         xtype: 'combobox',
@@ -86,13 +87,16 @@ Ext.define('Notebook.view.warranty.Form',{
                                 xtype: 'textfield',
                                 id:'nb-war-cust',
                                 fieldLabel: 'Власник',
-                                width: 435                                          
+                                width: 435,
+                                vtype: 'cyralphanumplus',
+                                allowBlank: false
                             },
                             {
                                 xtype: 'textfield',
                                 id:'nb-war-adr',
                                 fieldLabel: 'Адреса',
-                                width: 435                                           
+                                width: 435,
+                                vtype: 'cyralphanumplus'
                             },
                             {
                                 xtype: 'textfield',
@@ -137,7 +141,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 xtype: 'textfield',
                                 id: 'nd-war-compl',
                                 fieldLabel: 'Скарги',
-                                width: 435                                 
+                                width: 435
                             },
                             {
                                 xtype: 'textarea',
@@ -218,7 +222,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     },
                 ]
             },
-//Комплектність                        
+//Комплектність (можливо треба видалити)                       
             {
                 xtype: 'container',
                 layout: {
@@ -439,14 +443,16 @@ Ext.define('Notebook.view.warranty.Form',{
                         id: 'nb-war-det',
                         fieldLabel: 'Запчастини',
                         margin: '0 0 0 5',
-                        width: 237                                           
+                        width: 237,
+                        vtype: 'decimal'
                     }, 
                     {
                         xtype: 'textfield',
                         id: 'nb-war-work',
                         fieldLabel: 'Робота',
                         margin: '0 0 0 5',
-                        width: 237                                           
+                        width: 237,
+                        vtype: 'decimal'
                     },                     
                     {
                         xtype: 'datefield',
@@ -480,6 +486,12 @@ Ext.define('Notebook.view.warranty.Form',{
                         text: 'Видача',
                         icon: icons_path+'ord-out.png'
                     },
+                    {
+                        xtype: 'button',
+                        id: 'nb-save-warranty',
+                        text: 'Зберегти',
+                        icon: icons_path+'ord-out.png'
+                    },                    
                     {
                         xtype: 'button',
                         text: 'Пошук'
