@@ -452,13 +452,14 @@ class Notebook extends CI_Controller {
 	
 	
 	// функция update_order(), реализующая изменение данных заказа
-	public function update_order($id=0) {
-		$id = $this->input->get('id'); // принимаем параметр заказа из url
-		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
+	
+	public function update_order() {
+	
+		$id = $this->input->post('id'); // принимаем параметр заказа
 		
 		// в случае отсутствия id заказа - ошибка
 		if (!$id) {
-			echo '{"success":false,"message":"Помилка збереження данних1"}'; 
+			echo '{"success":false,"message":"Помилка збереження данних"}'; 
 			return;
 		}
 		
@@ -486,28 +487,28 @@ class Notebook extends CI_Controller {
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
-			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('gdate'));
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('gdate'));
 			$data['gdate']  = $date->format('Y-m-d');
 		}
 		
 		if (!$this->input->post('pstartdate')) {
 			$data['pstartdate'] = NULL;
 		} else {
-			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('pstartdate'));
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('pstartdate'));
 			$data['pstartdate']  = $date->format('Y-m-d');
 		}
 		
 		if (!$this->input->post('penddate')) {
 			$data['penddate'] = NULL;
 		} else {
-			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('penddate'));
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('penddate'));
 			$data['penddate']  = $date->format('Y-m-d');
 		}
 		
 		if (!$this->input->post('notified')) {
 			$data['notified'] = NULL;
 		} else {
-			$date =	DateTime::createFromFormat('Y-m-d',$this->input->post('notified'));
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('notified'));
 			$data['notified']  = $date->format('Y-m-d');
 		}
 	
@@ -521,7 +522,7 @@ class Notebook extends CI_Controller {
 		$query = $this->db->update('orders', $data);
 		
 			if ($query===FALSE) {
-					echo '{"success":false,"message":"Помилка збереження данних2"}'; 
+					echo '{"success":false,"message":"Помилка збереження данних"}'; 
 					return;
 				}
 		
@@ -541,7 +542,7 @@ class Notebook extends CI_Controller {
 		$query = $this->db->update('customers', $data);
 		
 			if ($query===FALSE) {
-						echo '{"success":false,"message":"Помилка збереження данних3"}'; 
+						echo '{"success":false,"message":"Помилка збереження данних"}'; 
 						return;
 					}
 					
