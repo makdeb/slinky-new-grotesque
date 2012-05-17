@@ -26,12 +26,26 @@ Ext.application({
             cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
         });
         Ext.apply(Ext.form.field.VTypes, {
+            cyralphanumplus:  function(val) {
+                return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]{1,}$/.test(val);
+            },
+            cyralphanumText: 'Допустимі символи кирилиці, латині, цифри, знаки пунктуації та операцій',
+            cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
+        });        
+        Ext.apply(Ext.form.field.VTypes, {
             phone:  function(val) {
                 return /^[\d\(\)\-]{1,}$/.test(val);
             },
             phoneText: 'Допустимі символи цифри, знаки (,) та -',
             phoneMask: /[\d\(\)\-]/
         });        
+        Ext.apply(Ext.form.field.VTypes, {
+            decimal:  function(val) {
+                return /^(\d+)(((.|,)\d+)+)?$/.test(val);
+            },
+            decimalText: 'Допустимі цілі та дробові числа',
+            decimalMask: /(\d+)(((.|,)\d+)+)?/
+        });         
     }
 });
 
