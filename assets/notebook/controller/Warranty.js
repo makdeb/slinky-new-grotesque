@@ -191,7 +191,7 @@ Ext.define('Notebook.controller.Warranty',{
         ajaxConf.url='notebook/update_order';
         ajaxConf.params={};
         ajaxConf.params.id=Ext.getCmp('nb-war-id').getValue();
-        ajaxConf.params.type=warType.getValue()['rb'];
+        ajaxConf.params.type=warType.getValue()['nb-war-type-rb'];
         ajaxConf.params.product=warProd.getValue();
         ajaxConf.params.categoryID=warCat.getValue();
         ajaxConf.params.complaints=warCompl.getValue();
@@ -208,13 +208,14 @@ Ext.define('Notebook.controller.Warranty',{
         ajaxConf.params.phone=warPhone.getValue();
         ajaxConf.params.wphone=warWPhone.getValue();
         ajaxConf.params.hphone=warHPhone.getValue();
-        ajaxConf.params.gdate=warWDate.getValue();
-        ajaxConf.params.pstartdate=warPSDate.getValue();
-        ajaxConf.params.penddate=warPEDate.getValue();
-        ajaxConf.params.notified=warNotifDate.getValue();       
+        ajaxConf.params.gdate=Ext.Date.format(warWDate.getValue(),'d.m.Y');
+        ajaxConf.params.pstartdate=Ext.Date.format(warPSDate.getValue(),'d.m.Y');
+        ajaxConf.params.penddate=Ext.Date.format(warPEDate.getValue(),'d.m.Y');
+        ajaxConf.params.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');       
         ajaxConf.success=function (resp,opts) {
             var json=Ext.decode(resp.responseText);
             if (json.success) {
+                Ext.getCmp('nb-product-tree').getStore().load();
                 Ext.Msg.alert('Повідомлення',json.message);
             }
             else {
