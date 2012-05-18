@@ -468,7 +468,13 @@ class Notebook extends CI_Controller {
 			
 		// заполняем массив $data данными из формы
 		$data['type']  = $this->input->post('type');
-		$data['product']  = $this->input->post('product');
+		
+		// проверка заполнения поля "Виріб"
+		if (!($data['product']  = $this->input->post('product'))) {
+			echo '{"success":false,"message":"Поле "Виріб:" повинно бути заповнене"}'; 
+			return;
+		};
+		
 		$data['categoryID']  = $this->input->post('categoryID');
 		$data['complaints']  = $this->input->post('complaints');
 		$data['performance']  = $this->input->post('performance');
@@ -550,6 +556,116 @@ class Notebook extends CI_Controller {
 		echo '{"success":true,"message":"Замовлення було успішно змінено"}';	
 		
 	}	
+	
+	// функция create_order(), реализующая создание нового заказа
+	public function create_order() {
+	
+		$data = array();
+		$result = array();	
+		
+		// установка временной зоны
+		date_default_timezone_set('Europe/Kiev');
+		
+		// заполняем массив $data данными из формы.
+		// * первоначально записываем данные нового заказчика
+		$data['name']  = $this->input->post('name');
+		$data['address']  = $this->input->post('address');
+		$data['phone']  = $this->input->post('phone');
+		$data['wphone']  = $this->input->post('wphone');
+		$data['hphone']  = $this->input->post('hphone');
+		
+		$query = $this->db->insert('customers',$data);
+
+		if ($query===FALSE) {
+						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+						return;
+					}
+		
+		// очистка массива $data и заполнение оного остальными данными заказа
+		unset($data);
+		$data = array();
+		
+		$data['customerID'] = $this->db->insert_id(); // запись номера заказчика
+		$data['type']  = $this->input->post('type');
+		$data['date_start'] = date("Y-m-d");  // сегодняшняя дата
+		
+		// верификация поля product	
+		if (!($data['product']  = $this->input->post('product'))) {
+			echo '{"success":false,"message":"Поле "Виріб:" повинно бути заповнене"}'; 
+			return;
+		};
+		// проверка номера категории,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['categoryID']  = $this->input->post('categoryID'))) {
+			$data['categoryID'] = 2;
+		};
+
+		$data['complaints']  = $this->input->post('complaints');
+		$data['performance']  = $this->input->post('performance');
+		$data['notes']  = $this->input->post('notes');
+		$data['sum']  = $this->input->post('sum');
+		$data['details']  = $this->input->post('details');
+		
+		// проверка номера мастера,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['masterID']  = $this->input->post('masterID'))) {
+			$data['masterID'] = 5;
+		};
+		
+		// проверка номера гарантии,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['guaranteeID']  = $this->input->post('guaranteeID'))) {
+			$data['guaranteeID'] = 2;
+		};
+		
+		$data['certificate']  = $this->input->post('certificate');
+		$data['comments']  = $this->input->post('comments');
+		$data['posted']  = $this->input->post('posted');
+
+		// для полей типа date производим проверку наличия значения в поле.
+		// При отсутствии такого значения записываем NULL,
+		// при наличии - преобразованное из строки в тип date значение
+		if (!$this->input->post('gdate')) {
+			$data['gdate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('gdate'));
+			$data['gdate']  = $date->format('Y-m-d');
+		}
+		
+		if (!$this->input->post('pstartdate')) {
+			$data['pstartdate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('pstartdate'));
+			$data['pstartdate']  = $date->format('Y-m-d');
+		}
+		
+		if (!$this->input->post('penddate')) {
+			$data['penddate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('penddate'));
+			$data['penddate']  = $date->format('Y-m-d');
+		}
+		
+		if (!$this->input->post('notified')) {
+			$data['notified'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('notified'));
+			$data['notified']  = $date->format('Y-m-d');
+		}
+		
+		$query = $this->db->insert('orders',$data);
+		
+		if ($query===FALSE) {
+						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+						return;
+					}
+
+		$result['ID'] = $this->db->insert_id();
+		
+		// вывод результирующей строки
+		echo '{"success":true,"id":"' .$result['ID'] .'","message":"Замовлення було успішно збережено"}'; 
+		
+	}
 	
 	
 }
