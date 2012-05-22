@@ -476,6 +476,11 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'button',
+                        id: 'nb-new-warranty',
+                        text: 'Новий'
+                    },                    
+                    {
+                        xtype: 'button',
                         id: 'nb-rec-warranty',
                         text: 'Прийом',
                         icon: icons_path+'ord-rec.png'
