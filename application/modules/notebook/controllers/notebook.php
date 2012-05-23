@@ -661,9 +661,10 @@ class Notebook extends CI_Controller {
 					}
 
 		$result['ID'] = $this->db->insert_id();
+		$result['date'] = $data['date_start'];
 		
 		// вывод результирующей строки
-		echo '{"success":true,"id":"' .$result['ID'] .'","message":"Замовлення було успішно збережено"}'; 
+		echo '{"success":true,"id":"' .$result['ID'] .'","date":"' .$result['date'] .'","message":"Замовлення було успішно збережено"}'; 
 		
 	}
 	
