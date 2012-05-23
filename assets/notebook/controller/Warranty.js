@@ -42,6 +42,7 @@ Ext.define('Notebook.controller.Warranty',{
             success: function (resp,opts) {                    
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
+                    //при успішному виконанні запиту заповнюємо поля форми
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-prod').setValue(json.order.product);
                     Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
@@ -110,21 +111,106 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-wdate').setValue('');  
     },
     recWarranty: function() {
+        //прийом можливий лише, коли стоїть відмітка про те, що замовлення нове
         if (this.isNew) {
+            //отримуємо значення полів форми
+            var warProd=Ext.getCmp('nb-war-prod');
+            var warCat=Ext.getCmp('nb-war-cat');
+            var warStartDate=Ext.getCmp('nb-war-date-start');
+            var warEndDate=Ext.getCmp('nb-war-date-end');
+            var warCust=Ext.getCmp('nb-war-cust');
+            var warAdr=Ext.getCmp('nb-war-adr');
+            var warHPhone=Ext.getCmp('nb-war-hphone');
+            var warWPhone=Ext.getCmp('nb-war-wphone');
+            var warPhone=Ext.getCmp('nb-war-phone');
+            var warNotifDate=Ext.getCmp('nb-war-date-notif');
+            var warCompl=Ext.getCmp('nd-war-compl');
+            var warPref=Ext.getCmp('nb-war-pref');
+            var warNotes=Ext.getCmp('nb-war-notes');
+            var warGuar=Ext.getCmp('nb-war-guar');
+            var warGuarCer=Ext.getCmp('nb-war-guar-cer');
+            var warGuarComm=Ext.getCmp('nb-war-guar-comm');
+            var warPost=Ext.getCmp('nb-war-post');
+            var warPSDate=Ext.getCmp('nb-war-psdate');
+            var warPEDate=Ext.getCmp('nb-war-pedate');
+            var warType=Ext.getCmp('nb-war-type');
+            var warMas=Ext.getCmp('nb-war-mas');                    
+            var warDet=Ext.getCmp('nb-war-det'); 
+            var warWork=Ext.getCmp('nb-war-work'); 
+            var warWDate=Ext.getCmp('nb-war-wdate');
+            if (!warProd.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Виріб"');
+                return;
+            }
+            if (!warCust.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Власник"');
+                return;
+            }  
+            if (!warAdr.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Адреса"');
+                return;
+            }   
+            if (!warHPhone.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Телефон"');
+                return;
+            }   
+            if (!warWPhone.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Телефон"');
+                return;
+            } 
+            if (!warPhone.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Телефон"');
+                return;
+            }             
+            if (!warDet.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Деталі"');
+                return;
+            }   
+            if (!warWork.isValid()) {
+                Ext.Msg.alert('Повідомлення','Невірно заповнене поле "Робота"');
+                return;
+            }             
             var ajaxConf={};
             ajaxConf.method='POST';
-            ajaxConf.url='notebook/create_order';
+            ajaxConf.url='notebook/create_order';          
+            ajaxConf.params={};
+            ajaxConf.params.id=Ext.getCmp('nb-war-id').getValue();
+            ajaxConf.params.type=warType.getValue()['nb-war-type-rb'];
+            ajaxConf.params.product=warProd.getValue();
+            ajaxConf.params.categoryID=warCat.getValue();
+            ajaxConf.params.complaints=warCompl.getValue();
+            ajaxConf.params.performance=warPref.getValue();
+            ajaxConf.params.sum=warWork.getValue();
+            ajaxConf.params.details=warDet.getValue();
+            ajaxConf.params.masterID=warMas.getValue();
+            ajaxConf.params.guaranteeID=warGuar.getValue();
+            ajaxConf.params.certificate=warGuarCer.getValue();
+            ajaxConf.params.comments=warGuarComm.getValue();
+            ajaxConf.params.posted=warPost.getValue();
+            ajaxConf.params.name=warCust.getValue();
+            ajaxConf.params.address=warAdr.getValue();
+            ajaxConf.params.phone=warPhone.getValue();
+            ajaxConf.params.wphone=warWPhone.getValue();
+            ajaxConf.params.hphone=warHPhone.getValue();
+            ajaxConf.params.gdate=Ext.Date.format(warWDate.getValue(),'d.m.Y');
+            ajaxConf.params.pstartdate=Ext.Date.format(warPSDate.getValue(),'d.m.Y');
+            ajaxConf.params.penddate=Ext.Date.format(warPEDate.getValue(),'d.m.Y');
+            ajaxConf.params.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');             
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
-                    //success
+                    //при успішному виконанні запиту встановлюємо id замовлення
+                    Ext.getCmp('nb-war-id').setValue(json.id);
+                    //оновлюємо дерево...
+                    Ext.getCmp('nb-product-tree').getStore().load(); 
+                    Ext.Msg.alert(json.message);  
                 }
                 else {
-                    //failure
+                    Ext.Msg.alert('Повідомлення',json.message);  
                 }
             }
             ajaxConf.failure=function () {
-                //
+                Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
             }        
             Ext.Ajax.request(ajaxConf);
         }
@@ -133,7 +219,9 @@ Ext.define('Notebook.controller.Warranty',{
         }
     },
     saveWarranty: function () {
+        //збереження можливе лише коли стоїть відмітка про те, що замовлення не нове
         if (!this.isNew) {
+            //отримуємо значення полів форми
             var warProd=Ext.getCmp('nb-war-prod');
             var warCat=Ext.getCmp('nb-war-cat');
             var warStartDate=Ext.getCmp('nb-war-date-start');
@@ -219,6 +307,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
+                    //оновлюємо дерево...
                     Ext.getCmp('nb-product-tree').getStore().load();
                     Ext.Msg.alert('Повідомлення',json.message);
                 }
