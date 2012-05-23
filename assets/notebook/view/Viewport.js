@@ -5,6 +5,7 @@ Ext.define('Notebook.view.Viewport',{
         align: 'stretch'
     },
     requires: [
+        'Notebook.view.Menu',
         'Notebook.view.warranty.Form',
         'Notebook.view.product.List'        
     ],
@@ -29,7 +30,8 @@ Ext.define('Notebook.view.Viewport',{
                     {
                         xtype: 'container',
                         height: 30,							
-                        html: 'menu'
+                        html: 'menu' 
+//                        xtype: 'main-menu'
                     }						
                 ]
             },

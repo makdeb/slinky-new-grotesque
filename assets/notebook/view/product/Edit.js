@@ -6,7 +6,7 @@ Ext.define('Notebook.view.product.Edit',{
     closable: false,     
     modal: true,
     width: 250,
-    height: 125,    
+    height: 135,    
     items: [
         {
             xtype: 'container',
@@ -34,6 +34,12 @@ Ext.define('Notebook.view.product.Edit',{
                     fieldLabel: 'Назва',
                     allowBlank: false,
                     vtype: 'cyralphanum'
+                },
+                {
+                    xtype: 'checkbox',
+                    id: 'nb-cat-edt-win-no-parent',
+                    boxLabel: 'додати в корінь',
+                    margin: '0 0 0 47'
                 }
             ]
         }
