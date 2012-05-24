@@ -50,9 +50,16 @@ Ext.define('Notebook.controller.Product', {
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
         if (button.id=='nb-add-cat') {
+            if (this.catEdtWin.selCat!=undefined) {
+                if (this.catEdtWin.selCat.get('id').substr(0,1)!='c') {
+                    Ext.Msg.alert('Повідомлення','Виберіть категорію');
+                    this.catEdtWin.close();
+                    return;                    
+                }
+            }
             this.catEdtWin.catAdd=true;            
             catEdtWinCont.getComponent('nb-cat-edt-win-message')
-                            .update('Додати нову підкатегорію в категорію');
+                            .update('Додати нову підкатегорію в категорію');         
         }
         else {
             //якщо вибраний вузел категорія, то встановлюємо значення відповідного поля у вюшці

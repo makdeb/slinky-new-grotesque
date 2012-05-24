@@ -14,24 +14,24 @@ Ext.define('Notebook.view.Viewport',{
             {
                 xtype: 'container',
                 region: 'north',
-                height: 100,
+                //height: 50,
                 style: {
-                    borderBottom: '1px solid #0B486B'
+                    //borderBottom: '1px solid #0B486B'
                 },					
                 items: [
+//                    {
+//                        xtype: 'container',
+//                        height: 70,
+//                        style: {
+//                            //borderBottom: '1px solid #0B486B'
+//                        },
+//                        html: 'logo'
+//                    },
                     {
-                        xtype: 'container',
-                        height: 70,
-                        style: {
-                            borderBottom: '1px solid #0B486B'
-                        },
-                        html: 'logo'
-                    },
-                    {
-                        xtype: 'container',
-                        height: 30,							
-                        html: 'menu' 
-//                        xtype: 'main-menu'
+//                        xtype: 'container',
+//                        height: 30,							
+//                        html: 'menu' 
+                        xtype: 'main-menu'
                     }						
                 ]
             },
@@ -53,9 +53,14 @@ Ext.define('Notebook.view.Viewport',{
                         region: 'south',
                         height: 25,
                         style: {
-                            borderTop: '1px solid #0B486B'
+                            //borderTop: '1px solid #0B486B'
                         },
-                        html: 'footer'
+                        //html: 'footer'
+                        items: [
+                            {
+                                xtype: 'panel'
+                            }
+                        ]
                     }						
                 ]
             }

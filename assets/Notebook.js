@@ -11,6 +11,7 @@ Ext.application({
     appFolder: '/slinky-new-grotesque/assets/notebook',
     autoCreateViewport: true,  
     controllers: [
+        'Menu',
         'Product', 
         'Warranty'               
     ],
