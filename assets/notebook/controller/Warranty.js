@@ -180,6 +180,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxConf.params.categoryID=warCat.getValue();
             ajaxConf.params.complaints=warCompl.getValue();
             ajaxConf.params.performance=warPref.getValue();
+            ajaxConf.params.notes=warNotes.getValue();
             ajaxConf.params.sum=warWork.getValue();
             ajaxConf.params.details=warDet.getValue();
             ajaxConf.params.masterID=warMas.getValue();
@@ -203,7 +204,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-id').setValue(json.id);
                     //оновлюємо дерево...
                     Ext.getCmp('nb-product-tree').getStore().load(); 
-                    Ext.Msg.alert(json.message);  
+                    Ext.Msg.alert('Повідомлення',json.message);  
                 }
                 else {
                     Ext.Msg.alert('Повідомлення',json.message);  
@@ -288,6 +289,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxConf.params.categoryID=warCat.getValue();
             ajaxConf.params.complaints=warCompl.getValue();
             ajaxConf.params.performance=warPref.getValue();
+            ajaxConf.params.notes=warNotes.getValue();
             ajaxConf.params.sum=warWork.getValue();
             ajaxConf.params.details=warDet.getValue();
             ajaxConf.params.masterID=warMas.getValue();
