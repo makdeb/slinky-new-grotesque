@@ -242,6 +242,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -260,6 +261,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -278,6 +280,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -296,6 +299,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -314,6 +318,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'hbox'
                                 },
+                                margin: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'checkbox',
@@ -391,7 +396,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                         xtype: 'radiogroup',
                                         id: 'nb-war-type',
                                         columns: 1,
-                                        margin: '15 0 0 0',
+                                        margin: '13 0 0 0',
                                         items: [
                                             {
                                                 boxLabel: 'Платний ремонт',
@@ -477,7 +482,8 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'button',
                         id: 'nb-new-warranty',
-                        text: 'Новий'
+                        text: 'Новий',
+                        icon: icons_path+'ord-new.png'
                     },                    
                     {
                         xtype: 'button',
@@ -494,7 +500,7 @@ Ext.define('Notebook.view.warranty.Form',{
                         xtype: 'button',
                         id: 'nb-save-warranty',
                         text: 'Зберегти',
-                        icon: icons_path+'ord-out.png'
+                        icon: icons_path+'ord-save.png'
                     },                    
                     {
                         xtype: 'button',

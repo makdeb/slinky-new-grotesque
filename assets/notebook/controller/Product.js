@@ -45,11 +45,14 @@ Ext.define('Notebook.controller.Product', {
         //отримуємо nb-cat-win-container крнтейнер
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
+        alert(Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0]);
         this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        alert(this.catEdtWin.selCat);
         //в залежності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
         if (button.id=='nb-add-cat') {
+            //Якщо вибрано запис, але цей запис не категорія, то просимо вибрати категорію
             if (this.catEdtWin.selCat!=undefined) {
                 if (this.catEdtWin.selCat.get('id').substr(0,1)!='c') {
                     Ext.Msg.alert('Повідомлення','Виберіть категорію');
@@ -141,11 +144,11 @@ Ext.define('Notebook.controller.Product', {
         this.catEdtWin.close();
     },
     delCat: function () {
+        this.catDelWin=this.getView('product.Delete').create();
         //отримуємо вибраний вузол
         var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
         //якшо вибраний вузол - категорія, то відображаємо повідомлення про видалення
-        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {        
-            this.catDelWin=this.getView('product.Delete').create();
+        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {                    
             this.catDelWin.selCat=selCat;
             this.catDelWin.getComponent('nb-cat-del-win-container')
                                 .getComponent('nb-cat-del-win-message')
@@ -170,6 +173,8 @@ Ext.define('Notebook.controller.Product', {
             if (json.success) {    
                 Ext.getCmp('nb-product-tree').getStore().load(); 
                 Ext.getCmp('nb-war-cat').getStore().load();
+                //відміняємо вибір категорії
+                Ext.getCmp('nb-product-tree').getSelectionModel().deselectAll(false);
                 Ext.Msg.alert('Повідомлення',json.message);
             }
             else {
