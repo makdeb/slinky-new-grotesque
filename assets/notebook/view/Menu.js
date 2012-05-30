@@ -5,6 +5,7 @@ Ext.define('Notebook.view.Menu',{
         {
             xtype: 'button',
             text: 'Категории',
+            icon: icons_path+'cat.png',  
             menu: {
                 items: [
                     {
@@ -20,7 +21,7 @@ Ext.define('Notebook.view.Menu',{
                     {
                         text: 'Удалить категорию',
                         id: 'nb-del-cat',
-                        icon: icons_path+'cat-delete.png'
+                        icon: icons_path+'cat-del.png'
                     }                    
                 ]
             }
@@ -28,13 +29,16 @@ Ext.define('Notebook.view.Menu',{
         {
             xtype: 'button',
             text: 'Справочники',
+            icon: icons_path+'dir.png', 
             menu: {
                 items: [
                     {
-                        text: 'Мастера'
+                        text: 'Мастера',
+                        icon: icons_path+'dir-mas.png'
                     },
                     {
-                        text: 'Гарантии'
+                        text: 'Гарантии',
+                        icon: icons_path+'dir-guar.png'
                     }
                 ]
             }            
