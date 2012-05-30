@@ -1,8 +1,8 @@
 Ext.define('Notebook.view.Viewport',{
     extend: 'Ext.container.Viewport',
     layout: {
-        type:'border',
-        align: 'stretch'
+        type:'fit'
+        //align: 'stretch'
     },
     requires: [
         'Notebook.view.Menu',
@@ -12,34 +12,13 @@ Ext.define('Notebook.view.Viewport',{
     initComponent: function () {
         this.items=[
             {
-                xtype: 'container',
-                region: 'north',
-                //height: 50,
-                style: {
-                    //borderBottom: '1px solid #0B486B'
-                },					
-                items: [
-//                    {
-//                        xtype: 'container',
-//                        height: 70,
-//                        style: {
-//                            //borderBottom: '1px solid #0B486B'
-//                        },
-//                        html: 'logo'
-//                    },
-                    {
-//                        xtype: 'container',
-//                        height: 30,							
-//                        html: 'menu' 
-                        xtype: 'main-menu'
-                    }						
-                ]
-            },
-            {
-                xtype: 'container',
-                region: 'center',					
+                xtype: 'panel',					
+                tbar: {
+                    xtype:'main-menu'
+                },
                 layout: {
-                    type: 'border'
+                    type: 'hbox',
+                    align:'stretch'
                 },
                 items: [
                     {
@@ -47,23 +26,10 @@ Ext.define('Notebook.view.Viewport',{
                     },
                     {
                         xtype: 'warranty-form'
-                    },
-                    {
-                        xtype: 'container',                    
-                        region: 'south',
-                        height: 25,
-                        style: {
-                            //borderTop: '1px solid #0B486B'
-                        },
-                        //html: 'footer'
-                        items: [
-                            {
-                                xtype: 'panel'
-                            }
-                        ]
-                    }						
+                    }					
                 ]
             }
+
         ];
         this.callParent();
     }

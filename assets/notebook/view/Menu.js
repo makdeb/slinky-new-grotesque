@@ -1,7 +1,7 @@
 Ext.define('Notebook.view.Menu',{
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.main-menu',
-    tbar: [
+    items: [
         {
             xtype: 'button',
             text: 'Категории',
