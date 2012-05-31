@@ -2,7 +2,6 @@ Ext.define('Notebook.view.Viewport',{
     extend: 'Ext.container.Viewport',
     layout: {
         type:'fit'
-        //align: 'stretch'
     },
     requires: [
         'Notebook.view.Menu',
