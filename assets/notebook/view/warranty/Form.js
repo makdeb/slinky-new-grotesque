@@ -68,7 +68,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 xtype: 'textfield',
                                 id: 'nb-war-prod',
                                 fieldLabel: 'Изделие',
-                                labelWidth: 50,
+                                labelWidth: 80,
                                 width: 535,
                                 vtype: 'cyralphanumplus',
                                 allowBlank: false
@@ -78,9 +78,11 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'column'
                                 },
+                                padding: '0 0 5 0',
                                 items: [
                                     {
-                                        xtype: 'textfield',
+                                        xtype: 'textfield',                                        
+                                        id: 'nb-war-ser-num',
                                         fieldLabel: 'Cерийный №',
                                         labelWidth: 80,
                                         width: 265,
@@ -89,6 +91,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                     },
                                     {
                                         xtype: 'textfield',
+                                        id: 'nb-war-fac-num',
                                         fieldLabel: 'Заводской №',
                                         labelWidth: 80,
                                         width: 265,
@@ -96,7 +99,31 @@ Ext.define('Notebook.view.warranty.Form',{
                                         allowBlank: false                                        
                                     }                                    
                                 ]
-                            }
+                            },
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Гарантия',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus',
+                                        allowBlank: false                                        
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Категория',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus',
+                                        allowBlank: false                                        
+                                    }                                    
+                                ]
+                            }                            
                         ]
                     }
                 ]
