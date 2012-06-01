@@ -5,6 +5,7 @@ Ext.define('Notebook.view.warranty.Form',{
     bodyStyle: {
         background: '#DFE9F6'
     },
+    autoScroll: true,
     initComponent: function () {
         this.items=[
             {
@@ -74,6 +75,14 @@ Ext.define('Notebook.view.warranty.Form',{
                                 allowBlank: false
                             },
                             {
+                                xtype: 'textfield',
+                                fieldLabel: 'Модель',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus',
+                                allowBlank: false
+                            },                            
+                            {
                                 xtype: 'container',
                                 layout: {
                                     type: 'column'
@@ -105,29 +114,249 @@ Ext.define('Notebook.view.warranty.Form',{
                                 layout: {
                                     type: 'column'
                                 },
+                                padding: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'textfield',
                                         fieldLabel: 'Гарантия',
                                         labelWidth: 80,
                                         width: 265,
-                                        vtype: 'cyralphanumplus',
-                                        allowBlank: false                                        
+                                        vtype: 'cyralphanumplus'                                       
                                     },
                                     {
                                         xtype: 'combobox',
                                         fieldLabel: 'Категория',
                                         labelWidth: 80,
                                         width: 265,
-                                        vtype: 'cyralphanumplus',
                                         allowBlank: false                                        
                                     }                                    
+                                ]
+                            }     
+                        ]
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                margin: '0 0 0 5',
+                defaults: {
+                    margin: '0 5 0 0',
+                    labelWidth: 30
+                },
+                items: [
+                    {
+                        xtype: 'fieldset',
+                        title: 'Владелец',
+                        width: 550,
+                        padding: '0 5 0 5',                    
+                        items: [
+                            {   
+                                xtype: 'textfield',
+                                fieldLabel: 'ФИО',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus'                                 
+                            },
+                            {   
+                                xtype: 'textfield',
+                                fieldLabel: 'Личная инф.',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus'                                 
+                            },                            
+                            {   
+                                xtype: 'textfield',
+                                fieldLabel: 'Адресс',
+                                labelWidth: 80,
+                                width: 535
+                            },
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Дом. тел.',
+                                        labelWidth: 80,
+                                        width: 175
+                                    }, 
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Раб. тел.',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        padding: '0 0 0 2'
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Моб. тел.',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        padding: '0 0 0 2'
+                                    }                                  
+                                ]
+                            },                            
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {   
+                                        xtype: 'datefield',
+                                        fieldLabel: 'Сообщено',
+                                        labelWidth: 80,
+                                        width: 175,
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Статус',
+                                        labelWidth: 80,
+                                        width: 260,
+                                        padding: '0 2 0 2'
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        text: 'Копировать',
+                                        icon: icons_path+'cat-edit.png'
+                                    }
+                                ]
+                            }                             
+                        ]
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                margin: '0 0 0 5',
+                defaults: {
+                    margin: '0 5 0 0',
+                    labelWidth: 30
+                },
+                items: [
+                    {
+                        xtype: 'fieldset',
+                        title: 'Жалобы',
+                        width: 550,
+                        padding: '0 5 0 5',                    
+                        items: [
+                            {   
+                                xtype: 'textfield',
+                                fieldLabel: 'Жалоба',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus'                                 
+                            },
+                            {   
+                                xtype: 'textarea',
+                                fieldLabel: 'Проделаная работа',
+                                labelWidth: 80,
+                                width: 535,
+                                height: 100                                
+                            }, 
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Заметки',
+                                        labelWidth: 80,
+                                        width: 200
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        icon: icons_path+'cat-edit.png'
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        width: 310
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                margin: '0 0 0 5',
+                defaults: {
+                    margin: '0 5 0 0',
+                    labelWidth: 30
+                },
+                items: [
+                    {
+                        xtype: 'fieldset',
+                        title: 'Владелец',
+                        width: 550,
+                        padding: '0 5 0 5',                    
+                        items: [
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Продавець',
+                                        labelWidth: 80,
+                                        width: 265                                       
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Чек, цена',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus'                                 
+                                    }
+                                ]
+                            },
+                            {   
+                                xtype: 'textarea',
+                                fieldLabel: 'Коментарии',
+                                labelWidth: 80,
+                                width: 535,
+                                height: 100                                
+                            },
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Мастер',
+                                        labelWidth: 80,
+                                        width: 265                                       
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Работа',
+                                        labelWidth: 50,
+                                        width: 240                                 
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        icon: icons_path+'cat-edit.png'
+                                    }
                                 ]
                             }                            
                         ]
                     }
                 ]
-            }
+            }            
         ];
         this.callParent();
     }    
