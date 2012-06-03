@@ -62,7 +62,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'fieldset',
                         title: 'Изделие',
-                        width: 550,
+                        width: 742,
                         padding: '0 5 0 5',                    
                         items: [
                             {
@@ -70,18 +70,10 @@ Ext.define('Notebook.view.warranty.Form',{
                                 id: 'nb-war-prod',
                                 fieldLabel: 'Изделие',
                                 labelWidth: 80,
-                                width: 535,
+                                width: 726,
                                 vtype: 'cyralphanumplus',
                                 allowBlank: false
                             },
-                            {
-                                xtype: 'textfield',
-                                fieldLabel: 'Модель',
-                                labelWidth: 80,
-                                width: 535,
-                                vtype: 'cyralphanumplus',
-                                allowBlank: false
-                            },                            
                             {
                                 xtype: 'container',
                                 layout: {
@@ -90,21 +82,18 @@ Ext.define('Notebook.view.warranty.Form',{
                                 padding: '0 0 5 0',
                                 items: [
                                     {
-                                        xtype: 'textfield',                                        
-                                        id: 'nb-war-ser-num',
-                                        fieldLabel: 'Cерийный №',
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Модель',
                                         labelWidth: 80,
-                                        width: 265,
+                                        width: 240,
                                         vtype: 'cyralphanumplus',
-                                        allowBlank: false                                        
+                                        allowBlank: false
                                     },
                                     {
-                                        xtype: 'textfield',
-                                        id: 'nb-war-fac-num',
-                                        fieldLabel: 'Заводской №',
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Категория',
                                         labelWidth: 80,
-                                        width: 265,
-                                        vtype: 'cyralphanumplus',
+                                        width: 240,
                                         allowBlank: false                                        
                                     }                                    
                                 ]
@@ -115,20 +104,31 @@ Ext.define('Notebook.view.warranty.Form',{
                                     type: 'column'
                                 },
                                 padding: '0 0 5 0',
-                                items: [
+                                items: [                                    
+                                    {
+                                        xtype: 'textfield',                                        
+                                        id: 'nb-war-ser-num',
+                                        fieldLabel: 'Cерийный №',
+                                        labelWidth: 80,
+                                        width: 240,
+                                        vtype: 'cyralphanumplus',
+                                        allowBlank: false                                        
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        id: 'nb-war-fac-num',
+                                        fieldLabel: 'Заводской №',
+                                        labelWidth: 80,
+                                        width: 240,
+                                        vtype: 'cyralphanumplus',
+                                        allowBlank: false                                        
+                                    },
                                     {
                                         xtype: 'textfield',
                                         fieldLabel: 'Гарантия',
                                         labelWidth: 80,
-                                        width: 265,
+                                        width: 240,
                                         vtype: 'cyralphanumplus'                                       
-                                    },
-                                    {
-                                        xtype: 'combobox',
-                                        fieldLabel: 'Категория',
-                                        labelWidth: 80,
-                                        width: 265,
-                                        allowBlank: false                                        
                                     }                                    
                                 ]
                             }     
@@ -147,28 +147,28 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'fieldset',
                         title: 'Владелец',
-                        width: 550,
+                        width: 742,
                         padding: '0 5 0 5',                    
                         items: [
                             {   
                                 xtype: 'textfield',
                                 fieldLabel: 'ФИО',
                                 labelWidth: 80,
-                                width: 535,
+                                width: 726,
                                 vtype: 'cyralphanumplus'                                 
                             },
                             {   
                                 xtype: 'textfield',
                                 fieldLabel: 'Личная инф.',
                                 labelWidth: 80,
-                                width: 535,
+                                width: 726,
                                 vtype: 'cyralphanumplus'                                 
                             },                            
                             {   
                                 xtype: 'textfield',
                                 fieldLabel: 'Адресс',
                                 labelWidth: 80,
-                                width: 535
+                                width: 726
                             },
                             {
                                 xtype: 'container',
@@ -181,21 +181,21 @@ Ext.define('Notebook.view.warranty.Form',{
                                         xtype: 'textfield',
                                         fieldLabel: 'Дом. тел.',
                                         labelWidth: 80,
-                                        width: 175
+                                        width: 240
                                     }, 
                                     {   
                                         xtype: 'textfield',
                                         fieldLabel: 'Раб. тел.',
                                         labelWidth: 80,
-                                        width: 175,
-                                        padding: '0 0 0 2'
+                                        width: 240,
+                                        //padding: '0 0 0 2'
                                     },
                                     {   
                                         xtype: 'textfield',
                                         fieldLabel: 'Моб. тел.',
                                         labelWidth: 80,
-                                        width: 175,
-                                        padding: '0 0 0 2'
+                                        width: 240,
+                                       // padding: '0 0 0 2'
                                     }                                  
                                 ]
                             },                            
@@ -210,19 +210,20 @@ Ext.define('Notebook.view.warranty.Form',{
                                         xtype: 'datefield',
                                         fieldLabel: 'Сообщено',
                                         labelWidth: 80,
-                                        width: 175,
+                                        width: 240
                                     },
                                     {
                                         xtype: 'combobox',
                                         fieldLabel: 'Статус',
                                         labelWidth: 80,
-                                        width: 260,
-                                        padding: '0 2 0 2'
+                                        width: 325,
+                                        padding: '0 0 0 0'
                                     },
                                     {
                                         xtype: 'button',
-                                        text: 'Копировать',
-                                        icon: icons_path+'cat-edit.png'
+                                        text: 'Копировать информацию',
+                                        icon: icons_path+'cat-edit.png',
+                                        width: 155
                                     }
                                 ]
                             }                             
@@ -241,22 +242,22 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'fieldset',
                         title: 'Жалобы',
-                        width: 550,
+                        width: 742,
                         padding: '0 5 0 5',                    
                         items: [
                             {   
                                 xtype: 'textfield',
                                 fieldLabel: 'Жалоба',
                                 labelWidth: 80,
-                                width: 535,
+                                width: 726,
                                 vtype: 'cyralphanumplus'                                 
                             },
                             {   
                                 xtype: 'textarea',
                                 fieldLabel: 'Проделаная работа',
                                 labelWidth: 80,
-                                width: 535,
-                                height: 100                                
+                                width: 726,
+                                height: 50                                
                             }, 
                             {
                                 xtype: 'container',
@@ -277,7 +278,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                     },
                                     {
                                         xtype: 'textfield',
-                                        width: 310
+                                        width: 500
                                     }
                                 ]
                             }
@@ -296,7 +297,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     {
                         xtype: 'fieldset',
                         title: 'Владелец',
-                        width: 550,
+                        width: 742,
                         padding: '0 5 0 5',                    
                         items: [
                             {
@@ -310,13 +311,13 @@ Ext.define('Notebook.view.warranty.Form',{
                                         xtype: 'combobox',
                                         fieldLabel: 'Продавець',
                                         labelWidth: 80,
-                                        width: 265                                       
+                                        width: 240                                       
                                     },
                                     {   
                                         xtype: 'textfield',
                                         fieldLabel: 'Чек, цена',
                                         labelWidth: 80,
-                                        width: 265,
+                                        width: 240,
                                         vtype: 'cyralphanumplus'                                 
                                     }
                                 ]
@@ -325,8 +326,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                 xtype: 'textarea',
                                 fieldLabel: 'Коментарии',
                                 labelWidth: 80,
-                                width: 535,
-                                height: 100                                
+                                width: 726,
+                                height: 50                                
                             },
                             {
                                 xtype: 'container',
@@ -339,12 +340,12 @@ Ext.define('Notebook.view.warranty.Form',{
                                         xtype: 'combobox',
                                         fieldLabel: 'Мастер',
                                         labelWidth: 80,
-                                        width: 265                                       
+                                        width: 240                                       
                                     },
                                     {   
                                         xtype: 'textfield',
                                         fieldLabel: 'Работа',
-                                        labelWidth: 50,
+                                        labelWidth: 80,
                                         width: 240                                 
                                     },
                                     {
@@ -352,7 +353,57 @@ Ext.define('Notebook.view.warranty.Form',{
                                         icon: icons_path+'cat-edit.png'
                                     }
                                 ]
-                            }                            
+                            },
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        fieldLabel: 'Мастер',
+                                        labelWidth: 80,
+                                        width: 240                                       
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Работа',
+                                        labelWidth: 80,
+                                        width: 240                                 
+                                    }
+                                ]
+                            },                            
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Запчасти',
+                                        labelWidth: 80,
+                                        width: 240
+                                    }, 
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Транспорт',
+                                        labelWidth: 80,
+                                        width: 240
+                                        //padding: '0 0 0 2'
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Итого',
+                                        labelWidth: 80,
+                                        width: 240
+                                       // padding: '0 0 0 2'
+                                    }                                  
+                                ]
+                            }
                         ]
                     }
                 ]
