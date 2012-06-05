@@ -27,8 +27,40 @@ Ext.define('Notebook.controller.Warranty',{
             },             
             'warranty-form button#nb-print-warranty': {
                 click: this.warPrint
+            },
+            'warranty-form button#nb-war-master-visible-toggle': {
+                click: function () {
+                    var secMasterContainer=Ext.getCmp('nb-war-sec-mas-container');
+                    if (secMasterContainer.isVisible()) {
+                        secMasterContainer.hide();
+                    }
+                    else
+                    {
+                        secMasterContainer.show();
+                    }
+                }
+            },
+            'warranty-form #nb-war-det': {
+                change: this.evalForm
+            },
+            'warranty-form #nb-war-trans': {
+                change: this.evalForm
             }
         });
+    },
+    //розраховує загальну суму
+    evalForm: function () {
+        var warDet=Ext.getCmp('nb-war-det');
+        var warDetVal=0;
+        if (warDet.isValid()&&warDet.getValue()!='') {
+            warDetVal=eval(warDet.getValue());
+        }
+        var warTrans=Ext.getCmp('nb-war-trans');
+        var warTransVal=0;
+        if (warTrans.isValid()&&warTrans.getValue()!='') {
+            warTransVal=eval(warTrans.getValue());
+        }       
+        Ext.getCmp('nb-war-total-price').setValue(warDetVal+warTransVal);
     },
     fillForm: function (warId) {
         //проставляємо відмітку, що ми вибрали існуюче замовлення

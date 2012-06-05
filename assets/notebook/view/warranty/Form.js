@@ -384,16 +384,20 @@ Ext.define('Notebook.view.warranty.Form',{
                                         id: 'nb-war-work-prim',
                                         fieldLabel: 'Работа',
                                         labelWidth: 50,
-                                        width: 240                                 
+                                        width: 240,
+                                        emptyText: '0',
+                                        vtype: 'mathexp'                                         
                                     },
                                     {
                                         xtype: 'button',
+                                        id: 'nb-war-master-visible-toggle',
                                         icon: icons_path+'mas-togg.png'
                                     }
                                 ]
                             },
                             {
                                 xtype: 'container',
+                                id: 'nb-war-sec-mas-container',
                                 layout: {
                                     type: 'column'
                                 },
@@ -414,7 +418,9 @@ Ext.define('Notebook.view.warranty.Form',{
                                         id: 'nb-war-work-sec',
                                         fieldLabel: 'Работа',
                                         labelWidth: 50,
-                                        width: 240                                 
+                                        width: 240,
+                                        emptyText: '0',
+                                        vtype: 'mathexp'                                         
                                     }
                                 ]
                             },
@@ -430,7 +436,9 @@ Ext.define('Notebook.view.warranty.Form',{
                                         id: 'nb-war-det',
                                         fieldLabel: 'Запчасти',
                                         labelWidth: 80,
-                                        width: 175
+                                        width: 175,
+                                        emptyText: '0',
+                                        vtype: 'mathexp'
                                     }, 
                                     {   
                                         xtype: 'textfield',
@@ -438,7 +446,9 @@ Ext.define('Notebook.view.warranty.Form',{
                                         fieldLabel: 'Транспорт',
                                         labelWidth: 80,
                                         width: 175,
-                                        padding: '0 0 0 2'
+                                        padding: '0 0 0 2',
+                                        emptyText: '0',
+                                        vtype: 'mathexp'                                        
                                     },
                                     {   
                                         xtype: 'textfield',

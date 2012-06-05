@@ -47,6 +47,13 @@ Ext.application({
             decimalText: 'Допустимі цілі та дробові числа',
             decimalMask: /(\d+)(((.|,)\d+)+)?/
         });         
+        Ext.apply(Ext.form.field.VTypes, {
+            mathexp:  function(val) {
+                return /(^(\d+)(((.|,)\d+)+)?$)|(^((\d+)(((.|,)\d+)+)?[\+\-\*\/]{0,1})+(\d+)(((.|,)\d+)+)?$)/.test(val);
+            },
+            mathexpText: 'Допустимы только простые математические выражения',
+            mathexpMask: /\d/
+        });         
     }
 });
 
