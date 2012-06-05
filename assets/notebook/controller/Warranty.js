@@ -4,12 +4,12 @@ Ext.define('Notebook.controller.Warranty',{
     models: [
         'Category',
         'Master',
-        'Guarantee'
+        'Seller'
     ],
     stores: [
         'Category',
         'Master',
-        'Guarantee'
+        'Seller'
     ],    
     views: [
         'warranty.Form'

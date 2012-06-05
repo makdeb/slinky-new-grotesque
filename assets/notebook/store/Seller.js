@@ -1,7 +1,7 @@
-Ext.define('Notebook.store.Guarantee',{
+Ext.define('Notebook.store.Seller',{
     extend: 'Ext.data.Store',
-    requires: 'Notebook.model.Guarantee', 
-    model: 'Notebook.model.Guarantee',
+    requires: 'Notebook.model.Seller', 
+    model: 'Notebook.model.Seller',
     autoLoad: true,
     proxy: {
         type: 'ajax',

@@ -37,8 +37,12 @@ Ext.define('Notebook.view.Menu',{
                         icon: icons_path+'dir-mas.png'
                     },
                     {
-                        text: 'Гарантии',
-                        icon: icons_path+'dir-guar.png'
+                        text: 'Продавци',
+                        icon: icons_path+'dir-sell.png'
+                    },
+                    {
+                        text: 'Шаблоны заметок',
+                        icon: icons_path+'dir-templ.png'
                     }
                 ]
             }            

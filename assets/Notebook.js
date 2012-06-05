@@ -30,8 +30,8 @@ Ext.application({
             cyralphanumplus:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]{1,}$/.test(val);
             },
-            cyralphanumText: 'Допустимі символи кирилиці, латині, цифри, знаки пунктуації та операцій',
-            cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
+            cyralphanumplusText: 'Допустимі символи кирилиці, латині, цифри, знаки пунктуації та операцій',
+            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             phone:  function(val) {
