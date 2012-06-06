@@ -32,14 +32,21 @@ Ext.define('Notebook.controller.Warranty',{
                 click: function () {
                     var secMasterContainer=Ext.getCmp('nb-war-sec-mas-container');
                     if (secMasterContainer.isVisible()) {
-                        secMasterContainer.hide();
+                        secMasterContainer.hide();                        
                     }
                     else
                     {
                         secMasterContainer.show();
                     }
+                    this.evalForm();
                 }
             },
+            'warranty-form #nb-war-work-prim': {
+                change: this.evalForm
+            }, 
+            'warranty-form #nb-war-work-sec': {
+                change: this.evalForm
+            },                
             'warranty-form #nb-war-det': {
                 change: this.evalForm
             },
@@ -60,7 +67,17 @@ Ext.define('Notebook.controller.Warranty',{
         if (warTrans.isValid()&&warTrans.getValue()!='') {
             warTransVal=eval(warTrans.getValue());
         }       
-        Ext.getCmp('nb-war-total-price').setValue(warDetVal+warTransVal);
+        var warMasPrimWork=Ext.getCmp('nb-war-work-prim');
+        var warMasPrimWorkVal=0;
+        if (warMasPrimWork.isValid()&&warMasPrimWork.getValue()!='') {
+            warMasPrimWorkVal=eval(warMasPrimWork.getValue());
+        }               
+        var warMasSecWork=Ext.getCmp('nb-war-work-sec');
+        var warMasSecWorkVal=0;
+        if (warMasSecWork.isValid()&&warMasSecWork.getValue()!=''&&Ext.getCmp('nb-war-sec-mas-container').isVisible()) {
+            warMasSecWorkVal=eval(warMasSecWork.getValue());
+        }                
+        Ext.getCmp('nb-war-total-price').setValue(warDetVal+warTransVal+warMasPrimWorkVal+warMasSecWorkVal);
     },
     fillForm: function (warId) {
         //проставляємо відмітку, що ми вибрали існуюче замовлення

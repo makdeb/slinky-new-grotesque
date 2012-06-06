@@ -46,7 +46,8 @@ Ext.define('Notebook.view.Menu',{
                     }
                 ]
             }            
-        }
+        },
+        '-'
     ]    
 //    items: [
 //        {
