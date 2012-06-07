@@ -47,7 +47,11 @@ Ext.define('Notebook.view.Menu',{
                 ]
             }            
         },
-        '-'
+        '-',
+        {
+            xtype: 'button',
+            text: 'Новый'
+        }
     ]    
 //    items: [
 //        {
