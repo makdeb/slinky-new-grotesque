@@ -93,11 +93,6 @@ class Notebook extends CI_Controller {
 		// для начала преобразуем строку формата "сID" из url в строку с номером родительской категории	
 		$node = preg_replace("/[^0-9]/", '', $node);
 		
-		if ($node==='') {
-			echo '{"success":false,"message":"Ошибка получения данных"}';
-			return;
-		}
-		
 		$data = array();
 	
 		// если parentID не указан, то выбираем все корневые категории
