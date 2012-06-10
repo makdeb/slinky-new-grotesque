@@ -18,142 +18,98 @@ class Notebook extends CI_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	
-	private $deletions=array();  // свойство класса Notebook, которое импользуется для удаления категорий
+	private $deletions=array();  // свойство класса Notebook, которое используется для удаления категорий
 	 
 	public function __construct() {
-		
 		parent::__construct();
-
-		$this->load->database();
+		
 		$this->load->helper(array('form', 'url'));
-
-	}  
+		$this->load->model(array('notebook_model','category_model','orders_model','customers_model'));
+	} 
 	 
 	public function index()
 	{
 		$this->load->view('index');
 	}
 	
-	// функция check_cat() , возвращающая json-строку из всех существующих категорий  
+	// функция check() , возвращающая json-строку из всех существующих категорий,
+	// продавцов, мастеров, шаблонов или причин черного списка, в зависимости
+	// от параметра $table 
 	
-	public function check_cat() {
+	public function check($table='') {
+		$table = $this->input->get('table'); // принимаем параметр из url
 		
+		// преобразуем параметр из названия таблицы в "удобный" формат
+		switch ($table):
+				    case 'sellers':
+				        $unit = "seller";
+				        break;
+				    case 'masters':
+				        $unit = "master";
+				        break;
+				    case 'categories':
+				        $unit = "category";
+				        break;
+					case 'notestpl':
+				        $unit = "template";
+				        break;
+					case 'blacklist':
+				        $unit = "reason";
+				        break;	
+					default:
+				        $unit = FALSE;
+				endswitch;
+		
+		// если параметр не указывает на существующую таблицу -- ошибка		
+		if (!$unit) {
+			echo '{"success":false,"message":"Ошибка получения данных"}';
+			return;
+		}		
+				
 		$data = array();
 		
-		$this->db->select('idCategories as id,name');
-		$this->db->from('categories');
-		
-		$query = $this->db->get();
-		
-		$data['records'] = json_encode($query->result());
+		// кодируем json-строку из полученного масива данных 
+		$data['records'] = json_encode($this->notebook_model->get_units($table));
 		$data['error'] = json_last_error();
 		
+		// проверка ошибок
 		if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"category":' .$data['records'] .'}';
+				$data['json'] = '{"success":false,"' .$unit .'":' .$data['records'] .'}';
 				
-			} else  $data['json'] = '{"success":true,"category":' .$data['records'] .'}';
-				
-	
-		// вивід результату
-		// $this->load->view('test_json.php',$data);
-		echo $data['json'];
+			} else  $data['json'] = '{"success":true,"' .$unit .'":' .$data['records'] .'}';
 		
-		
+		// вывод результата		
+		echo $data['json'];	
 	}
+
 	
-	// функция check_masters() , возвращающая json-строку из всех существующих мастеров
-	
-	public function check_masters() {
-		
-		$data = array();
-		
-		$this->db->select('idMasters as id,name');
-		$this->db->from('masters');
-		
-		$query = $this->db->get();
-		
-		$data['records'] = json_encode($query->result());
-		$data['error'] = json_last_error();
-		
-		if (($data['error'] !== JSON_ERROR_NONE)) {
-				unset($data['records']);
-				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"master":' .$data['records'] .'}';
-				
-			} else  $data['json'] = '{"success":true,"master":' .$data['records'] .'}';
-				
-	
-		// вивід результату
-		// $this->load->view('test_json.php',$data);
-		echo $data['json'];
-		
-		
-	}
-	
-	// функция check_guarantee() , возвращающая json-строку из всех существующих гарантий
-	
-	public function check_guarantee() {
-		
-		$data = array();
-		
-		$this->db->select('idGuarantee as id,name');
-		$this->db->from('guarantee');
-		
-		$query = $this->db->get();
-		
-		$data['records'] = json_encode($query->result());
-		$data['error'] = json_last_error();
-		
-		if (($data['error'] !== JSON_ERROR_NONE)) {
-				unset($data['records']);
-				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"guarantee":' .$data['records'] .'}';
-				
-			} else  $data['json'] = '{"success":true,"guarantee":' .$data['records'] .'}';
-				
-	
-		// вивід результату
-		// $this->load->view('test_json.php',$data);
-		echo $data['json'];
-		
-		
-	}	
-	
-	// функция get_categories() , возвращающая json-строку дерева категорий и заказов 
+	// функция treeview() , возвращающая json-строку дерева категорий и заказов 
 	// по указанному id родительской категории
-		
-	public function get_categories($node=0) {
+	
+	public function treeview($node=0) {
 		$node = $this->input->get('node');	// принимаем параметр родительской категории из url
 		// для начала преобразуем строку формата "сID" из url в строку с номером родительской категории	
 		$node = preg_replace("/[^0-9]/", '', $node);
+		
+		if ($node==='') {
+			echo '{"success":false,"message":"Ошибка получения данных"}';
+			return;
+		}
+		
 		$data = array();
-		
+	
 		// если parentID не указан, то выбираем все корневые категории
-		
 		if ($node==0) {
 		
 		// записываем список id существующих корневых категорий в массив $data['categories']
 		// и подсчитываем ихнее количество
-		
-		$this->db->select('idCategories');
-		$query = $this->db->get_where('categories',array('parentID'=>$node));
-		$data['categories'] = $query->result();
-		
+		$data['categories'] = $this->category_model->get_id($node);
 		$data['count'] = count($data['categories']);
-			
-		
-		// делаем выборку необходимых полей корневых категорий
-		
-		$this->db->where('categories.parentID',$node);
-		$this->db->select('idCategories as id,name');
-		$this->db->from('categories');
-		
-		$query = $this->db->get();
-		
+	
 		// кодируем json
-		$data['records'] = json_encode($query->result());	
+		$data['records'] = json_encode($this->category_model->get_categories($node));	
 		$data['error'] = json_last_error();
 		
 		// проверяем ошибки и отсутсвие категорий
@@ -173,36 +129,24 @@ class Notebook extends CI_Controller {
 					}
 			}
 		
-		} else {
-			/* если parentID указан, то выбираем категории c parentID равным указанному параметру,
-			   а также все заказы CategoryID которых равен данному параметру. 	
+		} 
+		 else {
+			/* 
+				если parentID указан, то выбираем категории c parentID равным указанному параметру,
+				а также все заказы CategoryID которых равен данному параметру. 	
 			*/
 			
-							
 			// записываем список id существующих корневых категорий в массив $data['categories']
 		    // и подсчитываем ихнее количество
-					
-				$this->db->select('idCategories');
-				$query = $this->db->get_where('categories',array('parentID'=>$node));
-				$data['categories'] = $query->result();
-				
+				$data['categories'] = $this->category_model->get_id($node);
 				$data['count_cat'] = count($data['categories']);
 			
 			// аналогично для заказов с CategoryID равным нашему параметру
-				
-				$this->db->select('idOrders');
-				$query = $this->db->get_where('orders',array('categoryId'=>$node));
-				$data['orders'] = $query->result();
-				
+				$data['orders'] = $this->orders_model->get_id($node);
 				$data['count_ord'] = count($data['orders']);
 				
-			// sql-запрос, производящий выборку нужных полей из двух таблиц - категорий и заказов
-				
-				$sql = "SELECT idCategories as id,name FROM ".$this->db->dbprefix('categories')." WHERE parentID = ? UNION ALL SELECT idOrders, product FROM ".$this->db->dbprefix('orders')." WHERE categoryId = ?";
-				$query = $this->db->query($sql, array($node, $node));   
-			
-
-			$data['records'] = json_encode($query->result());	
+			// кодируем json-строку из результатов выборки
+			$data['records'] = json_encode($this->notebook_model->get_treeview($node));	
 			$data['error1'] = json_last_error();
 			
 			//проверка ошибок
@@ -225,149 +169,279 @@ class Notebook extends CI_Controller {
 						}			
 				}
 
-				foreach ($data['orders'] as $order) {
+				foreach ($data['orders'] as $order)	{
 						foreach ($order as $field => $value) {
 							$data['json'] = str_replace('"' .$value .'"','"p' .$value .'"',$data['json']);
 						}
-					}
-				
-					
-		}
-
+				}
+			}	
 		}
 		
-		//$this->load->view('test_json.php',$data);
+		//вывод результата
 		echo $data['json'];
 		
 	}
 	
-	// функция add_cat(), добавляющая новую категорию
-	// * принимает в качестве параметра имя и id родительской категории, либо 0 в случае создания корневого каталога
+	// функция add_unit(), добавляющая новую категорию, нового мастера, продавца,
+	// шаблон, или елемент ЧС. 
+	// * принимает в качестве параметра имя таблицы, имя нового елемента и id родительской категории, либо 0 в случае создания корневого каталога
 	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
-	public function add_category($name='',$parent=0) {
-		
+	
+	public function add_unit($table='',$name='',$parent=0) {
+		$table = $this->input->get('table'); // принимаем параметры из url
 		$name = $this->input->get('name');
 		$parent = $this->input->get('parent');
-		$parent = preg_replace("/[^0-9]/", '', $parent); // преобразуем строку формата "сParentID" из url в строку с номером родительской категории
 		
-		if (!$name)
-		{
-			echo '{"success":false,"message":"Помилка при створенні категорії"}';
-			return;
-		}
-				
-		$return='';
-		$data = array();
-		
-		$data['parentID']  = $parent;
-		$data['name']  = $name;
-		
-		$query = $this->db->insert('categories',$data);
-	
-			if ($query===TRUE)
+		// если 3й параметр задан, преобразовываем его
+		if (($parent!=='')and($parent!=NULL))
 			{
-				$return = '{"success":true,"message":"Категорія була успішно створена"}';
-			} else
-			{
-				$return = '{"success":false,"message":"Помилка при створенні категорії"}';
+				$parent = preg_replace("/[^0-9]/", '', $parent);
 			}
 		
-		echo $return;
+		// преобразуем параметр из названия таблицы в "удобный" формат
+		switch ($table):
+				    case 'sellers':
+				        $unit = "seller";
+				        break;
+				    case 'masters':
+				        $unit = "master";
+				        break;
+				    case 'categories':
+				        $unit = "category";
+				        break;
+					case 'notestpl':
+				        $unit = "template";
+				        break;
+					case 'blacklist':
+				        $unit = "reason";
+				        break;	
+					default:
+				        $unit = FALSE;
+				endswitch;
 		
-	}
-	
-	// функция update_cat(), позволяющая переименовать существующую категорию
-	// * принимает в качестве параметра новое имя и id категории
-	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
-	public function update_category($name='',$id='') {
+		// если параметр $table не указывает на существующую таблицу -- ошибка		
+		if (!$unit) {
+			echo '{"success":false,"message":"Ошибка выбора данных для добавления"}';
+			return;
+		}	
+		// если параметр $name не указан -- ошибка		
+		if (!$name)
+		{
+			echo '{"success":false,"message":"Ошибка имени елемента"}';
+			return;
+		}
 		
-		$name = $this->input->get('name');
-		$id = $this->input->get('id');
-		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории
+		// если мы добавляем новую категорию, и не получили коректный параметр родительской категории -- ошибка
+		if (($unit=='category')and(!$parent)and($parent!=='0')) {
+			echo '{"success":false,"message":"Ошибка выбора родительской категории"}'; return;
+		}
 		
-		if ((!$id)||(!$name)) { echo '{"success":false,"message":"Помилка при перейменуванні категорії"}'; return;}
-		if ($id==1) { echo '{"success":false,"message":"Помилка при перейменуванні категорії"}'; return;} // запрет переименования Корзины
+		// проверка существования категории, для которой создаваемая станет дочерней
+		// *в случае не корневой категории
+		if (($unit=='category')and($parent)and($this->category_model->get_categories($parent)===FALSE)) {
 		
-		$return='';
+			{
+				echo '{"success":false,"message":"Ошибка создания категории"}'; return;
+			}
+		}
+		
 		$data = array();
 		
 		$data['name']  = $name;
 		
-		$this->db->where('idCategories', $id);
-		$query = $this->db->update('categories', $data);
+		if ($unit=='category') {
+			$data['parentID']  = $parent;
+		}
+		
+		$query = $this->notebook_model->add_units($table,$data);		
 		
 		if ($query===TRUE)
 			{
-				$return = '{"success":true,"message":"Категорія була успішно перейменована"}';
+				echo '{"success":true,"message":"Елемент был успешно создан"}';
 			} else
 			{
-				$return = '{"success":false,"message":"Помилка при перейменуванні категорії"}';
+				echo '{"success:false,"message":"Ошибка при создании нового елемента"}';
 			}
-		
-		echo $return;		
 	}
 	
-	// функция remove_category(), позволяющая удалить существующую категорию, а также
-	// все подкатегории и заказы с подзаказами
-	public function remove_category($id='') {
+	// функция update_unit((), позволяющая переименовать существующую категорию, мастера, продавца,
+	// шаблон, или елемент ЧС. 
+	// * принимает в качестве параметра имя таблицы,новое имя елемента и id порядковый номер записи
+	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
 	
-		$id = $this->input->get('id'); // принимаем параметр категории из url
-		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с номером категории	
+	public function update_unit($table='',$name='',$id='') {
+		$table = $this->input->get('table'); // принимаем параметры из url
+		$name = $this->input->get('name');
+		$id = $this->input->get('id');
 		
-		// в случае отсутствия параметра или попытки удалить Корзину - ошибка
-		if ((!$id)||($id==1)) {
-			echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с числовым значением	
+		}
+		// преобразуем параметр из названия таблицы в "удобный" формат
+		switch ($table):
+				    case 'sellers':
+				        $unit = "seller";
+				        break;
+				    case 'masters':
+				        $unit = "master";
+				        break;
+				    case 'categories':
+				        $unit = "category";
+				        break;
+					case 'notestpl':
+				        $unit = "template";
+				        break;
+					case 'blacklist':
+				        $unit = "reason";
+				        break;	
+					default:
+				        $unit = FALSE;
+				endswitch;
+		
+		// если параметр $table не указывает на существующую таблицу -- ошибка		
+		if (!$unit) {
+			echo '{"success":false,"message":"Ошибка выбора данных для обновления"}';
 			return;
+		}	
+		
+		// если параметры $name и $id не указаны -- ошибка	
+		if ((!$id)||(!$name)) {
+			 echo '{"success":false,"message":"Ошибка при переименовании елемента"}'; 
+			 return;
+		 }
+		// запрет переименования Корзины
+		if (($unit=='category')and($id==1)) {
+			echo '{"success":false,"message":"Ошибка при переименовании Корзины"}';
+		 	return;
+		 } 
+		// проверка существования записи с заданым id
+		if ($this->notebook_model->get_units($table,$id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора елемента для обновления"}';
+		 	return;
 		}
 		
 		$data = array();
-		$data['categoryId']  = 1; // id корзины
+		$data['name']  = $name;
 		
-		// записываем в свойство deletions класса Notebook id удаляемой категории
+		$query = $this->notebook_model->update_units($table,$id,$data);
+		
+		if ($query===TRUE)
+			{
+				echo '{"success":true,"message":"Елемент был успешно обновлен"}';
+			} else
+			{
+				echo '{"success:false,"message":"Ошибка при обновлении елемента"}';
+			}
+		
+	}
+	
+	// функция remove_unit(), позволяющая удалить существующую категорию, 
+	// все подкатегории и заказы с подзаказами, а также любой елемент в справочнике
+	// * принимает в качестве параметра имя таблицы и id порядковый номер записи
+	// функция выводит json-строку в формате '{"success": TRUE/FALSE,"message":"..."}'
+	public function remove_unit($table='',$id='') {
+		$table = $this->input->get('table'); // принимаем параметры из url
+		$id = $this->input->get('id');
+		
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "сID" из url в строку с числовым значением	
+		}
+		// преобразуем параметр из названия таблицы в "удобный" формат
+		switch ($table):
+				    case 'sellers':
+				        $unit = "seller";
+				        break;
+				    case 'masters':
+				        $unit = "master";
+				        break;
+				    case 'categories':
+				        $unit = "category";
+				        break;
+					case 'notestpl':
+				        $unit = "template";
+				        break;
+					case 'blacklist':
+				        $unit = "blacklist";
+				        break;	
+					default:
+				        $unit = FALSE;
+				endswitch;
+		
+		// если параметр $table не указывает на существующую таблицу -- ошибка		
+		if (!$unit) {
+			echo '{"success":false,"message":"Ошибка выбора данных для удаления"}';
+			return;
+		}	
+		
+		// если параметр $id не указан или он недопустим -- ошибка	
+		if ((!$id)||($id==1)) {
+			 echo '{"success":false,"message":"Ошибка при удалении елемента"}'; 
+			 return;
+		 }
+		
+		// проверка существования записи с заданым id
+		if ($this->notebook_model->get_units($table,$id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора елемента для удаления"}';
+		 	return;
+		}
+		
+		$data = array();
+		$data[$unit .'ID']  = 1; // id корзины или елемента по умолчанию
+		
+		// записываем в свойство deletions класса Notebook id удаляемой категории или записи
 		$this->deletions[]=$id;
 		
-		// обращаемся к вспомагательной приватной функции _find_category(), передавая ей
-		// в качестве параметра id удаляемой категории
-		$this->_find_category($id);
-	
-		// для всех значений id из массива-свойства $deletions удаляем все заказы,	
-		// для которых id категории совпадает с данным значением
+		if ($unit=='category') {
+			// обращаемся к вспомагательной приватной функции _find_category(), передавая ей
+			// в качестве параметра id удаляемой категории
+			$this->_find_category($id);
+		}	
+		
 		foreach ($this->deletions as $record) {
-			
-			$this->db->where('categoryId', $record);
-			$query1 = $this->db->update('orders', $data);
-				if ($query1===FALSE) {
-					echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
+			if (($unit!='blacklist')and($unit!='template')) {
+				$query = $this->orders_model->update_itemid($unit ,$record, $data);
+				if ($query===FALSE) {
+					echo '{"success":false,"message":"Ошибка удаления категории"}'; 
 					return;
 				}
-			
+			} elseif ($unit=='blacklist') {
+				$query = $this->customers_model->update_blackid($unit ,$record, $data);
+				if ($query===FALSE) {
+					echo '{"success":false,"message":"Ошибка удаления елемента ЧС"}'; 
+					return;
 				}
+			} else {
+				break;
+			}
+		}
 		
-		// для всех значений id из массива-свойства $deletions удаляем все категории
+		// для всех значений id из массива-свойства $deletions удаляем все категории или записи
 		foreach ($this->deletions as $record) {
 
-			$query2 = $this->db->delete('categories', array('idCategories' => $record));
+			$query = $this->notebook_model->delete_units($table,$record);
 			
-				if ($query2===FALSE) {
-						echo '{"success":false,"message":"Помилка при видаленні категорії"}'; 
+				if ($query===FALSE) {
+						echo '{"success":false,"message":"Ошибка удаления"}'; 
 						return;
 					}
 				
 				}
 		
-		echo '{"success":true,"message":"Категорія та всі її підкатегорії були успішно видалені"}';
-		
-		
+		echo '{"success":true,"message":"Елемент был успешно удален"}';
+				
 	}
 	
+	// вспомагательная функция _find_category(), используемая в remove_unit()
+	// для проверки дочерних категорий удаляемой категории
 	private function _find_category($node='') {
 		
 		// находим в таблице категорий все, у которых id родительской категории
 		// совпадает с принимаемым параметром
-		
-		$this->db->select('idCategories');
-		$query = $this->db->get_where('categories',array('parentID'=>$node));
-		$data['categories'] = $query->result_array();
+
+		//	$data['categories'] = $query->result_array();
+		$data['categories'] = $this->category_model->get_id($node);
 		
 		/* для каждой такой категории берем значение id и записываем в массив $deletions,
 		   являющийся свойством класса Notebook,
@@ -386,53 +460,71 @@ class Notebook extends CI_Controller {
 	}
 	
 	// функция remove_order(), позволяющая удалить (перенести в корзину) существующий заказ
-	public function remove_order($id=0) {
+	public function remove_order($id='') {
 		$id = $this->input->get('id');  // принимаем параметр заказа из url
-		$id = preg_replace("/[^0-9]/", '', $id);  // преобразуем строку формата "рID" из url в строку с номером заказа
+				
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "pID" из url в строку с числовым значением	
+		}
 		
 		// в случае отсутствия параметра - ошибка
-		if (!$id) { echo '{"success":false,"message":"Помилка при видаленні замовлення"}'; return;}
+		if (!$id) { 
+			echo '{"success":false,"message":"Ошибка при удалении заказа"}';
+			return;
+		 }
+		
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора елемента для удаления"}';
+		 	return;
+		}
+		
+		// проверка отсутствия удаляемого заказа в Корзине
+		if ($this->orders_model->is_in_trash($id)) {
+			echo '{"success":false,"message":Заказ уже находится в Корзине"}';
+		 	return;
+		}
 		
 		$data = array();
-		$data['categoryId']  = 1; // id корзины
+		$data['categoryID']  = 1; // id корзины
 		
-		// для заданного id удаляем заказ
-		$this->db->where('idOrders', $id);
-		$query = $this->db->update('orders', $data);
+		// для заданного id удаляем заказ (меняем текущее значение categoryID на значение корзины)
+		$query = $this->orders_model->update_itemid('',$id, $data);
 				if ($query===FALSE) {
-					echo '{"success":false,"message":"Помилка при видаленні замовлення"}'; 
+					echo '{"success":false,"message":"Ошибка удаления"}'; 
 					return;
 				}
+		
 		// вывод json-строки
-		echo '{"success":true,"message":"Замовлення було успішно перенесено до корзини"}';	
+		echo '{"success":true,"message":"Заказ был успешно перенесён в Корзину"}';	
 		
 	}
-	
 	
 	// функция fill_order(), реализующая автозаполнение формы
 	public function fill_order($id=0) {
 		$id = $this->input->get('id');  // принимаем параметр заказа из url
-		$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
+		
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
+		}
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) { 
+			echo '{"success":false,"message":"Ошибка выбора заказа"}';
+			return;
+		 }
 		
 		$data = array();
 		
 		//вибір замовлення із заданим id
-		
-		if (!$id) {
-			{ echo '{"success":false,"message":"Помилка отримання данних"}'; return;}
-		} else {
-				$this->db->where('orders.idOrders', $id); 
-				
-			// вибір тільки потрібних полів	і об'єднання з іншими таблицями
-				$this->db->select('idOrders as id,type,date_start,date_end,product,idCategories,customers.name as customer,address,phone,wphone,hphone,complaints,performance,notes,sum,details,idMasters,idGuarantee,certificate,gdate,comments,posted,pstartdate,penddate,notified');
-				$this->db->from('orders');
-				$this->db->join('categories', 'categories.idCategories = orders.categoryID');
-				$this->db->join('customers', 'customers.idCustomers = orders.customerID');
-				$this->db->join('masters', 'masters.idMasters = orders.masterID');
-				$this->db->join('guarantee', 'guarantee.idGuarantee = orders.guaranteeID');
-
-			$query = $this->db->get();
-			$data['records'] = json_encode($query->row());	
+			$query_result = $this->notebook_model->get_all_fields($id);
+			if ($query_result===FALSE) {
+				echo '{"success":false,"message":"Ошибка выбора елемента"}}'; // в случае отсутствия заказа с указанным id -- ошибка
+				return;
+			};
+			$data['records'] = json_encode($query_result);	
 			$data['error'] = json_last_error();
 			
 		// перевірка помилок, або відсутності запису під даним id
@@ -441,55 +533,159 @@ class Notebook extends CI_Controller {
 			if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"message":"Помилка отримання данних"}';
+				$data['json'] = '{"success":false,"message":"Ошибка получения данных"}';
 		// якщо помилок немає і запис знайдено, то формуємо json-строку зі значенням true 		
 			} else { $data['json'] = '{"success":true,"order":' .$data['records'] .'}';
 					$data['json'] = str_replace(':null',':""',$data['json']);
 				}
-		} 
+		echo $data['json'];
+	}
+
+	// функция fill_customer(), реализующая создание нового заказа на осонове данных клиента
+	// *принимает параметр заказа, из которого осуществляется копирование.
+	public function fill_customer($id=0) {
+		$id = $this->input->get('id');  // принимаем параметр заказа из url
+		
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
+		}
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) { 
+			echo '{"success":false,"message":"Ошибка выбора заказа"}';
+			return;
+		 }
+		
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора елемента"}';
+		 	return;
+		}
+		
+		$data = array();
+		$result = array();	
+		
+		// установка временной зоны
+		date_default_timezone_set('Europe/Kiev');
+		
+		// заполняем массив $data данными из формы.
+		// * записываем данные только заказчика
+		$data['name']  = $this->input->post('name');
+		$data['address']  = $this->input->post('address');
+		$data['phone']  = $this->input->post('phone');
+		$data['wphone']  = $this->input->post('wphone');
+		$data['hphone']  = $this->input->post('hphone');
+		$data['personaldata'] = $this->input->post('personaldata');
+		if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
+			$data['blacklistID'] = 1;
+		};
+		
+		// порядковый номер нового клиента
+		$insert_id = $this->customers_model->insert_data($data);
+		if ($insert_id==FALSE) {
+						echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
+						return;
+					}
+		
+		// очистка массива $data и заполнение оного остальными данными заказа
+		//* для полей без значений по умолчанию будет записыватся NULL
+		unset($data);
+		$data = array();
+		
+		$data['customerID'] = $insert_id; // запись номера заказчика
+		$data['date_start'] = date("Y-m-d");  // сегодняшняя дата
+
+		// записываем значения по умочанию
+		$data['categoryID'] = 2;
+		$data['sellerID'] = 1;
+		$data['masterID'] = 1;
+		
+		$new_order = $this->orders_model->insert_data($data);
+		$result['ID'] = $new_order;
+		
+		//вибір замовлення із нвоствореним id
+			$query_result = $this->notebook_model->get_all_fields($result['ID']);
+			if ($query_result===FALSE) {
+				echo '{"success":false,"message":"Ошибка получения елемента"}}'; // в случае отсутствия заказа с новым id -- ошибка
+				return;
+			};
+			$data['records'] = json_encode($query_result);	
+			$data['error'] = json_last_error();
+			
+		// перевірка помилок
+		// якщо є помилки , стираємо масив і записуємо у нього строкове значення '[]'
+		// після чого формуємо json-строку зі значенням false	
+			if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"message":"Ошибка получения данных"}';
+		// якщо помилок немає і запис знайдено, то формуємо json-строку зі значенням true 		
+			} else { $data['json'] = '{"success":true,"order":' .$data['records'] .'}';
+					$data['json'] = str_replace(':null',':""',$data['json']);
+				}
 		echo $data['json'];
 	}
 	
-	
 	// функция update_order(), реализующая изменение данных заказа
-	
 	public function update_order() {
-	
+		
 		$id = $this->input->post('id'); // принимаем параметр заказа
 		
 		// в случае отсутствия id заказа - ошибка
 		if (!$id) {
-			echo '{"success":false,"message":"Помилка збереження данних"}'; 
+			echo '{"success":false,"message":"Ошибка выбора заказа"}'; 
 			return;
+		}
+		
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора елемента"}';
+		 	return;
 		}
 		
 		$data = array();
 		$new = array();
 			
 		// заполняем массив $data данными из формы
+
+		$data['categoryID']  = $this->input->post('categoryID');
 		$data['type']  = $this->input->post('type');
-		
+		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
 		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Виріб:" повинно бути заповнене"}'; 
+			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
 			return;
 		};
+		$data['serialnum'] = $this->input->post('serialnum');
+		$data['factorynum'] = $this->input->post('factorynum');
+		$data['guarantee']  = $this->input->post('guarantee');
 		
-		$data['categoryID']  = $this->input->post('categoryID');
-		$data['complaints']  = $this->input->post('complaints');
-		$data['performance']  = $this->input->post('performance');
-		$data['notes']  = $this->input->post('notes');
-		$data['sum']  = $this->input->post('sum');
-		$data['details']  = $this->input->post('details');
-		$data['masterID']  = $this->input->post('masterID');
-		$data['guaranteeID']  = $this->input->post('guaranteeID');
-		$data['certificate']  = $this->input->post('certificate');
-		$data['comments']  = $this->input->post('comments');
-		$data['posted']  = $this->input->post('posted');
-	
 		// для полей типа date производим проверку наличия значения в поле.
 		// При отсутствии такого значения записываем NULL,
 		// при наличии - преобразованное из строки в тип date значение
+		if (!$this->input->post('notified')) {
+			$data['notified'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('notified'));
+			$data['notified']  = $date->format('Y-m-d');
+		}
+		
+		$data['complaints']  = $this->input->post('complaints');
+		$data['performance']  = $this->input->post('performance');
+		$data['notes']  = $this->input->post('notes');
+		$data['sellerID']  = $this->input->post('sellerID');
+		$data['check']  = $this->input->post('check');
+		$data['comments']  = $this->input->post('comments');
+		$data['masterID']  = $this->input->post('masterID');
+		$data['master2ID']  = $this->input->post('master2ID');
+		
+		$data['worksum']  = $this->input->post('worksum');
+		$data['worksum2']  = $this->input->post('worksum2');
+		$data['details']  = $this->input->post('details');
+		$data['transportation']  = $this->input->post('transportation');
+		$data['total']  = $this->input->post('total');
+		
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
@@ -497,38 +693,14 @@ class Notebook extends CI_Controller {
 			$data['gdate']  = $date->format('Y-m-d');
 		}
 		
-		if (!$this->input->post('pstartdate')) {
-			$data['pstartdate'] = NULL;
-		} else {
-			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('pstartdate'));
-			$data['pstartdate']  = $date->format('Y-m-d');
-		}
-		
-		if (!$this->input->post('penddate')) {
-			$data['penddate'] = NULL;
-		} else {
-			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('penddate'));
-			$data['penddate']  = $date->format('Y-m-d');
-		}
-		
-		if (!$this->input->post('notified')) {
-			$data['notified'] = NULL;
-		} else {
-			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('notified'));
-			$data['notified']  = $date->format('Y-m-d');
-		}
-	
 		// выбираем id заказчика данного заказа	
-		$query = $this->db->get_where('orders', array('idOrders' => $id));
-		$row  = $query->row();
-		$new['customer'] = $row->customerID;
+		$new['customer'] = $this->orders_model->get_custom_id($id);
 		
 		// обновляем данные
-		$this->db->where('idOrders', $id);
-		$query = $this->db->update('orders', $data);
+		$query = $this->orders_model->update_itemid('',$id,$data);
 		
 			if ($query===FALSE) {
-					echo '{"success":false,"message":"Помилка збереження данних"}'; 
+					echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
 					return;
 				}
 		
@@ -542,18 +714,19 @@ class Notebook extends CI_Controller {
 		$data['phone']  = $this->input->post('phone');
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
+		$data['personaldata'] = $this->input->post('personaldata');
+		$data['blacklistID']  = $this->input->post('blacklistID');
 		
 		// обновляем данные заказчика
-		$this->db->where('idCustomers', $new['customer']);
-		$query = $this->db->update('customers', $data);
+		$query = $this->customers_model->update_blackid('',$new['customer'],$data);
 		
 			if ($query===FALSE) {
-						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+						echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
 						return;
 					}
 					
 		// вывод json-строки
-		echo '{"success":true,"message":"Замовлення було успішно змінено"}';	
+		echo '{"success":true,"message":"Заказ был успешно сохранен"}';	
 		
 	}	
 	
@@ -573,11 +746,15 @@ class Notebook extends CI_Controller {
 		$data['phone']  = $this->input->post('phone');
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
-		
-		$query = $this->db->insert('customers',$data);
+		$data['personaldata'] = $this->input->post('personaldata');
+		if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
+			$data['blacklistID'] = 1;
+		};
+				
+		$insert_id = $this->customers_model->insert_data($data);
 
-		if ($query===FALSE) {
-						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+		if ($insert_id==FALSE) {
+						echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
 						return;
 					}
 		
@@ -585,67 +762,28 @@ class Notebook extends CI_Controller {
 		unset($data);
 		$data = array();
 		
-		$data['customerID'] = $this->db->insert_id(); // запись номера заказчика
-		$data['type']  = $this->input->post('type');
+		$data['customerID'] = $insert_id; // запись номера заказчика
 		$data['date_start'] = date("Y-m-d");  // сегодняшняя дата
 		
-		// верификация поля product	
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Виріб:" повинно бути заповнене"}'; 
-			return;
-		};
 		// проверка номера категории,
 		// если отсутствует - записываем значение по умочанию
 		if (!($data['categoryID']  = $this->input->post('categoryID'))) {
 			$data['categoryID'] = 2;
 		};
-
-		$data['complaints']  = $this->input->post('complaints');
-		$data['performance']  = $this->input->post('performance');
-		$data['notes']  = $this->input->post('notes');
-		$data['sum']  = $this->input->post('sum');
-		$data['details']  = $this->input->post('details');
-		
-		// проверка номера мастера,
-		// если отсутствует - записываем значение по умочанию
-		if (!($data['masterID']  = $this->input->post('masterID'))) {
-			$data['masterID'] = 5;
+		$data['type']  = $this->input->post('type');
+		$data['model'] = $this->input->post('model');
+		// проверка заполнения поля "Виріб"
+		if (!($data['product']  = $this->input->post('product'))) {
+			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
+			return;
 		};
+		$data['serialnum'] = $this->input->post('serialnum');
+		$data['factorynum'] = $this->input->post('factorynum');
+		$data['guarantee']  = $this->input->post('guarantee');
 		
-		// проверка номера гарантии,
-		// если отсутствует - записываем значение по умочанию
-		if (!($data['guaranteeID']  = $this->input->post('guaranteeID'))) {
-			$data['guaranteeID'] = 2;
-		};
-		
-		$data['certificate']  = $this->input->post('certificate');
-		$data['comments']  = $this->input->post('comments');
-		$data['posted']  = $this->input->post('posted');
-
 		// для полей типа date производим проверку наличия значения в поле.
 		// При отсутствии такого значения записываем NULL,
 		// при наличии - преобразованное из строки в тип date значение
-		if (!$this->input->post('gdate')) {
-			$data['gdate'] = NULL;
-		} else {
-			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('gdate'));
-			$data['gdate']  = $date->format('Y-m-d');
-		}
-		
-		if (!$this->input->post('pstartdate')) {
-			$data['pstartdate'] = NULL;
-		} else {
-			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('pstartdate'));
-			$data['pstartdate']  = $date->format('Y-m-d');
-		}
-		
-		if (!$this->input->post('penddate')) {
-			$data['penddate'] = NULL;
-		} else {
-			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('penddate'));
-			$data['penddate']  = $date->format('Y-m-d');
-		}
-		
 		if (!$this->input->post('notified')) {
 			$data['notified'] = NULL;
 		} else {
@@ -653,20 +791,48 @@ class Notebook extends CI_Controller {
 			$data['notified']  = $date->format('Y-m-d');
 		}
 		
-		$query = $this->db->insert('orders',$data);
+		$data['complaints']  = $this->input->post('complaints');
+		$data['performance']  = $this->input->post('performance');
+		$data['notes']  = $this->input->post('notes');
+		// проверка номера продавца,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
+			$data['sellerID']  = 1;
+		}
+		$data['check']  = $this->input->post('check');
+		$data['comments']  = $this->input->post('comments');
+		// проверка номера мастера,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['masterID']  = $this->input->post('masterID'))) {
+			$data['masterID'] = 1;
+		};
+		$data['master2ID']  = $this->input->post('master2ID');
+		$data['worksum']  = $this->input->post('worksum');
+		$data['worksum2']  = $this->input->post('worksum2');
+		$data['details']  = $this->input->post('details');
+		$data['transportation']  = $this->input->post('transportation');
+		$data['total']  = $this->input->post('total');
 		
-		if ($query===FALSE) {
-						echo '{"success":false,"message":"Помилка збереження данних"}'; 
+		if (!$this->input->post('gdate')) {
+			$data['gdate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('gdate'));
+			$data['gdate']  = $date->format('Y-m-d');
+		}
+		
+		$new_order = $this->orders_model->insert_data($data);
+		
+		if ($new_order==FALSE) {
+						echo '{"success":false,"message":"Ошибка при сохранении записи"}'; 
 						return;
 					}
 
-		$result['ID'] = $this->db->insert_id();
+		$result['ID'] = $new_order;
+		$result['date'] = $data['date_start'];
 		
 		// вывод результирующей строки
-		echo '{"success":true,"id":"' .$result['ID'] .'","message":"Замовлення було успішно збережено"}'; 
-		
+		echo '{"success":true,"id":"' .$result['ID'] .'","date":"' .$result['date'] .'","message":"Заказ был успешно сохранен"}'; 
 	}
-	
 	
 }
 
