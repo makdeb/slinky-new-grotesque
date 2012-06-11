@@ -50,8 +50,37 @@ Ext.define('Notebook.view.Menu',{
         '-',
         {
             xtype: 'button',
-            text: 'Новый'
-        }
+            id: 'nb-new-warranty',
+            text: 'Новый',
+            icon: icons_path+'ord-new.png'
+        },
+        {
+            xtype: 'button',
+            id: 'nb-rec-warranty',
+            text: 'Прийом',
+            icon: icons_path+'ord-rec.png'
+        },
+        {
+            xtype: 'button',
+            text: 'Выдача',
+            icon: icons_path+'ord-out.png'
+        },
+        {
+            xtype: 'button',
+            id: 'nb-save-warranty',
+            text: 'Сохранить',
+            icon: icons_path+'ord-save.png'
+        },                    
+        {
+            xtype: 'button',
+            text: 'Поиск'
+        },
+        {
+            xtype: 'button',
+            id: 'nb-print-warranty',
+            text: 'Печать',
+            icon: icons_path+'ord-print.png'
+        }                 
     ]    
 //    items: [
 //        {

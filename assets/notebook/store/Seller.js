@@ -5,10 +5,13 @@ Ext.define('Notebook.store.Seller',{
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: 'notebook/check_guarantee',
+        url: 'notebook/check',
+        extraParams: {
+            table: 'sellers'
+        },        
         reader: {
             type: 'json',
-            root: 'guarantee'
+            root: 'seller'
         }        
     }
 });

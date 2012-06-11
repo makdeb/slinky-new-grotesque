@@ -16,16 +16,16 @@ Ext.define('Notebook.controller.Warranty',{
     ],  
     init: function () {
         this.control({
-            'warranty-form button#nb-new-warranty': {
+            'main-menu button#nb-new-warranty': {
                 click: this.newWarranty
             },            
-            'warranty-form button#nb-rec-warranty': {
+            'main-menu button#nb-rec-warranty': {
                 click: this.recWarranty
             },
-            'warranty-form button#nb-save-warranty': {
+            'main-menu button#nb-save-warranty': {
                 click: this.saveWarranty
             },             
-            'warranty-form button#nb-print-warranty': {
+            'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
             'warranty-form button#nb-war-master-visible-toggle': {
@@ -215,6 +215,7 @@ Ext.define('Notebook.controller.Warranty',{
         return ajaxParams;
     },
     newWarranty: function() {
+        alert('eee');
         //вказуємо, що при доданні нового замовлення можливий лише його прийом, а не збереження
         this.isNew=true;        
         //очищаємо форму
@@ -245,6 +246,7 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-wdate').setValue('');  
     },
     recWarranty: function() {
+        alert('eee');
         //прийом можливий лише, коли стоїть відмітка про те, що замовлення нове
         if (this.isNew) {
             var ajaxConf={};

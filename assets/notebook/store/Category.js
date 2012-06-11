@@ -5,7 +5,10 @@ Ext.define('Notebook.store.Category',{
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: 'notebook/check_cat',
+        url: 'notebook/check',
+        extraParams: {
+            table: 'categories'
+        },
         reader: {
             type: 'json',
             root: 'category'

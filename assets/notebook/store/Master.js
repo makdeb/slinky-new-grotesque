@@ -5,7 +5,10 @@ Ext.define('Notebook.store.Master',{
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: 'notebook/check_masters',
+        url: 'notebook/check',
+        extraParams: {
+            table: 'masters'
+        },        
         reader: {
             type: 'json',
             root: 'master'
