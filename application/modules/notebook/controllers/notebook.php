@@ -536,28 +536,9 @@ class Notebook extends CI_Controller {
 		echo $data['json'];
 	}
 
-	// функция fill_customer(), реализующая создание нового заказа на осонове данных клиента
-	// *принимает параметр заказа, из которого осуществляется копирование.
-	public function fill_customer($id=0) {
-		$id = $this->input->get('id');  // принимаем параметр заказа из url
-		
-		if (($id!=='')and($id!=NULL)) 
-		{
-			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
-		}
-		
-		// в случае отсутствия параметра - ошибка
-		if (!$id) { 
-			echo '{"success":false,"message":"Ошибка выбора заказа"}';
-			return;
-		 }
-		
-		// проверка существования записи с заданым id
-		if ($this->orders_model->get_unit($id)===FALSE) {
-			echo '{"success":false,"message":"Ошибка выбора елемента"}';
-		 	return;
-		}
-		
+	// функция fill_customer(), реализующая создание нового заказа на основе данных клиента
+	public function fill_customer() {
+
 		$data = array();
 		$result = array();	
 		
