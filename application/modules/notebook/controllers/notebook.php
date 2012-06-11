@@ -233,7 +233,7 @@ class Notebook extends CI_Controller {
 		
 		// проверка существования категории, для которой создаваемая станет дочерней
 		// *в случае не корневой категории
-		if (($unit=='category')and($parent)and($this->category_model->get_categories($parent)===FALSE)) {
+		if (($unit=='category')and($parent)and($this->notebook_model->get_units($table,$parent)===FALSE)) {
 		
 			{
 				echo '{"success":false,"message":"Ошибка создания категории"}'; return;

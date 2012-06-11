@@ -22,8 +22,6 @@ class Category_model extends CI_Model {
 	//  функция возврата списка id и имен категорий, являющихся подкатегориями заданной параметром
 	public function get_categories($parentID=FALSE) 
 	{
-	
-		// записываем список id существующих корневых категорий в массив $data['categories']
 		$this->db->where('parentID',$parentID);
 		$this->db->select('id,name');
 		$this->db->from($this->table);
