@@ -4,12 +4,16 @@ Ext.define('Notebook.controller.Warranty',{
     models: [
         'Category',
         'Master',
-        'Seller'
+        'Seller',
+        'Status',
+        'Notetpl'
     ],
     stores: [
         'Category',
         'Master',
-        'Seller'
+        'Seller',
+        'Status',
+        'Notetpl'
     ],    
     views: [
         'warranty.Form'
@@ -28,6 +32,17 @@ Ext.define('Notebook.controller.Warranty',{
             'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
+            'warranty-form button#nb-war-add-note-templ': {
+                click: function () {
+                    var warNotes=Ext.getCmp('nb-war-notes');
+                    if (warNotes.getValue()=='') {
+                        warNotes.setValue(Ext.getCmp('nb-war-note-templ').getRawValue());
+                    }
+                    else {
+                        warNotes.setValue(warNotes.getValue()+'+'+Ext.getCmp('nb-war-note-templ').getRawValue());
+                    }
+                }
+            },             
             'warranty-form button#nb-war-master-visible-toggle': {
                 click: function () {
                     var secMasterContainer=Ext.getCmp('nb-war-sec-mas-container');
@@ -40,7 +55,7 @@ Ext.define('Notebook.controller.Warranty',{
                     }
                     this.evalForm();
                 }
-            },
+            },           
             'warranty-form #nb-war-work-prim': {
                 change: this.evalForm
             }, 
@@ -215,35 +230,41 @@ Ext.define('Notebook.controller.Warranty',{
         return ajaxParams;
     },
     newWarranty: function() {
-        alert('eee');
         //вказуємо, що при доданні нового замовлення можливий лише його прийом, а не збереження
         this.isNew=true;        
         //очищаємо форму
         Ext.getCmp('nb-war-id').setValue('');
-        Ext.getCmp('nb-war-prod').setValue('');
-        Ext.getCmp('nb-war-cat').clearValue();
         Ext.getCmp('nb-war-date-start').setValue('');
-        Ext.getCmp('nb-war-date-end').setValue('');
+        Ext.getCmp('nb-war-date-end').setValue('');        
+        Ext.getCmp('nb-war-in-workshop').setValue(0);        
+        Ext.getCmp('nb-war-prod').setValue('');
+        Ext.getCmp('nb-war-model').setValue('');
+        Ext.getCmp('nb-war-ser-num').setValue('');
+        Ext.getCmp('nb-war-fac-num').setValue('');
+        Ext.getCmp('nb-war-guar').setValue('');
+        Ext.getCmp('nb-war-cat').setValue('2');
         Ext.getCmp('nb-war-cust').setValue('');
+        Ext.getCmp('nb-war-cust-info').setValue('');
         Ext.getCmp('nb-war-adr').setValue('');
         Ext.getCmp('nb-war-hphone').setValue('');
         Ext.getCmp('nb-war-wphone').setValue('');
         Ext.getCmp('nb-war-phone').setValue('');
         Ext.getCmp('nb-war-date-notif').setValue('');
+        Ext.getCmp('nb-war-cust-state').setValue('1');
         Ext.getCmp('nd-war-compl').setValue('');
         Ext.getCmp('nb-war-pref').setValue('');
         Ext.getCmp('nb-war-notes').setValue('');
-        Ext.getCmp('nb-war-guar').clearValue();
-        Ext.getCmp('nb-war-guar-cer').setValue('');
-        Ext.getCmp('nb-war-guar-comm').setValue('');
-        Ext.getCmp('nb-war-post').setValue('');
-        Ext.getCmp('nb-war-psdate').setValue('');
-        Ext.getCmp('nb-war-pedate').setValue('');
-        Ext.getCmp('nb-war-type').items.items[0].setValue(true);
-        Ext.getCmp('nb-war-mas').clearValue();         
-        Ext.getCmp('nb-war-det').setValue(''); 
-        Ext.getCmp('nb-war-work').setValue('');
-        Ext.getCmp('nb-war-wdate').setValue('');  
+        Ext.getCmp('nb-war-seller').setValue('1');
+        Ext.getCmp('nb-war-ticket-price').setValue('');
+        Ext.getCmp('nb-war-guar-comm').setValue('');        
+        Ext.getCmp('nb-war-mas-prim').clearValue();
+        Ext.getCmp('nb-war-work-prim').setValue('');
+        Ext.getCmp('nb-war-sec-mas-container').hide();
+        Ext.getCmp('nb-war-mas-sec').clearValue();
+        Ext.getCmp('nb-war-work-sec').setValue('');
+        Ext.getCmp('nb-war-det').setValue('');
+        Ext.getCmp('nb-war-trans').setValue(''); 
+        Ext.getCmp('nb-war-total-price').setValue('');   
     },
     recWarranty: function() {
         alert('eee');

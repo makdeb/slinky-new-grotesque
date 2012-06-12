@@ -237,7 +237,11 @@ Ext.define('Notebook.view.warranty.Form',{
                                         fieldLabel: 'Статус',
                                         labelWidth: 80,
                                         width: 260,
-                                        padding: '0 2 0 2'
+                                        padding: '0 2 0 2',
+                                        store: 'Status',
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        forceSelection: true                                         
                                     },
                                     {
                                         xtype: 'button',
@@ -293,7 +297,11 @@ Ext.define('Notebook.view.warranty.Form',{
                                         id: 'nb-war-note-templ',
                                         fieldLabel: 'Заметки',
                                         labelWidth: 80,
-                                        width: 200
+                                        width: 200,
+                                        store: 'Notetpl',
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        forceSelection: true                                          
                                     },
                                     {
                                         xtype: 'button',
