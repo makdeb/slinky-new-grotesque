@@ -233,7 +233,7 @@ class Notebook extends CI_Controller {
 		
 		// проверка существования категории, для которой создаваемая станет дочерней
 		// *в случае не корневой категории
-		if (($unit=='category')and($parent)and($this->category_model->get_categories($parent)===FALSE)) {
+		if (($unit=='category')and($parent)and($this->notebook_model->get_units($table,$parent)===FALSE)) {
 		
 			{
 				echo '{"success":false,"message":"Ошибка создания категории"}'; return;
@@ -536,28 +536,9 @@ class Notebook extends CI_Controller {
 		echo $data['json'];
 	}
 
-	// функция fill_customer(), реализующая создание нового заказа на осонове данных клиента
-	// *принимает параметр заказа, из которого осуществляется копирование.
-	public function fill_customer($id=0) {
-		$id = $this->input->get('id');  // принимаем параметр заказа из url
-		
-		if (($id!=='')and($id!=NULL)) 
-		{
-			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "рID" из url в строку с номером заказа
-		}
-		
-		// в случае отсутствия параметра - ошибка
-		if (!$id) { 
-			echo '{"success":false,"message":"Ошибка выбора заказа"}';
-			return;
-		 }
-		
-		// проверка существования записи с заданым id
-		if ($this->orders_model->get_unit($id)===FALSE) {
-			echo '{"success":false,"message":"Ошибка выбора елемента"}';
-		 	return;
-		}
-		
+	// функция fill_customer(), реализующая создание нового заказа на основе данных клиента
+	public function fill_customer() {
+
 		$data = array();
 		$result = array();	
 		
@@ -828,6 +809,140 @@ class Notebook extends CI_Controller {
 		// вывод результирующей строки
 		echo '{"success":true,"id":"' .$result['ID'] .'","date":"' .$result['date'] .'","message":"Заказ был успешно сохранен"}'; 
 	}
+	
+	// функция copy_order(), реализующая создание нового заказа на основе исходного, заданного параметром id
+	// * параметр id передается методом post. Номер исходного заказа вписывается в поле notes нового.
+	public function copy_order() {
+	
+		$id = $this->input->post('id'); // принимаем параметр заказа
+		
+		// в случае отсутствия id заказа - ошибка
+		if (!$id) {
+			echo '{"success":false,"message":"Ошибка выбора заказа"}'; 
+			return;
+		}
+		
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора елемента"}';
+		 	return;
+		}
+		
+		$data = array();
+		
+		// установка временной зоны
+		date_default_timezone_set('Europe/Kiev');
+		
+		// заполняем массив $data данными из формы.
+		// * первоначально записываем данные нового заказчика
+		$data['name']  = $this->input->post('name');
+		$data['address']  = $this->input->post('address');
+		$data['phone']  = $this->input->post('phone');
+		$data['wphone']  = $this->input->post('wphone');
+		$data['hphone']  = $this->input->post('hphone');
+		$data['personaldata'] = $this->input->post('personaldata');
+		if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
+			$data['blacklistID'] = 1;
+		};
+				
+		$insert_id = $this->customers_model->insert_data($data);
+		
+		if ($insert_id==FALSE) {
+						echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
+						return;
+					}
+		
+		// очистка массива $data и заполнение оного остальными данными заказа
+		unset($data);
+		$data = array();
+		
+		$data['customerID'] = $insert_id; // запись номера заказчика
+		$data['date_start'] = date("Y-m-d");  // сегодняшняя дата
+		
+		// проверка номера категории,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['categoryID']  = $this->input->post('categoryID'))) {
+			$data['categoryID'] = 2;
+		};
+		$data['type']  = $this->input->post('type');
+		$data['model'] = $this->input->post('model');
+		// проверка заполнения поля "Виріб"
+		if (!($data['product']  = $this->input->post('product'))) {
+			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
+			return;
+		};
+		$data['serialnum'] = $this->input->post('serialnum');
+		$data['factorynum'] = $this->input->post('factorynum');
+		$data['guarantee']  = $this->input->post('guarantee');
+		
+		// для полей типа date производим проверку наличия значения в поле.
+		// При отсутствии такого значения записываем NULL,
+		// при наличии - преобразованное из строки в тип date значение
+		if (!$this->input->post('notified')) {
+			$data['notified'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('notified'));
+			$data['notified']  = $date->format('Y-m-d');
+		}
+		
+		$data['complaints']  = $this->input->post('complaints');
+		$data['performance']  = $this->input->post('performance');
+		$data['notes']  = $this->input->post('notes') .' (' .'Копия с заказа №' .$id .')'; // запись номера исходного заказа в заметки
+		// проверка номера продавца,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
+			$data['sellerID']  = 1;
+		}
+		$data['check']  = $this->input->post('check');
+		$data['comments']  = $this->input->post('comments');
+		// проверка номера мастера,
+		// если отсутствует - записываем значение по умочанию
+		if (!($data['masterID']  = $this->input->post('masterID'))) {
+			$data['masterID'] = 1;
+		};
+		$data['master2ID']  = $this->input->post('master2ID');
+		$data['worksum']  = $this->input->post('worksum');
+		$data['worksum2']  = $this->input->post('worksum2');
+		$data['details']  = $this->input->post('details');
+		$data['transportation']  = $this->input->post('transportation');
+		$data['total']  = $this->input->post('total');
+		
+		if (!$this->input->post('gdate')) {
+			$data['gdate'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('gdate'));
+			$data['gdate']  = $date->format('Y-m-d');
+		}
+		
+		$new_order = $this->orders_model->insert_data($data); // id нового заказа, основанного на исходном
+		
+		if ($new_order==FALSE) {
+						echo '{"success":false,"message":"Ошибка при сохранении записи"}'; 
+						return;
+					}
+		
+		//вибір замовлення із новоствореним id
+			$query_result = $this->notebook_model->get_all_fields($new_order);
+			if ($query_result===FALSE) {
+				echo '{"success":false,"message":"Ошибка получения елемента"}}'; // в случае отсутствия заказа с новым id -- ошибка
+				return;
+			};
+			$data['records'] = json_encode($query_result);	
+			$data['error'] = json_last_error();
+			
+		// перевірка помилок
+		// якщо є помилки , стираємо масив і записуємо у нього строкове значення '[]'
+		// після чого формуємо json-строку зі значенням false	
+			if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"message":"Ошибка получения данных"}';
+		// якщо помилок немає і запис знайдено, то формуємо json-строку зі значенням true 		
+			} else { $data['json'] = '{"success":true,"order":' .$data['records'] .'}';
+					$data['json'] = str_replace(':null',':""',$data['json']);
+				}
+		echo $data['json'];			
+	}	
 	
 }
 
