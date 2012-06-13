@@ -107,32 +107,84 @@ Ext.define('Notebook.controller.Warranty',{
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
                     //при успішному виконанні запиту заповнюємо поля форми
+//id
+//idCategories
+//date_start
+//date_end
+//type
+//model
+//product
+//address
+//check
+//comments
+//complaints
+//customer
+//date_end
+//date_start
+//details
+//factorynum
+//file
+//gdate
+//guarantee
+//hphone
+//id
+//id2Masters
+//idBlacklist
+//idCategories
+//idMasters
+//idSellers
+//model
+//notes
+//notified
+//performance
+//personaldata
+//phone
+//product
+//serialnum
+//total
+//transportation
+//type
+//worksum
+//worksum2
+//wphone
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
-                    Ext.getCmp('nb-war-prod').setValue(json.order.product);
-                    Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
-                    Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));
+                    Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
+                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+                    Ext.getCmp('nb-war-prod').setValue(json.order.product);
+                    Ext.getCmp('nb-war-model').setValue(json.order.model);
+                    Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
+                    Ext.getCmp('nb-war-fac-num').setValue(json.order.factorynum);
+                    Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
+                    Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
                     Ext.getCmp('nb-war-cust').setValue(json.order.customer);
+                    Ext.getCmp('nb-war-cust-info').setValue(json.order.personaldata);
                     Ext.getCmp('nb-war-adr').setValue(json.order.address);
                     Ext.getCmp('nb-war-hphone').setValue(json.order.hphone);
                     Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
+                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
-                    Ext.getCmp('nb-war-guar').setValue(json.order.idGuarantee);
-                    Ext.getCmp('nb-war-guar-cer').setValue(json.order.certificate);
-                    Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);
-                    Ext.getCmp('nb-war-post').setValue(json.order.posted);
-                    Ext.getCmp('nb-war-psdate').setValue(Ext.Date.parse(json.order.pstartdate,'Y-m-d'));
-                    Ext.getCmp('nb-war-pedate').setValue(Ext.Date.parse(json.order.penddate,'Y-m-d'));
-                    Ext.getCmp('nb-war-type').items.items[json.order.type].setValue(true);
-                    Ext.getCmp('nb-war-mas').setValue(json.order.idMasters);                    
-                    Ext.getCmp('nb-war-det').setValue(json.order.details); 
-                    Ext.getCmp('nb-war-work').setValue(json.order.sum); 
-                    Ext.getCmp('nb-war-wdate').setValue(json.order.gdate); 
-                    //alert(Ext.getCmp('nb-war-type').getValue()['rb']);                                           
+                    Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
+                    Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
+                    Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
+                    Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
+                    Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
+                    if (json.order.id2Masters!=undefined && json.order.id2Masters!='' && json.order.id2Masters!=1) {
+                        Ext.getCmp('nb-war-sec-mas-container').show();    
+                    }
+                    else {
+                        Ext.getCmp('nb-war-sec-mas-container').hide();
+                    }
+                    alert(json.order.id2Masters);
+                    Ext.getCmp('nb-war-mas-sec').setValue(json.order.id2Masters);
+                    Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
+                    Ext.getCmp('nb-war-det').setValue(json.order.details);
+                    Ext.getCmp('nb-war-trans').setValue(json.order.transportation); 
+                    Ext.getCmp('nb-war-total-price').setValue(json.order.total);                                            
                 }
                 else {
                     Ext.Msg.alert('Сообщение',json.message);
@@ -144,89 +196,168 @@ Ext.define('Notebook.controller.Warranty',{
         };
         Ext.Ajax.request(ajaxConf);
     },
-    fillAjaxParams: function () {
+    fillAjaxParams: function (action) {
         //отримуємо значення полів форми
-        var warProd=Ext.getCmp('nb-war-prod');
-        var warCat=Ext.getCmp('nb-war-cat');
-        var warStartDate=Ext.getCmp('nb-war-date-start');
-        var warEndDate=Ext.getCmp('nb-war-date-end');
-        var warCust=Ext.getCmp('nb-war-cust');
-        var warAdr=Ext.getCmp('nb-war-adr');
-        var warHPhone=Ext.getCmp('nb-war-hphone');
-        var warWPhone=Ext.getCmp('nb-war-wphone');
-        var warPhone=Ext.getCmp('nb-war-phone');
-        var warNotifDate=Ext.getCmp('nb-war-date-notif');
-        var warCompl=Ext.getCmp('nd-war-compl');
-        var warPref=Ext.getCmp('nb-war-pref');
-        var warNotes=Ext.getCmp('nb-war-notes');
-        var warGuar=Ext.getCmp('nb-war-guar');
-        var warGuarCer=Ext.getCmp('nb-war-guar-cer');
-        var warGuarComm=Ext.getCmp('nb-war-guar-comm');
-        var warPost=Ext.getCmp('nb-war-post');
-        var warPSDate=Ext.getCmp('nb-war-psdate');
-        var warPEDate=Ext.getCmp('nb-war-pedate');
-        var warType=Ext.getCmp('nb-war-type');
-        var warMas=Ext.getCmp('nb-war-mas');                    
-        var warDet=Ext.getCmp('nb-war-det'); 
-        var warWork=Ext.getCmp('nb-war-work'); 
-        var warWDate=Ext.getCmp('nb-war-wdate');
-        if (!warProd.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Изделие"');
-            return false;
-        }
-        if (!warCust.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Владелец"');
-            return false;
-        }  
-        if (!warAdr.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Адресс"');
-            return false;
-        }   
-        if (!warHPhone.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
-            return false;
-        }   
-        if (!warWPhone.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
-            return false;
-        } 
-        if (!warPhone.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
-            return false;
-        }             
-        if (!warDet.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Деталі"');
-            return false;
-        }   
-        if (!warWork.isValid()) {
-            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Робота"');
-            return false;
-        }             
+//        var warProd=Ext.getCmp('nb-war-prod');
+//        var warCat=Ext.getCmp('nb-war-cat');
+//        var warStartDate=Ext.getCmp('nb-war-date-start');
+//        var warEndDate=Ext.getCmp('nb-war-date-end');
+//        var warCust=Ext.getCmp('nb-war-cust');
+//        var warAdr=Ext.getCmp('nb-war-adr');
+//        var warHPhone=Ext.getCmp('nb-war-hphone');
+//        var warWPhone=Ext.getCmp('nb-war-wphone');
+//        var warPhone=Ext.getCmp('nb-war-phone');
+//        var warNotifDate=Ext.getCmp('nb-war-date-notif');
+//        var warCompl=Ext.getCmp('nd-war-compl');
+//        var warPref=Ext.getCmp('nb-war-pref');
+//        var warNotes=Ext.getCmp('nb-war-notes');
+//        var warGuar=Ext.getCmp('nb-war-guar');
+//        var warGuarCer=Ext.getCmp('nb-war-guar-cer');
+//        var warGuarComm=Ext.getCmp('nb-war-guar-comm');
+//        var warPost=Ext.getCmp('nb-war-post');
+//        var warPSDate=Ext.getCmp('nb-war-psdate');
+//        var warPEDate=Ext.getCmp('nb-war-pedate');
+//        var warType=Ext.getCmp('nb-war-type');
+//        var warMas=Ext.getCmp('nb-war-mas');                    
+//        var warDet=Ext.getCmp('nb-war-det'); 
+//        var warWork=Ext.getCmp('nb-war-work'); 
+//        var warWDate=Ext.getCmp('nb-war-wdate');
+        
+        
+                    //var warStartDate=Ext.getCmp('nb-war-date-start');
+                    //var warEndDate=Ext.getCmp('nb-war-date-end');
+                    if (action='update') {
+                        var warId=Ext.getCmp('nb-war-id');
+                    }
+                    var warInWS=Ext.getCmp('nb-war-in-workshop');
+                    var warProd=Ext.getCmp('nb-war-prod');
+                    var warModel=Ext.getCmp('nb-war-model');
+                    var warSerNum=Ext.getCmp('nb-war-ser-num');
+                    var warFacNum=Ext.getCmp('nb-war-fac-num');
+                    var warGuar=Ext.getCmp('nb-war-guar');
+                    var warCat=Ext.getCmp('nb-war-cat');
+                    var warCust=Ext.getCmp('nb-war-cust');
+                    var warCustInfo=Ext.getCmp('nb-war-cust-info');
+                    var warAdr=Ext.getCmp('nb-war-adr');
+                    var warHPhone=Ext.getCmp('nb-war-hphone');
+                    var warWPhone=Ext.getCmp('nb-war-wphone');
+                    var warPhone=Ext.getCmp('nb-war-phone');
+                    var warNotifDate=Ext.getCmp('nb-war-date-notif');
+                    var warCustState=Ext.getCmp('nb-war-cust-state');
+                    var warCompl=Ext.getCmp('nd-war-compl');
+                    var warPref=Ext.getCmp('nb-war-pref');
+                    var warNotes=Ext.getCmp('nb-war-notes');
+                    var warSeller=Ext.getCmp('nb-war-seller');
+                    var warTicketPrice=Ext.getCmp('nb-war-ticket-price');
+                    var warGuarComm=Ext.getCmp('nb-war-guar-comm');
+                    var warMasPrim=Ext.getCmp('nb-war-mas-prim');
+                    var warWorkPrim=Ext.getCmp('nb-war-work-prim');
+                    var warMasSec=Ext.getCmp('nb-war-mas-sec');
+                    var warWorkSec=Ext.getCmp('nb-war-work-sec');
+                    var warDet=Ext.getCmp('nb-war-det');
+                    var warTrans=Ext.getCmp('nb-war-trans');
+                    var warTotalPrice=Ext.getCmp('nb-war-total-price');
+        
+//        if (!warProd.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Изделие"');
+//            return false;
+//        }
+//        if (!warCust.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Владелец"');
+//            return false;
+//        }  
+//        if (!warAdr.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Адресс"');
+//            return false;
+//        }   
+//        if (!warHPhone.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
+//            return false;
+//        }   
+//        if (!warWPhone.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
+//            return false;
+//        } 
+//        if (!warPhone.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
+//            return false;
+//        }             
+//        if (!warDet.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Деталі"');
+//            return false;
+//        }   
+//        if (!warWork.isValid()) {
+//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Робота"');
+//            return false;
+//        }             
          
         var ajaxParams={};
-        ajaxParams.id=Ext.getCmp('nb-war-id').getValue();
-        ajaxParams.type=warType.getValue()['nb-war-type-rb'];
-        ajaxParams.product=warProd.getValue();
+        if (action='update') {
+            ajaxParams.id=warId.getValue();
+        }        
         ajaxParams.categoryID=warCat.getValue();
+        if (warInWS.getValue()) {
+            ajaxParams.type=1;
+        }
+        else {
+            ajaxParams.type=0;
+        }        
+        ajaxParams.model=warModel.getValue();
+        ajaxParams.product=warProd.getValue();
+        ajaxParams.serialnum=warSerNum.getValue();
+        ajaxParams.factorynum=warFacNum.getValue();
+        ajaxParams.guarantee=warGuar.getValue();
+        ajaxParams.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');
         ajaxParams.complaints=warCompl.getValue();
         ajaxParams.performance=warPref.getValue();
         ajaxParams.notes=warNotes.getValue();
-        ajaxParams.sum=warWork.getValue();
-        ajaxParams.details=warDet.getValue();
-        ajaxParams.masterID=warMas.getValue();
-        ajaxParams.guaranteeID=warGuar.getValue();
-        ajaxParams.certificate=warGuarCer.getValue();
+        ajaxParams.sellerID=warSeller.getValue();
+        ajaxParams.check=warTicketPrice.getValue();
         ajaxParams.comments=warGuarComm.getValue();
-        ajaxParams.posted=warPost.getValue();
+        ajaxParams.masterID=warMasPrim.getValue();       
+        ajaxParams.worksum=warWorkPrim.getValue();        
+        if (Ext.getCmp('nb-war-sec-mas-container').isVisible()) {
+            ajaxParams.master2ID=warMasSec.getValue();
+            ajaxParams.worksum2=warWorkSec.getValue();
+        }
+        else {
+            ajaxParams.master2ID=1;
+            ajaxParams.worksum2=0;            
+        }
+        ajaxParams.details=warDet.getValue();
+        ajaxParams.transportation=warTrans.getValue();
+        ajaxParams.total=warTotalPrice.getValue();
+        //ajaxParams.gdate=
         ajaxParams.name=warCust.getValue();
         ajaxParams.address=warAdr.getValue();
         ajaxParams.phone=warPhone.getValue();
         ajaxParams.wphone=warWPhone.getValue();
         ajaxParams.hphone=warHPhone.getValue();
-        ajaxParams.gdate=Ext.Date.format(warWDate.getValue(),'d.m.Y');
-        ajaxParams.pstartdate=Ext.Date.format(warPSDate.getValue(),'d.m.Y');
-        ajaxParams.penddate=Ext.Date.format(warPEDate.getValue(),'d.m.Y');
-        ajaxParams.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');   
+        ajaxParams.personaldata=warCustInfo.getValue();
+        ajaxParams.blacklistID=warCustState.getValue();        
+//        ajaxParams.id=Ext.getCmp('nb-war-id').getValue();
+//        ajaxParams.type=warType.getValue()['nb-war-type-rb'];
+//        ajaxParams.product=warProd.getValue();
+//        ajaxParams.categoryID=warCat.getValue();
+//        ajaxParams.complaints=warCompl.getValue();
+//        ajaxParams.performance=warPref.getValue();
+//        ajaxParams.notes=warNotes.getValue();
+//        ajaxParams.sum=warWork.getValue();
+//        ajaxParams.details=warDet.getValue();
+//        ajaxParams.masterID=warMas.getValue();
+//        ajaxParams.guaranteeID=warGuar.getValue();
+//        ajaxParams.certificate=warGuarCer.getValue();
+//        ajaxParams.comments=warGuarComm.getValue();
+//        ajaxParams.posted=warPost.getValue();
+//        ajaxParams.name=warCust.getValue();
+//        ajaxParams.address=warAdr.getValue();
+//        ajaxParams.phone=warPhone.getValue();
+//        ajaxParams.wphone=warWPhone.getValue();
+//        ajaxParams.hphone=warHPhone.getValue();
+//        ajaxParams.gdate=Ext.Date.format(warWDate.getValue(),'d.m.Y');
+//        ajaxParams.pstartdate=Ext.Date.format(warPSDate.getValue(),'d.m.Y');
+//        ajaxParams.penddate=Ext.Date.format(warPEDate.getValue(),'d.m.Y');
+//        ajaxParams.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');   
         return ajaxParams;
     },
     newWarranty: function() {

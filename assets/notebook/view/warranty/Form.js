@@ -410,6 +410,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                     type: 'column'
                                 },
                                 padding: '0 0 5 0',
+                                hidden: true,
                                 items: [
                                     {
                                         xtype: 'combobox',
