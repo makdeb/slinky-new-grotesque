@@ -70,7 +70,12 @@ Ext.define('Notebook.view.Menu',{
             id: 'nb-save-warranty',
             text: 'Сохранить',
             icon: icons_path+'ord-save.png'
-        },                    
+        },  
+        {
+            xtype: 'button',
+            id: 'nb-copy-warranty',
+            text: 'Копировать'
+        },
         {
             xtype: 'button',
             text: 'Поиск'

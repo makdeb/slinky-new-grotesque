@@ -1,7 +1,7 @@
 Ext.define('Notebook.view.product.Delete',{
     extend: 'Ext.window.Window',
     layout: 'fit',
-    title: 'Категорія',
+    title: 'Категория',
     resizable: false,
     closable: false,     
     modal: true,
@@ -26,11 +26,11 @@ Ext.define('Notebook.view.product.Delete',{
     buttons: [
         {
             id: 'nb-cat-del-win-ok',
-            text: 'Так'
+            text: 'Да'
         },
         {
             id: 'nb-cat-del-win-cancel',
-            text: 'Ні'
+            text: 'Нет'
         }
     ]
 });

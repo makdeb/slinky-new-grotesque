@@ -1,7 +1,7 @@
 Ext.define('Notebook.view.product.Edit',{
     extend: 'Ext.window.Window',
     layout: 'fit',
-    title: 'Категорія',
+    title: 'Категория',
     resizable: false,
     closable: false,     
     modal: true,
@@ -31,14 +31,14 @@ Ext.define('Notebook.view.product.Edit',{
                     id: 'nb-cat-edt-win-cat-name',
                     width: 100,
                     labelWidth: 40,
-                    fieldLabel: 'Назва',
+                    fieldLabel: 'Имя',
                     allowBlank: false,
                     vtype: 'cyralphanum'
                 },
                 {
                     xtype: 'checkbox',
                     id: 'nb-cat-edt-win-no-parent',
-                    boxLabel: 'додати в корінь',
+                    boxLabel: 'добавить в корень',
                     margin: '0 0 0 47'
                 }
             ]
@@ -48,11 +48,11 @@ Ext.define('Notebook.view.product.Edit',{
     buttons: [
         {
             id: 'nb-cat-edt-win-save',
-            text: 'Зберегти'
+            text: 'Сохранить'
         },
         {
             id: 'nb-cat-edt-win-cancel',
-            text: 'Відмінити'
+            text: 'Отмена'
         }
     ]
 });

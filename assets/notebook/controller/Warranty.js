@@ -28,7 +28,10 @@ Ext.define('Notebook.controller.Warranty',{
             },
             'main-menu button#nb-save-warranty': {
                 click: this.saveWarranty
-            },             
+            },    
+            'main-,enu button#nb-copy-warranty': {
+                click: this.copyWarrany
+            },
             'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
@@ -107,46 +110,6 @@ Ext.define('Notebook.controller.Warranty',{
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
                     //при успішному виконанні запиту заповнюємо поля форми
-//id
-//idCategories
-//date_start
-//date_end
-//type
-//model
-//product
-//address
-//check
-//comments
-//complaints
-//customer
-//date_end
-//date_start
-//details
-//factorynum
-//file
-//gdate
-//guarantee
-//hphone
-//id
-//id2Masters
-//idBlacklist
-//idCategories
-//idMasters
-//idSellers
-//model
-//notes
-//notified
-//performance
-//personaldata
-//phone
-//product
-//serialnum
-//total
-//transportation
-//type
-//worksum
-//worksum2
-//wphone
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
                     Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
@@ -179,7 +142,6 @@ Ext.define('Notebook.controller.Warranty',{
                     else {
                         Ext.getCmp('nb-war-sec-mas-container').hide();
                     }
-                    alert(json.order.id2Masters);
                     Ext.getCmp('nb-war-mas-sec').setValue(json.order.id2Masters);
                     Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
                     Ext.getCmp('nb-war-det').setValue(json.order.details);
@@ -197,67 +159,40 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.Ajax.request(ajaxConf);
     },
     fillAjaxParams: function (action) {
-        //отримуємо значення полів форми
-//        var warProd=Ext.getCmp('nb-war-prod');
-//        var warCat=Ext.getCmp('nb-war-cat');
-//        var warStartDate=Ext.getCmp('nb-war-date-start');
-//        var warEndDate=Ext.getCmp('nb-war-date-end');
-//        var warCust=Ext.getCmp('nb-war-cust');
-//        var warAdr=Ext.getCmp('nb-war-adr');
-//        var warHPhone=Ext.getCmp('nb-war-hphone');
-//        var warWPhone=Ext.getCmp('nb-war-wphone');
-//        var warPhone=Ext.getCmp('nb-war-phone');
-//        var warNotifDate=Ext.getCmp('nb-war-date-notif');
-//        var warCompl=Ext.getCmp('nd-war-compl');
-//        var warPref=Ext.getCmp('nb-war-pref');
-//        var warNotes=Ext.getCmp('nb-war-notes');
-//        var warGuar=Ext.getCmp('nb-war-guar');
-//        var warGuarCer=Ext.getCmp('nb-war-guar-cer');
-//        var warGuarComm=Ext.getCmp('nb-war-guar-comm');
-//        var warPost=Ext.getCmp('nb-war-post');
-//        var warPSDate=Ext.getCmp('nb-war-psdate');
-//        var warPEDate=Ext.getCmp('nb-war-pedate');
-//        var warType=Ext.getCmp('nb-war-type');
-//        var warMas=Ext.getCmp('nb-war-mas');                    
-//        var warDet=Ext.getCmp('nb-war-det'); 
-//        var warWork=Ext.getCmp('nb-war-work'); 
-//        var warWDate=Ext.getCmp('nb-war-wdate');
-        
-        
-                    //var warStartDate=Ext.getCmp('nb-war-date-start');
-                    //var warEndDate=Ext.getCmp('nb-war-date-end');
-                    if (action='update') {
-                        var warId=Ext.getCmp('nb-war-id');
-                    }
-                    var warInWS=Ext.getCmp('nb-war-in-workshop');
-                    var warProd=Ext.getCmp('nb-war-prod');
-                    var warModel=Ext.getCmp('nb-war-model');
-                    var warSerNum=Ext.getCmp('nb-war-ser-num');
-                    var warFacNum=Ext.getCmp('nb-war-fac-num');
-                    var warGuar=Ext.getCmp('nb-war-guar');
-                    var warCat=Ext.getCmp('nb-war-cat');
-                    var warCust=Ext.getCmp('nb-war-cust');
-                    var warCustInfo=Ext.getCmp('nb-war-cust-info');
-                    var warAdr=Ext.getCmp('nb-war-adr');
-                    var warHPhone=Ext.getCmp('nb-war-hphone');
-                    var warWPhone=Ext.getCmp('nb-war-wphone');
-                    var warPhone=Ext.getCmp('nb-war-phone');
-                    var warNotifDate=Ext.getCmp('nb-war-date-notif');
-                    var warCustState=Ext.getCmp('nb-war-cust-state');
-                    var warCompl=Ext.getCmp('nd-war-compl');
-                    var warPref=Ext.getCmp('nb-war-pref');
-                    var warNotes=Ext.getCmp('nb-war-notes');
-                    var warSeller=Ext.getCmp('nb-war-seller');
-                    var warTicketPrice=Ext.getCmp('nb-war-ticket-price');
-                    var warGuarComm=Ext.getCmp('nb-war-guar-comm');
-                    var warMasPrim=Ext.getCmp('nb-war-mas-prim');
-                    var warWorkPrim=Ext.getCmp('nb-war-work-prim');
-                    var warMasSec=Ext.getCmp('nb-war-mas-sec');
-                    var warWorkSec=Ext.getCmp('nb-war-work-sec');
-                    var warDet=Ext.getCmp('nb-war-det');
-                    var warTrans=Ext.getCmp('nb-war-trans');
-                    var warTotalPrice=Ext.getCmp('nb-war-total-price');
-        
+        //отримуємо значення полів форми                
+        //var warStartDate=Ext.getCmp('nb-war-date-start');
+        //var warEndDate=Ext.getCmp('nb-war-date-end');
+        if (action='update') {
+            var warId=Ext.getCmp('nb-war-id');
+        }
+        var warInWS=Ext.getCmp('nb-war-in-workshop');
+        var warProd=Ext.getCmp('nb-war-prod');
+        var warModel=Ext.getCmp('nb-war-model');
+        var warSerNum=Ext.getCmp('nb-war-ser-num');
+        var warFacNum=Ext.getCmp('nb-war-fac-num');
+        var warGuar=Ext.getCmp('nb-war-guar');
+        var warCat=Ext.getCmp('nb-war-cat');
+        var warCust=Ext.getCmp('nb-war-cust');
+        var warCustInfo=Ext.getCmp('nb-war-cust-info');
+        var warAdr=Ext.getCmp('nb-war-adr');
+        var warHPhone=Ext.getCmp('nb-war-hphone');
+        var warWPhone=Ext.getCmp('nb-war-wphone');
+        var warPhone=Ext.getCmp('nb-war-phone');
+        var warNotifDate=Ext.getCmp('nb-war-date-notif');
+        var warCustState=Ext.getCmp('nb-war-cust-state');
+        var warCompl=Ext.getCmp('nd-war-compl');
+        var warPref=Ext.getCmp('nb-war-pref');
+        var warNotes=Ext.getCmp('nb-war-notes');
+        var warSeller=Ext.getCmp('nb-war-seller');
+        var warTicketPrice=Ext.getCmp('nb-war-ticket-price');
+        var warGuarComm=Ext.getCmp('nb-war-guar-comm');
+        var warMasPrim=Ext.getCmp('nb-war-mas-prim');
+        var warWorkPrim=Ext.getCmp('nb-war-work-prim');
+        var warMasSec=Ext.getCmp('nb-war-mas-sec');
+        var warWorkSec=Ext.getCmp('nb-war-work-sec');
+        var warDet=Ext.getCmp('nb-war-det');
+        var warTrans=Ext.getCmp('nb-war-trans');
+        var warTotalPrice=Ext.getCmp('nb-war-total-price');        
 //        if (!warProd.isValid()) {
 //            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Изделие"');
 //            return false;
@@ -289,8 +224,7 @@ Ext.define('Notebook.controller.Warranty',{
 //        if (!warWork.isValid()) {
 //            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Робота"');
 //            return false;
-//        }             
-         
+//        }                      
         var ajaxParams={};
         if (action='update') {
             ajaxParams.id=warId.getValue();
@@ -334,30 +268,7 @@ Ext.define('Notebook.controller.Warranty',{
         ajaxParams.wphone=warWPhone.getValue();
         ajaxParams.hphone=warHPhone.getValue();
         ajaxParams.personaldata=warCustInfo.getValue();
-        ajaxParams.blacklistID=warCustState.getValue();        
-//        ajaxParams.id=Ext.getCmp('nb-war-id').getValue();
-//        ajaxParams.type=warType.getValue()['nb-war-type-rb'];
-//        ajaxParams.product=warProd.getValue();
-//        ajaxParams.categoryID=warCat.getValue();
-//        ajaxParams.complaints=warCompl.getValue();
-//        ajaxParams.performance=warPref.getValue();
-//        ajaxParams.notes=warNotes.getValue();
-//        ajaxParams.sum=warWork.getValue();
-//        ajaxParams.details=warDet.getValue();
-//        ajaxParams.masterID=warMas.getValue();
-//        ajaxParams.guaranteeID=warGuar.getValue();
-//        ajaxParams.certificate=warGuarCer.getValue();
-//        ajaxParams.comments=warGuarComm.getValue();
-//        ajaxParams.posted=warPost.getValue();
-//        ajaxParams.name=warCust.getValue();
-//        ajaxParams.address=warAdr.getValue();
-//        ajaxParams.phone=warPhone.getValue();
-//        ajaxParams.wphone=warWPhone.getValue();
-//        ajaxParams.hphone=warHPhone.getValue();
-//        ajaxParams.gdate=Ext.Date.format(warWDate.getValue(),'d.m.Y');
-//        ajaxParams.pstartdate=Ext.Date.format(warPSDate.getValue(),'d.m.Y');
-//        ajaxParams.penddate=Ext.Date.format(warPEDate.getValue(),'d.m.Y');
-//        ajaxParams.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');   
+        ajaxParams.blacklistID=warCustState.getValue();          
         return ajaxParams;
     },
     newWarranty: function() {
@@ -460,6 +371,18 @@ Ext.define('Notebook.controller.Warranty',{
         }
         else {
             Ext.Msg.alert('Повідомлення','Збереження не можливе при введенні нового замовлення. Необхідно виконати прийом.');
+        }
+    },
+    copyWarranty: function () {
+        if (!this.isNew) {
+            var ajaxConf={};
+            ajaxConf.url='notebook/copy_order';
+            ajaxConf.method='POST';
+            ajaxConf.params={};
+            ajaxConf.params.id=Ext.getCmp('nb-war-id');
+            ajaxConf.success=function (resp,opts) {
+                var json=Ext.decode(resp.responseText);
+            }
         }
     },
     warPrint: function () {
