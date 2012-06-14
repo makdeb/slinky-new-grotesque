@@ -1,0 +1,23 @@
+table {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #000;
+}
+.logo {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 22px;
+	font-weight: bold;
+	color: #F00;
+}
+.main td {
+	padding: 5px 0;
+}
+.bordered {
+	border-bottom: 1px solid #000;
+}
+h2 {
+	font-weight: normal;
+}
+.info td {
+	padding: 5px;
+}

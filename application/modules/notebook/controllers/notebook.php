@@ -576,6 +576,7 @@ class Notebook extends CI_Controller {
 		$data['categoryID'] = 2;
 		$data['sellerID'] = 1;
 		$data['masterID'] = 1;
+		$data['master2ID'] = 1;
 		
 		$new_order = $this->orders_model->insert_data($data);
 		$result['ID'] = $new_order;
@@ -782,7 +783,9 @@ class Notebook extends CI_Controller {
 		if (!($data['masterID']  = $this->input->post('masterID'))) {
 			$data['masterID'] = 1;
 		};
-		$data['master2ID']  = $this->input->post('master2ID');
+		if (!($data['master2ID']  = $this->input->post('master2ID'))) {
+			$data['master2ID'] = 1;
+		};
 		$data['worksum']  = $this->input->post('worksum');
 		$data['worksum2']  = $this->input->post('worksum2');
 		$data['details']  = $this->input->post('details');
@@ -900,7 +903,9 @@ class Notebook extends CI_Controller {
 		if (!($data['masterID']  = $this->input->post('masterID'))) {
 			$data['masterID'] = 1;
 		};
-		$data['master2ID']  = $this->input->post('master2ID');
+		if (!($data['master2ID']  = $this->input->post('master2ID'))) {
+			$data['master2ID'] = 1;
+		};
 		$data['worksum']  = $this->input->post('worksum');
 		$data['worksum2']  = $this->input->post('worksum2');
 		$data['details']  = $this->input->post('details');
@@ -944,6 +949,93 @@ class Notebook extends CI_Controller {
 		echo $data['json'];			
 	}	
 	
+	// функция do_upload(), реализующая добавление файла-изображения к существующему заказу.
+	// * принимает параметр id заказа методом post. Использует File Uploading Class CI.
+	public function do_upload() {
+		$id = $this->input->post('id'); // принимаем параметр заказа
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) { 
+			echo '{"success":false,"message":"Ошибка выбора заказа"}';
+			return;
+		 }
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора записи"}';
+		 	return;
+		}
+		
+		$data = array();
+		
+		$config['upload_path'] = './uploads'; // путь
+		$config['allowed_types'] = 'gif|jpg|png'; //разрешенные типы файла
+		$config['max_width']  = '1280';
+		$config['max_height']  = '1024';
+		$config['file_name']  = 'file_' .$id; // записываем файл под именем "file"_номер_заказа, например "file_235"
+		$config['overwrite'] = TRUE; // перезапись существующих имен. Это обеспечит не более одного файла на один заказ
+
+		$this->load->library('upload', $config); // загрузка FUC CI с заданными параметрами
+
+		if ( ! $this->upload->do_upload())
+		{
+			$data['error'] = $this->upload->display_errors(); // ошибки операции
+			
+			echo '{"success":false,"message":"Ошибка добавления файла. ' .$data["error"] .'"}';
+		}
+		else
+		{
+			$up_data = $this->upload->data();
+			$name = $up_data['client_name']; // запоминаем оригинальное имя файла
+			$data['file'] = $up_data['file_name']; // новое имя файла
+	
+			$query = $this->orders_model->update_itemid('',$id,$data); // запись в базу имени файла
+			
+			if ($query==FALSE) {
+				echo '{"success":false,"message":"Ошибка обновления данных"}'; 
+				return;
+			}
+			
+			echo '{"success":true,"message":"Файл ' .$name  .' был успешно добавлен"}';
+		}
+	}	
+	
+	// функция выдачи заказа close_order(). Принимает номер заказа для выдачи	 
+	public function close_order($id='') {
+		$id = $this->input->get('id');  // принимаем параметр заказа из url
+		
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "pID" из url в строку с числовым значением	
+		}
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) { 
+			echo '{"success":false,"message":"Ошибка выбора заказа"}';
+			return;
+		 }
+		
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора записи"}';
+		 	return;
+		}
+		
+		$data = array();
+		
+		// установка временной зоны
+		date_default_timezone_set('Europe/Kiev');
+		
+		$data['date_end'] = date("Y-m-d");  // сегодняшняя дата
+		// обновляем данные
+		$query = $this->orders_model->update_itemid('',$id,$data);
+		
+			if ($query===FALSE) {
+					echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
+					return;
+				}
+		// вывод json-строки
+		echo '{"success":true,"date":"' .$data['date_end'] .'"}';	
+	}
 }
 
 /* End of file notebook.php */
