@@ -133,7 +133,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                         store: 'Category',
                                         displayField: 'name',
                                         valueField: 'id',
-                                        forceSelection: true                                        
+                                        forceSelection: true
                                     }                                    
                                 ]
                             }     
@@ -470,6 +470,27 @@ Ext.define('Notebook.view.warranty.Form',{
                                     }                                  
                                 ]
                             }                            
+                        ]
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                items: [
+                    {
+                        xtype: 'form',
+                        width: 100,
+                        hidden: true,
+                        items: [
+                            {
+                                xtype: 'filefield',
+                                name: 'war-file',
+                                labelWidth: 50,
+                                msgTarget: 'side',
+                                allowBlank: false,
+                                anchor: '100%',
+                                buttonText: ''
+                            }
                         ]
                     }
                 ]
