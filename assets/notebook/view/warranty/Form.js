@@ -476,22 +476,51 @@ Ext.define('Notebook.view.warranty.Form',{
             },
             {
                 xtype: 'container',
+                layout: {
+                    type: 'column',
+                    align: 'right'
+                },
+                width: 550,
+                margin: '5 0 0 0',
                 items: [
                     {
+                        xtype: 'datefield',
+                        labelWidth: 85,
+                        margin: '0 0 0 5',
+                        width: 180,
+                        format: 'd.m.Y',
+                        fieldLabel: 'Гарантия до'
+                    },
+                    {
+                        xtype: 'button',
+                        text: 'Загрузить файл',
+                        margin: '0 0 0 150'
+                    },
+                    {
                         xtype: 'form',
-                        width: 100,
-                        hidden: true,
+                        id: 'nb-war-file-upload-form',
+                        padding: '0',
+                        bodyStyle: {
+                            background: '#DFE9F6'
+                        },
+                        border: false,
                         items: [
                             {
                                 xtype: 'filefield',
                                 name: 'war-file',
-                                labelWidth: 50,
+                                id: 'nb-war-file',
                                 msgTarget: 'side',
                                 allowBlank: false,
                                 anchor: '100%',
-                                buttonText: ''
+                                buttonText: 'ww',
+                                buttonOnly: true,
+                                margin:'0'
                             }
                         ]
+                    },
+                    {
+                        xtype: 'button',
+                        text: 'ww'
                     }
                 ]
             }            

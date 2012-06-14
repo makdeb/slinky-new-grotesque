@@ -35,6 +35,11 @@ Ext.define('Notebook.controller.Warranty',{
             'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
+            'main-menu button#nb-browse-file': {
+                click: function () {
+                    Ext.getCmp('nb-war-file').click();
+                }
+            },            
             'warranty-form button#nb-war-copy-cust-info': {
                 click: this.copyCustInfo
             },
