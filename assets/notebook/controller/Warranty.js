@@ -1,6 +1,7 @@
 Ext.define('Notebook.controller.Warranty',{
     extend: 'Ext.app.Controller',
     isNew: true,
+    uplFile: '',
     models: [
         'Category',
         'Master',
@@ -165,6 +166,46 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.Ajax.request(ajaxConf);
     },
     fillAjaxParams: function (action) {
+        var invalidFields='';
+        Ext.each(Ext.ComponentQuery.query(
+            '#nb-war-id,'+
+            '#nb-war-in-workshop,'+
+            '#nb-war-prod,'+
+            '#nb-war-model,'+
+            '#nb-war-ser-num,'+
+            '#nb-war-fac-num,'+
+            '#nb-war-guar,'+
+            '#nb-war-cust,'+
+            '#nb-war-cust-info,'+
+            '#nb-war-adr,'+
+            '#nb-war-hphone,'+
+            '#nb-war-wphone,'+
+            '#nb-war-phone,'+
+            '#nb-war-date-notif,'+
+            '#nd-war-compl,'+
+            '#nb-war-pref,'+
+            '#nb-war-notes,'+
+            '#nb-war-ticket-price,'+
+            '#nb-war-guar-comm,'+
+            '#nb-war-work-prim,'+
+            '#nb-war-work-sec,'+
+            '#nb-war-det,'+
+            '#nb-war-trans,'+
+            '#nb-war-total-price'    
+        ),function(item,index,allItems){
+            if (!item.isValid()) {
+                if (invalidFields=='') {
+                    invalidFields=item.fieldLabel;
+                }
+                else {
+                    invalidFields+=','+item.fieldLabel;
+                }                
+            }
+        });
+        if (invalidFields!='') {
+            Ext.Msg.alert('Сообщение','Не правильно заполнены поля:\n'+invalidFields);
+            return false;
+        }        
         //отримуємо значення полів форми                
         //var warStartDate=Ext.getCmp('nb-war-date-start');
         //var warEndDate=Ext.getCmp('nb-war-date-end');
@@ -196,7 +237,8 @@ Ext.define('Notebook.controller.Warranty',{
         var warWorkSec=Ext.getCmp('nb-war-work-sec');
         var warDet=Ext.getCmp('nb-war-det');
         var warTrans=Ext.getCmp('nb-war-trans');
-        var warTotalPrice=Ext.getCmp('nb-war-total-price');        
+        var warTotalPrice=Ext.getCmp('nb-war-total-price');
+        
 //        if (!warProd.isValid()) {
 //            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Изделие"');
 //            return false;

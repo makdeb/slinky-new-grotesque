@@ -23,28 +23,28 @@ Ext.application({
             cyralphanum:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s]{1,}$/.test(val);
             },
-            cyralphanumText: 'Допустимі символи кирилиці, латині та цифри',
+            cyralphanumText: 'Допустимые символы кирилици, латыни',
             cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
         });
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanumplus:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]{1,}$/.test(val);
             },
-            cyralphanumplusText: 'Допустимі символи кирилиці, латині, цифри, знаки пунктуації та операцій',
-            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
+            cyralphanumplusText: 'Допустимые символы кирилици, латыни, цифри, знаки пунктуации и операций',
+            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             phone:  function(val) {
                 return /^[\d\(\)\-]{1,}$/.test(val);
             },
-            phoneText: 'Допустимі символи цифри, знаки (,) та -',
+            phoneText: 'Допустимые цифры, знаки (,) и -',
             phoneMask: /[\d\(\)\-]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             decimal:  function(val) {
                 return /^(\d+)(((.|,)\d+)+)?$/.test(val);
             },
-            decimalText: 'Допустимі цілі та дробові числа',
+            decimalText: 'Допустимы цифры',
             decimalMask: /(\d+)(((.|,)\d+)+)?/
         });         
         Ext.apply(Ext.form.field.VTypes, {
