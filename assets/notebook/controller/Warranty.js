@@ -35,10 +35,8 @@ Ext.define('Notebook.controller.Warranty',{
             'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
-            'main-menu button#nb-browse-file': {
-                click: function () {
-                    Ext.getCmp('nb-war-file').click();
-                }
+            'warranty-form button#nb-war-upload-file': {
+                click: this.uploadFile
             },            
             'warranty-form button#nb-war-copy-cust-info': {
                 click: this.copyCustInfo
@@ -317,7 +315,6 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-total-price').setValue('');   
     },
     recWarranty: function() {
-        alert('eee');
         //прийом можливий лише, коли стоїть відмітка про те, що замовлення нове
         if (this.isNew) {
             var ajaxConf={};
@@ -512,6 +509,33 @@ Ext.define('Notebook.controller.Warranty',{
         else {
             Ext.Msg.alert('Сообщение','Копировать можно только существующий заказ');
         }        
+    },
+    uploadFile: function () {
+        if (!this.isNew) {
+            var uploadForm=Ext.getCmp('nb-war-file-upload-form').getForm();
+            if (uploadForm.isValid()) {
+                uploadForm.submit({
+                    url: 'notebook/do_upload',
+                    waitMsg: 'Ваш файл загружается...',
+                    params: {
+                        id: Ext.getCmp('nb-war-id').getValue()
+                    },
+                    success: function (fp,opts) {
+                        Ext.Msg.alert('Сообщение',opts.result.message);
+                    },
+                    failure: function (fp,opts) {
+                        Ext.Msg.alert('Сообщение',opts.result.message);
+                    }
+                });
+            }
+            else
+            {
+                Ext.Msg.alert('Сообщение','Выберите файл для загрузки');
+            }
+        } 
+        else {
+            Ext.Msg.alert('Сообщение','Добавление файла возможно только после приема');
+        }
     },
     warPrint: function () {
         var selWar=Ext.getCmp('nb-war-id').getValue();

@@ -493,6 +493,7 @@ Ext.define('Notebook.view.warranty.Form',{
                     },
                     {
                         xtype: 'button',
+                        id: 'nb-war-upload-file',
                         text: 'Загрузить файл',
                         margin: '0 0 0 150'
                     },
@@ -507,14 +508,15 @@ Ext.define('Notebook.view.warranty.Form',{
                         items: [
                             {
                                 xtype: 'filefield',
-                                name: 'war-file',
+                                name: 'userfile',
                                 id: 'nb-war-file',
                                 msgTarget: 'side',
                                 allowBlank: false,
                                 anchor: '100%',
                                 buttonText: 'ww',
                                 buttonOnly: true,
-                                margin:'0'
+                                margin:'0',
+                                msgTarget: 'none'
                             }
                         ]
                     },
