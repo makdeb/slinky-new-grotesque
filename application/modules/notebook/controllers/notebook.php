@@ -995,7 +995,7 @@ class Notebook extends CI_Controller {
 				return;
 			}
 			
-			echo '{"success":true,"message":"Файл ' .$name  .' был успешно добавлен"}';
+			echo '{"success":true,"message":"Файл ' .$name  .' был успешно добавлен","file":"' .$data['file']  .'"}';
 		}
 	}	
 	
