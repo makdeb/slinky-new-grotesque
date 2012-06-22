@@ -311,8 +311,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                     {
                                         xtype: 'textfield',
                                         id: 'nb-war-notes',
-                                        width: 310,
-                                        vtype: 'cyralphanumplus'
+                                        width: 310//,
+                                        //vtype: 'cyralphanumplus'
                                     }
                                 ]
                             }
@@ -485,6 +485,7 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'datefield',
+                        id: 'nb-war-gdate',
                         labelWidth: 85,
                         margin: '0 0 0 5',
                         width: 180,
@@ -495,7 +496,8 @@ Ext.define('Notebook.view.warranty.Form',{
                         xtype: 'button',
                         id: 'nb-war-upload-file',
                         text: 'Загрузить файл',
-                        margin: '0 0 0 150'
+                        icon: icons_path+'file-upl.png',
+                        margin: '0 0 0 210'
                     },
                     {
                         xtype: 'form',
@@ -513,7 +515,10 @@ Ext.define('Notebook.view.warranty.Form',{
                                 msgTarget: 'side',
                                 allowBlank: false,
                                 anchor: '100%',
-                                buttonText: 'ww',
+                                buttonConfig: {
+                                    icon: icons_path+'file-browse.png'
+                                },
+                                buttonText: '',
                                 buttonOnly: true,
                                 margin:'0',
                                 msgTarget: 'none'
@@ -522,7 +527,8 @@ Ext.define('Notebook.view.warranty.Form',{
                     },
                     {
                         xtype: 'button',
-                        text: 'ww'
+                        id: 'nb-war-view-file',
+                        icon: icons_path+'file-view.png'
                     }
                 ]
             }            

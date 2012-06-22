@@ -7,17 +7,20 @@ Ext.define('Notebook.controller.Warranty',{
         'Master',
         'Seller',
         'Status',
-        'Notetpl'
+        'Notetpl',
+        'Ptemplate'
     ],
     stores: [
         'Category',
         'Master',
         'Seller',
         'Status',
-        'Notetpl'
+        'Notetpl',
+        'Ptemplate'
     ],    
     views: [
-        'warranty.Form'
+        'warranty.Form',
+        'warranty.Ptemplate'
     ],  
     init: function () {
         this.control({
@@ -77,6 +80,24 @@ Ext.define('Notebook.controller.Warranty',{
             },
             'warranty-form #nb-war-trans': {
                 change: this.evalForm
+            },
+            'warranty-form button#nb-war-view-file': {
+                click: function () {
+                    if (this.uplFile!='') {
+                        window.open(uploads_path+this.uplFile,'_blank');
+                    }
+                    else {
+                        Ext.Msg.alert('Сообщение','Для этого заказа нет прикрепленных файлов');
+                    }
+                }
+            },
+            '#nb-ptpl-win-print': {
+                click: this.ptplPrint
+            },
+            '#nb-ptpl-win-cancel': {
+                click: function () {
+                    this.ptplWin.close();
+                }
             }
         });
     },
@@ -106,7 +127,8 @@ Ext.define('Notebook.controller.Warranty',{
     },
     fillForm: function (warId) {
         //проставляємо відмітку, що ми вибрали існуюче замовлення
-        this.isNew=false;
+        var thisController=this;
+        //this.isNew=false;
         var ajaxConf={
             method: 'GET',
             url: 'notebook/fill_order',
@@ -153,7 +175,10 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
                     Ext.getCmp('nb-war-det').setValue(json.order.details);
                     Ext.getCmp('nb-war-trans').setValue(json.order.transportation); 
-                    Ext.getCmp('nb-war-total-price').setValue(json.order.total);                                            
+                    Ext.getCmp('nb-war-total-price').setValue(json.order.total);
+                    Ext.getCmp('nb-war-gdate').setValue(Ext.Date.parse(json.order.gdate,'Y-m-d'));
+                    thisController.uplFile=json.order.file;
+                    thisController.isNew=false;
                 }
                 else {
                     Ext.Msg.alert('Сообщение',json.message);
@@ -238,6 +263,7 @@ Ext.define('Notebook.controller.Warranty',{
         var warDet=Ext.getCmp('nb-war-det');
         var warTrans=Ext.getCmp('nb-war-trans');
         var warTotalPrice=Ext.getCmp('nb-war-total-price');
+        var warGDate=Ext.getCmp('nb-war-gdate');
         
 //        if (!warProd.isValid()) {
 //            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Изделие"');
@@ -308,7 +334,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxParams.details=warDet.getValue();
             ajaxParams.transportation=warTrans.getValue();
             ajaxParams.total=warTotalPrice.getValue();
-            //ajaxParams.gdate=
+            ajaxParams.gdate=Ext.Date.format(warGDate.getValue(),'d.m.Y');
         }
         ajaxParams.name=warCust.getValue();
         ajaxParams.address=warAdr.getValue();
@@ -354,7 +380,9 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-work-sec').setValue('');
         Ext.getCmp('nb-war-det').setValue('');
         Ext.getCmp('nb-war-trans').setValue(''); 
-        Ext.getCmp('nb-war-total-price').setValue('');   
+        Ext.getCmp('nb-war-total-price').setValue(''); 
+        Ext.getCmp('nb-war-gdate').setValue(''); 
+        this.uplFile='';
     },
     recWarranty: function() {
         //прийом можливий лише, коли стоїть відмітка про те, що замовлення нове
@@ -556,6 +584,7 @@ Ext.define('Notebook.controller.Warranty',{
         if (!this.isNew) {
             var uploadForm=Ext.getCmp('nb-war-file-upload-form').getForm();
             if (uploadForm.isValid()) {
+                var thisController=this;
                 uploadForm.submit({
                     url: 'notebook/do_upload',
                     waitMsg: 'Ваш файл загружается...',
@@ -564,6 +593,7 @@ Ext.define('Notebook.controller.Warranty',{
                     },
                     success: function (fp,opts) {
                         Ext.Msg.alert('Сообщение',opts.result.message);
+                        thisController.uplFile=opts.result.file;
                     },
                     failure: function (fp,opts) {
                         Ext.Msg.alert('Сообщение',opts.result.message);
@@ -579,13 +609,25 @@ Ext.define('Notebook.controller.Warranty',{
             Ext.Msg.alert('Сообщение','Добавление файла возможно только после приема');
         }
     },
+    ptplPrint: function () {
+        var ptplWinCont=this.ptplWin.getComponent('nb-ptpl-win-container');
+        //alert(this.ptplWin.getComponent('nb-ptpl-win-container').getComponent('nb-ptpl-win-message').getValue());
+        if (ptplWinCont.getComponent('nb-ptpl-win-templ').isValid()) {            
+            window.open(print_url+ptplWinCont.getComponent('nb-ptpl-win-templ').getValue()+'/'+Ext.getCmp('nb-war-id').getValue(),'_blank');
+            this.ptplWin.close();
+        }
+        else {
+            Ext.Msg.alert('Сообщение','Выберите шаблон');
+        }
+    },
     warPrint: function () {
         var selWar=Ext.getCmp('nb-war-id').getValue();
         if (selWar!=undefined && selWar!='') {
-            window.open(print_url+'?id='+selWar,'_blank');
+            this.ptplWin=this.getView('warranty.Ptemplate').create();
+            this.ptplWin.show();
         }
         else {
-            Ext.Msg.alert('Повідомлення','Виберіть замовлення або збережіть зміни, якщо додається нове.');
+            Ext.Msg.alert('Сообщение','Выберите заказ, или сохраните текущий');
         }
     }
 });

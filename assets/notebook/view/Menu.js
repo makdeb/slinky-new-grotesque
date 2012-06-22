@@ -85,11 +85,6 @@ Ext.define('Notebook.view.Menu',{
             id: 'nb-print-warranty',
             text: 'Печать',
             icon: icons_path+'ord-print.png'
-        },
-        {
-            xtype: 'button',
-            id: 'nb-browse-file',
-            text: 'browsw'
         }
     ]    
 //    items: [

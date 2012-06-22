@@ -1,6 +1,7 @@
 //шлях до іконок
+var uploads_path='http://localhost/slinky-new-grotesque/uploads/';
 var icons_path='http://localhost/slinky-new-grotesque/assets/extjs/resources/themes/images/custom/';
-var print_url='http://ya.ru';
+var print_url='http://dda.loc/print/';
 
 Ext.require([
     'Ext.window.MessageBox'
