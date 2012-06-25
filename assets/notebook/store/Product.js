@@ -11,7 +11,7 @@ Ext.define('Notebook.store.Product',{
     clearOnLoad: true,
     proxy: {
         type: 'ajax',
-        url: 'notebook/get_categories',
+        url: 'notebook/treeview',
         reader: {
             type: 'json',
             root: 'product'

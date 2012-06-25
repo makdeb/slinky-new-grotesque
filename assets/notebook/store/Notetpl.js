@@ -1,17 +1,17 @@
-Ext.define('Notebook.store.Master',{
+Ext.define('Notebook.store.Notetpl',{
     extend: 'Ext.data.Store',
-    requires: 'Notebook.model.Master', 
-    model: 'Notebook.model.Master',
+    requires: 'Notebook.model.Notetpl',
+    model: 'Notebook.model.Notetpl',
     autoLoad: true,
     proxy: {
         type: 'ajax',
         url: 'notebook/check',
         extraParams: {
-            table: 'masters'
+            table: 'notestpl'
         },        
         reader: {
             type: 'json',
-            root: 'master'
-        }        
+            root: 'template'
+        } 
     }
 });

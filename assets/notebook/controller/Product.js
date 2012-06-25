@@ -45,14 +45,24 @@ Ext.define('Notebook.controller.Product', {
         //отримуємо nb-cat-win-container крнтейнер
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
+        alert(Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0]);
         this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        alert(this.catEdtWin.selCat);
         //в залежності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
         if (button.id=='nb-add-cat') {
+            //Якщо вибрано запис, але цей запис не категорія, то просимо вибрати категорію
+            if (this.catEdtWin.selCat!=undefined) {
+                if (this.catEdtWin.selCat.get('id').substr(0,1)!='c') {
+                    Ext.Msg.alert('Сообщение','Выберите категорию');
+                    this.catEdtWin.close();
+                    return;                    
+                }
+            }
             this.catEdtWin.catAdd=true;            
             catEdtWinCont.getComponent('nb-cat-edt-win-message')
-                            .update('Додати нову підкатегорію в категорію');
+                            .update('Добавить новую подкатегорию');         
         }
         else {
             //якщо вибраний вузел категорія, то встановлюємо значення відповідного поля у вюшці
@@ -61,13 +71,13 @@ Ext.define('Notebook.controller.Product', {
                                 .setRawValue(this.catEdtWin.selCat.get('name'));
             }
             else {
-                Ext.Msg.alert('Повідомлення','Виберіть категорію');
+                Ext.Msg.alert('Сообщение','Выберите категорию');
                 this.catEdtWin.close();
                 return;
             }              
             this.catEdtWin.catAdd=false;            
             catEdtWinCont.getComponent('nb-cat-edt-win-message')
-                            .update('Редагувати підкатегорію в категорії');  
+                            .update('Редактировать категорию');  
             //ховаємо чекбокс
             catEdtWinCont.getComponent('nb-cat-edt-win-no-parent').hide();
         }   
@@ -85,12 +95,13 @@ Ext.define('Notebook.controller.Product', {
             };
             //залежно від того, чи додаємо ми категорію чи редагуємо, налаштовується конфігурація AJAX запиту
             if (this.catEdtWin.catAdd) {
-                ajaxConf.url='notebook/add_category';
+                ajaxConf.url='notebook/add_unit';
             }
             else {
-                ajaxConf.url='notebook/update_category';              
+                ajaxConf.url='notebook/update_unit';              
             }
             ajaxConf.params={};
+            ajaxConf.params.table='categories';
             ajaxConf.params.name=catEdtWinCont.getComponent('nb-cat-edt-win-cat-name').getValue();
             if (this.catEdtWin.catAdd){
                 //якшо при доданні не вибрана батьківська категорія, то передаємо в parent значення 0
@@ -116,14 +127,14 @@ Ext.define('Notebook.controller.Product', {
                     //перезавантажуємо Store...
                     Ext.getCmp('nb-product-tree').getStore().load();                                       
                     Ext.getCmp('nb-war-cat').getStore().load();                     
-                    Ext.Msg.alert('Повідомлення',json.message);
+                    Ext.Msg.alert('Сообщение',json.message);
                 }
                 else {
-                    Ext.Msg.alert('Повідомлення',json.message);
+                    Ext.Msg.alert('Сообщение',json.message);
                 }
             }
             ajaxConf.failure=function () {
-                Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
+                Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
             }
             //виконуємо запит
             Ext.Ajax.request(ajaxConf);            
@@ -134,19 +145,19 @@ Ext.define('Notebook.controller.Product', {
         this.catEdtWin.close();
     },
     delCat: function () {
+        this.catDelWin=this.getView('product.Delete').create();
         //отримуємо вибраний вузол
         var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
         //якшо вибраний вузол - категорія, то відображаємо повідомлення про видалення
-        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {        
-            this.catDelWin=this.getView('product.Delete').create();
+        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {                    
             this.catDelWin.selCat=selCat;
             this.catDelWin.getComponent('nb-cat-del-win-container')
                                 .getComponent('nb-cat-del-win-message')
-                                    .update('Видалити категорію '+selCat.get('name')+' та всі її підкатегорії?');
+                                    .update('Удалить категорию '+selCat.get('name')+' и все ее подкатегории?');
             this.catDelWin.show();
         }
         else {
-            Ext.Msg.alert('Повідомлення','Виберіть категорію');
+            Ext.Msg.alert('Сообщение','Выберите категорию');
             this.catDelWin.close();
         }
     },
@@ -155,22 +166,25 @@ Ext.define('Notebook.controller.Product', {
         var ajaxConf={
             method: 'GET'
         };
-        ajaxConf.url='notebook/remove_category';
+        ajaxConf.url='notebook/remove_unit';
         ajaxConf.params={};
+        ajaxConf.params.table='categories';
         ajaxConf.params.id=this.catDelWin.selCat.get('id');
         ajaxConf.success=function (resp,opts) {
             var json=Ext.decode(resp.responseText);
             if (json.success) {    
                 Ext.getCmp('nb-product-tree').getStore().load(); 
                 Ext.getCmp('nb-war-cat').getStore().load();
-                Ext.Msg.alert('Повідомлення',json.message);
+                //відміняємо вибір категорії
+                Ext.getCmp('nb-product-tree').getSelectionModel().deselectAll(false);
+                Ext.Msg.alert('Сообщение',json.message);
             }
             else {
-                Ext.Msg.alert('Повідомлення',json.message);
+                Ext.Msg.alert('Сообщение',json.message);
             }
         }
         ajaxConf.failure=function () {
-            Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
+            Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
         }
         //виконуємо запит
         Ext.Ajax.request(ajaxConf);

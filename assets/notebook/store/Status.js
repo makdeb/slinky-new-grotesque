@@ -1,17 +1,17 @@
-Ext.define('Notebook.store.Master',{
+Ext.define('Notebook.store.Status',{
     extend: 'Ext.data.Store',
-    requires: 'Notebook.model.Master', 
-    model: 'Notebook.model.Master',
+    requires: 'Notebook.model.Status',
+    model: 'Notebook.model.Status',
     autoLoad: true,
     proxy: {
         type: 'ajax',
         url: 'notebook/check',
         extraParams: {
-            table: 'masters'
+            table: 'blacklist'
         },        
         reader: {
             type: 'json',
-            root: 'master'
-        }        
+            root: 'reason'
+        } 
     }
 });

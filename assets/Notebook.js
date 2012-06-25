@@ -1,6 +1,7 @@
 //шлях до іконок
+var uploads_path='http://localhost/slinky-new-grotesque/uploads/';
 var icons_path='http://localhost/slinky-new-grotesque/assets/extjs/resources/themes/images/custom/';
-var print_url='http://ya.ru';
+var print_url='http://dda.loc/print/';
 
 Ext.require([
     'Ext.window.MessageBox'
@@ -11,6 +12,7 @@ Ext.application({
     appFolder: '/slinky-new-grotesque/assets/notebook',
     autoCreateViewport: true,  
     controllers: [
+        'Menu',
         'Product', 
         'Warranty'               
     ],
@@ -22,29 +24,36 @@ Ext.application({
             cyralphanum:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s]{1,}$/.test(val);
             },
-            cyralphanumText: 'Допустимі символи кирилиці, латині та цифри',
+            cyralphanumText: 'Допустимые символы кирилици, латыни',
             cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
         });
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanumplus:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]{1,}$/.test(val);
             },
-            cyralphanumText: 'Допустимі символи кирилиці, латині, цифри, знаки пунктуації та операцій',
-            cyralphanumMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s]/
+            cyralphanumplusText: 'Допустимые символы кирилици, латыни, цифри, знаки пунктуации и операций',
+            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             phone:  function(val) {
                 return /^[\d\(\)\-]{1,}$/.test(val);
             },
-            phoneText: 'Допустимі символи цифри, знаки (,) та -',
+            phoneText: 'Допустимые цифры, знаки (,) и -',
             phoneMask: /[\d\(\)\-]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             decimal:  function(val) {
                 return /^(\d+)(((.|,)\d+)+)?$/.test(val);
             },
-            decimalText: 'Допустимі цілі та дробові числа',
+            decimalText: 'Допустимы цифры',
             decimalMask: /(\d+)(((.|,)\d+)+)?/
+        });         
+        Ext.apply(Ext.form.field.VTypes, {
+            mathexp:  function(val) {
+                return /(^(\d+)(((.|,)\d+)+)?$)|(^((\d+)(((.|,)\d+)+)?[\+\-\*\/]{0,1})+(\d+)(((.|,)\d+)+)?$)/.test(val);
+            },
+            mathexpText: 'Допустимы только простые математические выражения',
+            mathexpMask: /\d/
         });         
     }
 });

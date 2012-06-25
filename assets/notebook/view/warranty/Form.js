@@ -1,23 +1,24 @@
 Ext.define('Notebook.view.warranty.Form',{
-    extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     alias: 'widget.warranty-form',
-    region: 'center', 
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
+    flex:1,
+    bodyStyle: {
+        background: '#DFE9F6'
     },
-    padding: '5',
+    autoScroll: true,
     initComponent: function () {
         this.items=[
             {
                 xtype: 'container',
                 layout: {
-                    type: 'hbox'
-                },                   
+                    type: 'column'
+                }, 
+                margin: '5 0 0 5',
                 defaults: {
                     labelWidth: 50,
                     margin: '0 5 0 0'
                 },
+                width: 550,
                 items: [
                     {
                         xtype: 'textfield',
@@ -27,487 +28,510 @@ Ext.define('Notebook.view.warranty.Form',{
                         readOnly: true
                     },                    
                     {
-                        xtype: 'textfield',
-                        id: 'nb-war-prod',
-                        fieldLabel: 'Виріб',
-                        width: 220,
-                        vtype: 'cyralphanumplus',
-                        allowBlank: false
-                    },
-                    {
-                        xtype: 'combobox',
-                        id: 'nb-war-cat',
-                        fieldLabel: 'Категорія',
-                        labelWidth: 60,
-                        width: 220,
-                        store: 'Category',
-                        displayField: 'name',
-                        valueField: 'id',
-                        forceSelection: true
-                    },
-                    {
                         xtype: 'datefield',
                         id:'nb-war-date-start',
                         format: 'd.m.Y',
-                        fieldLabel: 'Прийнято',
+                        fieldLabel: 'Принято',
                         labelWidth: 60,
-                        width: 160,
+                        width: 150,
                         readOnly: true
                     },
                     {
                         xtype: 'datefield',
                         id:'nb-war-date-end',
                         format: 'd.m.Y',
-                        fieldLabel: 'Видано',
+                        fieldLabel: 'Выдано',
                         labelWidth: 60,
-                        width: 160,
+                        width: 150,
                         readOnly: true 
-                    }                    
+                    },
+                    {
+                        xtype: 'checkbox',
+                        id: 'nb-war-in-workshop',
+                        boxLabel: 'В мастерской'
+                    }
                 ]
-            },  
-//Відомості про клієнта
+            },
             {
                 xtype: 'container',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretchmax'
-                },
+                margin: '0 0 0 5',
                 defaults: {
                     margin: '0 5 0 0',
-                    labelWidth: 100
+                    labelWidth: 30
                 },
                 items: [
                     {
                         xtype: 'fieldset',
-                        title: 'Відомості про клієнта',
-                        width: 450,
-                        padding: '0 5 0 5',
+                        title: 'Изделие',
+                        width: 550,
+                        padding: '0 5 0 5',                    
                         items: [
                             {
                                 xtype: 'textfield',
-                                id:'nb-war-cust',
-                                fieldLabel: 'Власник',
-                                width: 435,
+                                id: 'nb-war-prod',
+                                fieldLabel: 'Изделие',
+                                labelWidth: 80,
+                                width: 535,
                                 vtype: 'cyralphanumplus',
                                 allowBlank: false
                             },
                             {
                                 xtype: 'textfield',
-                                id:'nb-war-adr',
-                                fieldLabel: 'Адреса',
-                                width: 435,
-                                vtype: 'cyralphanumplus'
+                                id: 'nb-war-model',
+                                fieldLabel: 'Модель',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus',
+                                allowBlank: false
+                            },                            
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'textfield',                                        
+                                        id: 'nb-war-ser-num',
+                                        fieldLabel: 'Cерийный №',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus'                                       
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        id: 'nb-war-fac-num',
+                                        fieldLabel: 'Заводской №',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus'                                        
+                                    }                                    
+                                ]
                             },
                             {
-                                xtype: 'textfield',
-                                id:'nb-war-hphone',
-                                fieldLabel: 'Домашній тел.',
-                                width: 435,
-                                vtype: 'phone'
-                            },
-                            {
-                                xtype: 'textfield',
-                                id:'nb-war-wphone',
-                                fieldLabel: 'Робочій тел.',
-                                width: 435,
-                                vtype: 'phone'
-                            },
-                            {
-                                xtype: 'textfield',
-                                id:'nb-war-phone',
-                                fieldLabel: 'Мобільний тел.',
-                                width: 435,
-                                vtype: 'phone'
-                            },
-                            {
-                                xtype: 'datefield',
-                                id:'nb-war-date-notif',
-                                format: 'd.m.Y',
-                                fieldLabel: 'Повідомлено',
-                                width: 200                                          
-                            }                            
-                        ]
-                    },
-//Скарги                    
-                    {
-                        xtype: 'fieldset',
-                        title: 'Скарги',
-                        width: 450, 
-                        padding: '0 5 0 5',
-                        defaults: {
-                            labelWidth: 70
-                        },
-                        items: [
-                            {
-                                xtype: 'textfield',
-                                id: 'nd-war-compl',
-                                fieldLabel: 'Скарги',
-                                width: 435
-                            },
-                            {
-                                xtype: 'textarea',
-                                id:'nb-war-pref',
-                                fieldLabel: 'Виконана робота',
-                                width: 435,
-                                height: 105
-                            },
-                            {
-                                xtype: 'textfield',
-                                id:'nb-war-notes',
-                                fieldLabel: 'Примітки',
-                                width: 435                                 
-                            }                            
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        id: 'nb-war-guar',
+                                        fieldLabel: 'Гарантия',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus'                                       
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        id: 'nb-war-cat',
+                                        fieldLabel: 'Категория',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        store: 'Category',
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        forceSelection: true
+                                    }                                    
+                                ]
+                            }     
                         ]
                     }
                 ]
             },
-//Відомості про гарантію            
             {
                 xtype: 'container',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretchmax'
-                },
+                margin: '0 0 0 5',
                 defaults: {
-                    margin: '0 5 0 0'
+                    margin: '0 5 0 0',
+                    labelWidth: 30
                 },
                 items: [
                     {
                         xtype: 'fieldset',
-                        layout: {
-                            type: 'hbox',
-                            align: 'stretchmax'
-                        },                          
-                        title: 'Відомості про гарантію',
-                        width: 905,
-                        padding: '0 5 0 5',
+                        title: 'Владелец',
+                        width: 550,
+                        padding: '0 5 0 5',                    
                         items: [
+                            {   
+                                xtype: 'textfield',
+                                id:'nb-war-cust',
+                                fieldLabel: 'ФИО',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus',
+                                allowBlank: false
+                            },
+                            {   
+                                xtype: 'textfield',
+                                id: 'nb-war-cust-info',
+                                fieldLabel: 'Личная инф.',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus'                                 
+                            },                            
+                            {   
+                                xtype: 'textfield',
+                                id:'nb-war-adr',
+                                fieldLabel: 'Адресс',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus',
+                                allowBlank: false
+                            },
                             {
                                 xtype: 'container',
-                                margin: '0 18 0 0',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {   
+                                        xtype: 'textfield',
+                                        id:'nb-war-hphone',
+                                        fieldLabel: 'Дом. тел.',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        vtype: 'phone'
+                                    }, 
+                                    {   
+                                        xtype: 'textfield',
+                                        id:'nb-war-wphone',
+                                        fieldLabel: 'Раб. тел.',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        padding: '0 0 0 2',
+                                        vtype: 'phone'
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        id:'nb-war-phone',
+                                        fieldLabel: 'Моб. тел.',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        padding: '0 0 0 2',
+                                        vtype: 'phone'
+                                    }                                  
+                                ]
+                            },                            
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {   
+                                        xtype: 'datefield',
+                                        id:'nb-war-date-notif',
+                                        format: 'd.m.Y',
+                                        fieldLabel: 'Сообщено',
+                                        labelWidth: 80,
+                                        width: 175
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        id: 'nb-war-cust-state',
+                                        fieldLabel: 'Статус',
+                                        labelWidth: 80,
+                                        width: 260,
+                                        padding: '0 2 0 2',
+                                        store: 'Status',
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        forceSelection: true                                         
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        id: 'nb-war-copy-cust-info',
+                                        text: 'Копировать',
+                                        icon: icons_path+'copy.png'
+                                    }
+                                ]
+                            }                             
+                        ]
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                margin: '0 0 0 5',
+                defaults: {
+                    margin: '0 5 0 0',
+                    labelWidth: 30
+                },
+                items: [
+                    {
+                        xtype: 'fieldset',
+                        title: 'Жалобы',
+                        width: 550,
+                        padding: '0 5 0 5',                    
+                        items: [
+                            {   
+                                xtype: 'textfield',
+                                id: 'nd-war-compl',
+                                fieldLabel: 'Жалобы',
+                                labelWidth: 80,
+                                width: 535,
+                                vtype: 'cyralphanumplus'                                 
+                            },
+                            {   
+                                xtype: 'textarea',
+                                id:'nb-war-pref',
+                                fieldLabel: 'Проделаная работа',
+                                labelWidth: 80,
+                                width: 535,
+                                height: 50                                
+                            }, 
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
                                 items: [
                                     {
                                         xtype: 'combobox',
-                                        id:'nb-war-guar',
-                                        fieldLabel: 'Гарантія',
-                                        labelWidth: 70,
-                                        width: 435,
-                                        store: 'Guarantee',
+                                        id: 'nb-war-note-templ',
+                                        fieldLabel: 'Заметки',
+                                        labelWidth: 80,
+                                        width: 200,
+                                        store: 'Notetpl',
                                         displayField: 'name',
                                         valueField: 'id',
-                                        forceSelection: true                                        
+                                        forceSelection: true                                          
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        id: 'nb-war-add-note-templ',
+                                        icon: icons_path+'arr-left.png'
                                     },
                                     {
                                         xtype: 'textfield',
-                                        id:'nb-war-guar-cer',
-                                        fieldLabel: 'Свідоцтво',
-                                        labelWidth: 70,
-                                        width: 435                                 
+                                        id: 'nb-war-notes',
+                                        width: 310//,
+                                        //vtype: 'cyralphanumplus'
                                     }
                                 ]
-                            },
-                            {
-                                xtype: 'container',
-                                items: [                                
-                                    {
-                                        xtype: 'textarea',
-                                        id: 'nb-war-guar-comm',
-                                        fieldLabel: 'Примітки',
-                                        labelWidth: 70,
-                                        width: 435,
-                                        height: 50
-                                    }
-                                ]
-                            }                            
-                        ]
-                    },
-                ]
-            },
-//Комплектність (можливо треба видалити)                       
-            {
-                xtype: 'container',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretchmax'
-                },
-                items: [
-                    {
-                        xtype: 'fieldset',
-                        title: 'Комплектність',
-                        width: 450,    
-                        padding: '0 5 0 5',
-                        items: [
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 5 0 0'
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'Термінал №',
-                                        labelWidth: 150,
-                                        width: 415                                          
-                                    }
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 5 0 0'
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'Акамулятор №',
-                                        labelWidth: 150,
-                                        width: 415                                           
-                                    }
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 5 0 0'
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'ЗП від електромережі №',
-                                        labelWidth: 150,
-                                        width: 415                                           
-                                    }
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 5 0 0'
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'ЗП від прикурювача №',
-                                        labelWidth: 150,
-                                        width: 415                                           
-                                    }
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 10 0 0',
-                                        boxLabel: 'Антена'
-                                    },
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 10 0 0',
-                                        boxLabel: 'Чохол'
-                                    },
-                                    {
-                                        xtype: 'checkbox',
-                                        margin: '0 10 0 0',
-                                        boxLabel: 'Шнури'
-                                    }                                    
-                                ]
-                            },
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'hbox'
-                                },
-                                margin: '5 0 5 0',
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        margin: '0 0 0 12',
-                                        fieldLabel: 'Мобільний телефон',
-                                        labelWidth: 150,
-                                        width: 415                                           
-                                    }
-                                ]
-                            }                            
-                        ]
-                    },
-//Інші відомості                    
-                    {
-                        xtype: 'container',
-                        layout: {
-                            type: 'vbox'
-                        },
-                        margin: '0 0 0 5',
-                        defaults: {
-                            labelWidth: 80
-                        },
-                        items: [
-                            {
-                                xtype: 'fieldset',
-                                title: 'Інші відомості',
-                                width: 450,
-                                padding: '0 5 0 5',
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        id: 'nb-war-post',
-                                        fieldLabel: 'Відправлено',
-                                        width: 435                                           
-                                    },
-                                    {
-                                        xtype: 'datefield',
-                                        id: 'nb-war-psdate',
-                                        format: 'd.m.Y',
-                                        fieldLabel: 'Відправлено',
-                                        width: 200                                           
-                                    } ,
-                                    {
-                                        xtype: 'datefield',
-                                        id: 'nb-war-pedate',
-                                        format: 'd.m.Y',
-                                        fieldLabel: 'Отримано',
-                                        width: 200                                           
-                                    },                                            
-                                    {
-                                        xtype: 'radiogroup',
-                                        id: 'nb-war-type',
-                                        columns: 1,
-                                        margin: '15 0 0 0',
-                                        items: [
-                                            {
-                                                boxLabel: 'Платний ремонт',
-                                                inputValue: 0,
-                                                name: 'nb-war-type-rb'
-                                            },
-                                            {
-                                                boxLabel: 'Гарантійний ремонт',
-                                                inputValue: 1,
-                                                name: 'nb-war-type-rb'
-                                            },
-                                            {
-                                                boxLabel: 'В очікуванні',
-                                                inputValue: 2,
-                                                name: 'nb-war-type-rb'
-                                            }                                            
-                                        ]
-                                    }                                    
-                                ]
-                            }                           
+                            }
                         ]
                     }
                 ]
             },
-//Майстер та ціни            
             {
                 xtype: 'container',
-                layout: {
-                    type: 'hbox'
-                },
-                margin: '0 0 0 0',
+                margin: '0 0 0 5',
                 defaults: {
-                    labelWidth: 70
+                    margin: '0 5 0 0',
+                    labelWidth: 30
                 },
                 items: [
                     {
-                        xtype: 'combobox',
-                        id: 'nb-war-mas',
-                        fieldLabel: 'Майстер',
-                        width: 245,
-                        store: 'Master',
-                        displayField: 'name',
-                        valueField: 'id'                            
-                    },
-                    {
-                        xtype: 'textfield',
-                        id: 'nb-war-det',
-                        fieldLabel: 'Запчастини',
-                        margin: '0 0 0 5',
-                        width: 237,
-                        vtype: 'decimal'
-                    }, 
-                    {
-                        xtype: 'textfield',
-                        id: 'nb-war-work',
-                        fieldLabel: 'Робота',
-                        margin: '0 0 0 5',
-                        width: 237,
-                        vtype: 'decimal'
-                    },                     
-                    {
-                        xtype: 'datefield',
-                        id: 'nb-war-wdate',
-                        format: 'd.m.Y',
-                        fieldLabel: 'Гарантія до',
-                        margin: '0 0 0 5',
-                        width: 170                                          
-                    }                   
+                        xtype: 'fieldset',
+                        title: 'Ведомости про гарантию',
+                        width: 550,
+                        padding: '0 5 0 5',                    
+                        items: [
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        id: 'nb-war-seller',
+                                        fieldLabel: 'Продавець',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        store: 'Seller',
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        forceSelection: true                                         
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        id: 'nb-war-ticket-price',
+                                        fieldLabel: 'Чек, цена',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        vtype: 'cyralphanumplus'                                 
+                                    }
+                                ]
+                            },
+                            {   
+                                xtype: 'textarea',
+                                id: 'nb-war-guar-comm',
+                                fieldLabel: 'Коментарии',
+                                labelWidth: 80,
+                                width: 535,
+                                height: 50                                
+                            },
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        id: 'nb-war-mas-prim',
+                                        fieldLabel: 'Мастер',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        store: 'Master',
+                                        displayField: 'name',
+                                        valueField: 'id'                                        
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        id: 'nb-war-work-prim',
+                                        fieldLabel: 'Работа',
+                                        labelWidth: 50,
+                                        width: 240,
+                                        emptyText: '0',
+                                        vtype: 'mathexp'                                         
+                                    },
+                                    {
+                                        xtype: 'button',
+                                        id: 'nb-war-master-visible-toggle',
+                                        icon: icons_path+'mas-togg.png'
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: 'container',
+                                id: 'nb-war-sec-mas-container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                hidden: true,
+                                items: [
+                                    {
+                                        xtype: 'combobox',
+                                        id: 'nb-war-mas-sec',
+                                        fieldLabel: 'Мастер',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        store: 'Master',
+                                        displayField: 'name',
+                                        valueField: 'id'                                        
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        id: 'nb-war-work-sec',
+                                        fieldLabel: 'Работа',
+                                        labelWidth: 50,
+                                        width: 240,
+                                        emptyText: '0',
+                                        vtype: 'mathexp'                                         
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    {   
+                                        xtype: 'textfield',
+                                        id: 'nb-war-det',
+                                        fieldLabel: 'Запчасти',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        emptyText: '0',
+                                        vtype: 'mathexp'
+                                    }, 
+                                    {   
+                                        xtype: 'textfield',
+                                        id: 'nb-war-trans',
+                                        fieldLabel: 'Транспорт',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        padding: '0 0 0 2',
+                                        emptyText: '0',
+                                        vtype: 'mathexp'                                        
+                                    },
+                                    {   
+                                        xtype: 'textfield',
+                                        id: 'nb-war-total-price',
+                                        fieldLabel: 'Итого',
+                                        labelWidth: 80,
+                                        width: 175,
+                                        padding: '0 0 0 2',
+                                        vtype: 'decimal'
+                                    }                                  
+                                ]
+                            }                            
+                        ]
+                    }
                 ]
             },
-//Кнопки            
             {
                 xtype: 'container',
                 layout: {
-                    type: 'hbox'
+                    type: 'column',
+                    align: 'right'
                 },
-                style: {
-                    //borderTop: '1px solid #0B486B',
-                    marginTop: '5px',
-                    paddingTop: '5px'
-                },
+                width: 550,
+                margin: '5 0 0 0',
                 items: [
                     {
-                        xtype: 'button',
-                        id: 'nb-new-warranty',
-                        text: 'Новий'
-                    },                    
-                    {
-                        xtype: 'button',
-                        id: 'nb-rec-warranty',
-                        text: 'Прийом',
-                        icon: icons_path+'ord-rec.png'
+                        xtype: 'datefield',
+                        id: 'nb-war-gdate',
+                        labelWidth: 85,
+                        margin: '0 0 0 5',
+                        width: 180,
+                        format: 'd.m.Y',
+                        fieldLabel: 'Гарантия до'
                     },
                     {
                         xtype: 'button',
-                        text: 'Видача',
-                        icon: icons_path+'ord-out.png'
+                        id: 'nb-war-upload-file',
+                        text: 'Загрузить файл',
+                        icon: icons_path+'file-upl.png',
+                        margin: '0 0 0 210'
+                    },
+                    {
+                        xtype: 'form',
+                        id: 'nb-war-file-upload-form',
+                        padding: '0',
+                        bodyStyle: {
+                            background: '#DFE9F6'
+                        },
+                        border: false,
+                        items: [
+                            {
+                                xtype: 'filefield',
+                                name: 'userfile',
+                                id: 'nb-war-file',
+                                msgTarget: 'side',
+                                allowBlank: false,
+                                anchor: '100%',
+                                buttonConfig: {
+                                    icon: icons_path+'file-browse.png'
+                                },
+                                buttonText: '',
+                                buttonOnly: true,
+                                margin:'0',
+                                msgTarget: 'none'
+                            }
+                        ]
                     },
                     {
                         xtype: 'button',
-                        id: 'nb-save-warranty',
-                        text: 'Зберегти',
-                        icon: icons_path+'ord-out.png'
-                    },                    
-                    {
-                        xtype: 'button',
-                        text: 'Пошук'
-                    },
-                    {
-                        xtype: 'button',
-                        id: 'nb-print-warranty',
-                        text: 'Друк',
-                        icon: icons_path+'ord-print.png'
-                    }                    
+                        id: 'nb-war-view-file',
+                        icon: icons_path+'file-view.png'
+                    }
                 ]
-            }
+            }            
         ];
         this.callParent();
     }    
