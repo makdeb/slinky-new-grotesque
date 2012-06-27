@@ -34,6 +34,7 @@ Ext.define('Notebook.view.Menu',{
                 items: [
                     {
                         text: 'Мастера',
+                        id: 'nb-dict-master',
                         icon: icons_path+'dir-mas.png'
                     },
                     {

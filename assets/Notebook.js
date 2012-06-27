@@ -4,7 +4,8 @@ var icons_path='http://localhost/slinky-new-grotesque/assets/extjs/resources/the
 var print_url='http://dda.loc/print/';
 
 Ext.require([
-    'Ext.window.MessageBox'
+    'Ext.window.MessageBox',
+    'Ext.grid.plugin.CellEditing'
 ]);
 
 Ext.application({
@@ -14,7 +15,8 @@ Ext.application({
     controllers: [
         'Menu',
         'Product', 
-        'Warranty'               
+        'Warranty',
+        'Dictionary'
     ],
     launch: function() {
         //ініціалізація менеджера підказок
