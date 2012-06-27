@@ -8,10 +8,11 @@ Ext.define('Notebook.controller.Menu',{
             'main-menu #nb-dict-master': {
                 click: function () {
                     //alert('ffff');
-                    this.dictWin=this.getView('dictionary.Master').create();
+                    //this.dictWin=this.getView('dictionary.Master').create();
                     //this.qqq.columns=[{header: 'Ololo',dataIndex: 'name'}];
                     //this.qqq.create();
-                    this.dictWin.show();
+                    //this.dictWin.show();
+                    this.getController('Dictionary').dictCreateWin('Masters');
                 }
             }
         });

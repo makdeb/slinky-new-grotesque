@@ -11,7 +11,7 @@ Ext.define('Notebook.view.dictionary.Master',{
     items: [
         {
             xtype: 'gridpanel',
-            id: 'bbbggg',
+            id: 'nb-dict-mast-grid',
             plugins: [{
                 ptype: 'cellediting'
             }],
@@ -23,27 +23,28 @@ Ext.define('Notebook.view.dictionary.Master',{
                     editor: {
                         xtype: 'textfield'
                     }
-                },
-                {
-                    xtype: 'actioncolumn',
-                    width: 20,
-                    items: [
-                        {
-                            icon: icons_path+'dict-del.png',
-                            id: 'nb-mas-dict-del'
-                        }
-                    ]
                 }
             ],
-            store: 'Master'
+            store: 'Master',
+            tbar: [
+                {
+                    text: 'Добавить',
+                    id: 'nb-dict-mast-win-add'
+                },
+                {
+                    text: 'Удалить',
+                    id: 'nb-dict-mast-win-del'
+                }                
+            ]
         }
     ],
     buttons: [
         {
-            text: 'Сохранить'
+            text: 'Сохранить',
+            id: 'nb-dict-mast-win-save'
         },
         {
-            text: 'Отменить'
+            text: 'Закрыть'
         }        
     ]
 });
