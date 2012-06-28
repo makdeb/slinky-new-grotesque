@@ -31,6 +31,19 @@ class Customers_model extends CI_Model {
 		return $this->db->insert_id();
 	
 	}
-
+	
+	// функция search_id() возвращает ассоц. масив порядковых номеров заказчиков,
+	// найденных по критериям $terms в поле $field
+		public function search_id($field=FALSE,$terms='') 
+	{
+		$this->db->select('id');	
+		$this->db->like($field, $terms);
+		
+		$query = $this->db->get($this->table);
+		if ($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		} else { return FALSE; }
+	}	
 	
 }
