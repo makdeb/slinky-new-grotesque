@@ -327,8 +327,8 @@ class Notebook extends CI_Controller {
 			return;
 		}	
 		
-		// если параметры $name и $id не указаны -- ошибка	
-		if ((!$id)||(!$name)) {
+		// если параметры $name и $id не указаны или они недопустимы -- ошибка	
+		if ((!$id)||(!$name)||($id==1)) {
 			 echo '{"success":false,"message":"Ошибка при переименовании елемента"}'; 
 			 return;
 		 }
