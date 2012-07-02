@@ -81,8 +81,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 fieldLabel: 'Модель',
                                 labelWidth: 80,
                                 width: 535,
-                                vtype: 'cyralphanumplus',
-                                allowBlank: false
+                                vtype: 'cyralphanumplus'
                             },                            
                             {
                                 xtype: 'container',
@@ -178,8 +177,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 fieldLabel: 'Адресс',
                                 labelWidth: 80,
                                 width: 535,
-                                vtype: 'cyralphanumplus',
-                                allowBlank: false
+                                vtype: 'cyralphanumplus'
                             },
                             {
                                 xtype: 'container',

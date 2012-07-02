@@ -39,12 +39,19 @@ Ext.define('Notebook.view.Menu',{
                     },
                     {
                         text: 'Продавци',
+                        id: 'nb-dict-seller',
                         icon: icons_path+'dir-sell.png'
                     },
                     {
                         text: 'Шаблоны заметок',
+                        id: 'nb-dict-notetpl',
                         icon: icons_path+'dir-templ.png'
-                    }
+                    },
+                    {
+                        text: 'Статусы владельца',
+                        id: 'nb-dict-status',
+                        icon: icons_path+'dir-stat.png'
+                    }                    
                 ]
             }            
         },
@@ -75,11 +82,14 @@ Ext.define('Notebook.view.Menu',{
         {
             xtype: 'button',
             id: 'nb-copy-warranty',
-            text: 'Копировать'
+            text: 'Копировать',
+            icon: icons_path+'copy.png'
         },
         {
             xtype: 'button',
-            text: 'Поиск'
+            id: 'nb-search-product',
+            text: 'Поиск',
+            icon: icons_path+'ord-srch.png'
         },
         {
             xtype: 'button',

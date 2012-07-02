@@ -7,14 +7,24 @@ Ext.define('Notebook.controller.Menu',{
         this.control({
             'main-menu #nb-dict-master': {
                 click: function () {
-                    //alert('ffff');
-                    //this.dictWin=this.getView('dictionary.Master').create();
-                    //this.qqq.columns=[{header: 'Ololo',dataIndex: 'name'}];
-                    //this.qqq.create();
-                    //this.dictWin.show();
                     this.getController('Dictionary').dictCreateWin('Masters');
                 }
-            }
+            },
+            'main-menu #nb-dict-seller': {
+                click: function () {
+                    this.getController('Dictionary').dictCreateWin('Sellers');
+                }
+            },
+            'main-menu #nb-dict-notetpl': {
+                click: function () {
+                    this.getController('Dictionary').dictCreateWin('Notetpls');
+                }
+            },
+            'main-menu #nb-dict-status': {
+                click: function () {
+                    this.getController('Dictionary').dictCreateWin('Statuses');
+                }
+            }            
         });
     }    
 });

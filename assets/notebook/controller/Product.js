@@ -1,15 +1,18 @@
 Ext.define('Notebook.controller.Product', {
     extend: 'Ext.app.Controller',
     models: [
-        'Product'
+        'Product',
+        'SearchField'
     ],
     stores: [
-        'Product'
+        'Product',
+        'SearchField'
     ],    
     views: [
         'product.List',
         'product.Edit',
-        'product.Delete'
+        'product.Delete',
+        'product.Search'
     ],
     init: function () {        
         this.control({
@@ -36,7 +39,10 @@ Ext.define('Notebook.controller.Product', {
             },            
             '#nb-product-tree': {
                 itemclick: this.warLoad
-            }           
+            },
+            '#nb-search-product': {
+                click: this.searchProd
+            }
         });
     },
     editCatList: function (button) {
@@ -45,9 +51,7 @@ Ext.define('Notebook.controller.Product', {
         //отримуємо nb-cat-win-container крнтейнер
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
-        alert(Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0]);
         this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
-        alert(this.catEdtWin.selCat);
         //в залежності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
@@ -200,5 +204,10 @@ Ext.define('Notebook.controller.Product', {
             //викликаємо метод контроллера, що заповнює форму
             this.getController('Warranty').fillForm(warId);
         }
+    },
+    searchProd: function () {
+        //alert('ddd');
+        var prodSearch=this.getView('product.Search').create();
+        prodSearch.show();
     }
 });

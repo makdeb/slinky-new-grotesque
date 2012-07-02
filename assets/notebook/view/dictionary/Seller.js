@@ -1,8 +1,8 @@
-Ext.define('Notebook.view.dictionary.Master',{
+Ext.define('Notebook.view.dictionary.Seller',{
     extend: 'Ext.window.Window',
     alias: 'widget.dict',
     layout: 'fit',
-    title: 'Справочники (Мастера)',
+    title: 'Справочники (Продавци)',
     resizable: false,
     closable: false,     
     modal: true,
@@ -18,14 +18,14 @@ Ext.define('Notebook.view.dictionary.Master',{
             columns: [
                 {header: 'id',dataIndex: 'id'},
                 {
-                    header: 'Мастер',
+                    header: 'Продавец',
                     dataIndex: 'name',
                     editor: {
                         xtype: 'textfield'
                     }
                 }
             ],
-            store: 'Master',
+            store: 'Seller',
             tbar: [
                 {
                     text: 'Добавить',
