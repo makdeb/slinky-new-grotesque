@@ -85,11 +85,38 @@ class Notebook extends CI_Controller {
 	}
 
 	
-	// функция treeview() , возвращающая json-строку дерева категорий и заказов 
-	// по указанному id родительской категории
-	
-	public function treeview($node=0) {
+	/* функция treeview() , возвращающая json-строку дерева категорий и заказов 
+	   по указанному id родительской категории
+	   данная функция используется для отображения дерева категорий и заказов в боковой панели,
+	   а также для отображения результатов поиска в боковой панели. 
+	   В случае, если параметр $search задан, ведется поиск заказов по критериям:
+	   
+	   Таблица - $table , Поле таблицы - $field, Ключевые слова - $search_terms.
+	   
+	   В случае, если параметр $between задан, дополнительно проверяется, находятся ли заказы по дате приема 
+	   между $first_date и $second_date (данная проверка реализована в методе _search() данного контроллера).
+	*/
+	public function treeview($node=0,$search=0,$table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='') {
 		$node = $this->input->get('node');	// принимаем параметр родительской категории из url
+		$search = $this->input->get('search'); // принимаем параметр поиска из url
+		
+		// если параметр поиска задан и не равен нулю, переходим на вспомогательную функцию поиска _search(),
+		// в которую передаются критерии поиска из URL.
+		
+		if ($search) {
+			$table = $this->input->get('table');
+			$field = $this->input->get('field');
+			$search_terms = $this->input->get('search_terms');
+			$between = $this->input->get('between');
+			$first_date = $this->input->get('first_date');
+			$second_date = $this->input->get('second_date');
+			
+			$this->_search($table,$field,$search_terms,$between,$first_date,$second_date);
+			
+			return;
+		}		
+		
+		// обработка параметра $node:
 		// для начала преобразуем строку формата "сID" из url в строку с номером родительской категории	
 		$node = preg_replace("/[^0-9]/", '', $node);
 		
@@ -300,8 +327,8 @@ class Notebook extends CI_Controller {
 			return;
 		}	
 		
-		// если параметры $name и $id не указаны -- ошибка	
-		if ((!$id)||(!$name)) {
+		// если параметры $name и $id не указаны или они недопустимы -- ошибка	
+		if ((!$id)||(!$name)||($id==1)) {
 			 echo '{"success":false,"message":"Ошибка при переименовании елемента"}'; 
 			 return;
 		 }
@@ -1035,6 +1062,124 @@ class Notebook extends CI_Controller {
 				}
 		// вывод json-строки
 		echo '{"success":true,"date":"' .$data['date_end'] .'"}';	
+	}
+	
+	/* вспомагательная функция _search(), используемая в treeview() в случае не нулевого параметра search.
+	   Возвращает json-строку найденных заказов для их отображения в боковой панели.
+	   
+	   Принимает шесть параметров: название искомой таблицы, поля, а также ключевых последовательностей для поиска.
+	   Кроме этого, параметр проверки диапазона дат(либо 1, либо 0), и сами даты, задающие начало и конец диапазона выборки заказов. 
+	   
+	   * проверка дат в диапазоне ведется только по дате приема заказа.   
+	*/
+	private function _search($table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='') {
+		
+		// если параметр $table не указывает на существующую таблицу -- ошибка		
+		if (($table!='orders')and($table!='customers')) {
+			echo '{"success":false,"message":"Ошибка получения данных"}';
+			return;
+		}		
+		// если не задана ключевая последовательность -- ошибка
+		if (!$search_terms) {
+			echo '{"success":false,"message":"Введите корректную строку поиска"}';
+			return;
+		}
+				
+		$data = array();
+		$new = array();
+		
+		// в случае поиска по заказчику, записываем в массив $new все порядковые номера 
+		// найденых клиентов, и реализуем поиск заказов, у которых customerID равен каждому из елементов массива $new
+		// * исключая заказы из корзины.
+		if ($table=='customers') {
+			$data['customers'] = $this->customers_model->search_id($field,$search_terms); // порядковые номера заказчиков
+			$data['count_cust'] = count($data['customers']); // количество найденных заказчиков
+			
+			if ($data['customers']===FALSE) {
+				echo '{"success":false,"message":"Поиск не дал результатов"}'; // если заказчики не найдены
+				return;
+			}
+			// запись номеров заказчиков из ассоц-го массива $data['customers'] в "обычный" массив $new
+			foreach ($data['customers'] as $customer)	{
+						foreach ($customer as $field => $value) {
+							$new[] = $value;
+						}
+				}
+			$field = 'customerID';	// переопределение искомого поля для заказов
+			$data['orders'] = array();
+			$data['records'] = array();
+			$new= array_reverse($new); // сортировка массива $new в обратном порядке для корректного отображения в боковой панели
+			
+			// ищем заказы, у которых customerID совпадает с каждым из елементов массива $new
+			for ($i = 0; $i < $data['count_cust']; $i++) 
+			{	
+				
+				$data['iter'] = $this->orders_model->search_id($field,$new[$i],$between,$first_date,$second_date); // порядковые номера заказов
+				if (!$data['iter']) {
+					$data['iter'] = array(); // если результат поиска FALSE -- очищаем массив итераций 
+				}
+				$data['orders'] = array_merge($data['iter'],$data['orders']); // используем слияние текущего массива результатов с массивом на пред. итерации
+				$data['count_ord'] = count($data['orders']); // подсчет рез-ов
+
+			}
+			
+			// проверка количества результатов
+			if ($data['orders']===array()) {
+				echo '{"success":false,"message":"Поиск не дал результатов"}'; 
+				return;
+			} elseif ($data['count_ord']>499) {
+				echo '{"success":false,"message":"Превышен допустимый диапазон для результатов поиска(500)"}';
+				return;
+			}
+			
+			// кодируем json-строку из результатов выборки, полученной при слиянии массивов на каждой итерации
+			for ($i = 0; $i < $data['count_cust']; $i++) 
+			{	
+				$data['iter'] = $this->orders_model->search($field,$new[$i],$between,$first_date,$second_date);
+				if (!$data['iter']) {
+					$data['iter'] = array();
+				}
+				$data['records'] = array_merge($data['iter'],$data['records']);
+			}
+			
+			$data['records'] = json_encode($data['records']);
+			$data['error1'] = json_last_error();
+		} else {
+		// если поиск производится по полям таблицы заказов	
+		$data['orders'] = $this->orders_model->search_id($field,$search_terms,$between,$first_date,$second_date);
+		$data['count_ord'] = count($data['orders']);
+		if ($data['orders']===FALSE) {
+			echo '{"success":false,"message":"Поиск не дал результатов"}';
+			return;
+		} elseif ($data['count_ord']>499) {
+			echo '{"success":false,"message":"Превышен допустимый диапазон для результатов поиска(500)"}';
+			return;
+		}
+		
+		// кодируем json-строку из результатов выборки
+		$data['records'] = json_encode($this->orders_model->search($field,$search_terms,$between,$first_date,$second_date));	
+		$data['error1'] = json_last_error();
+		
+		}	
+			//проверка ошибок
+			if (($data['error1'] !== JSON_ERROR_NONE)) {
+				unset($data['records']);
+				$data['records'] = '[]';
+				$data['json'] = '{"success":false,"product":' .$data['records'] .',"count":"0"}';
+				
+			} else  {
+				
+				// если ошибок нет, формируем нужную строку с заменой id-заказов на формат "pID"
+				$data['json'] = '{"success":true,"product":' .$data['records'] .',"count":"' .$data['count_ord'] .'"}';
+
+				foreach ($data['orders'] as $order)	{
+						foreach ($order as $field => $value) {
+							$data['json'] = preg_replace('"' .$value .'"','p' .$value,$data['json'],1);
+						}
+				}
+			}	
+		//вывод результата
+		echo $data['json'];
 	}
 }
 
