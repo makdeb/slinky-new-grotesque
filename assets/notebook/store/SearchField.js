@@ -7,7 +7,8 @@ Ext.define('Notebook.store.SearchField',{
         type: 'memory'
     },
     data: [
-        {id:'1',field: 'product',name: 'Продукт'},
-        {id:'2',field: 'sss',name: 'ddd'}
+        {id:1,field: 'id',name: '№пп'},
+        {id:2,field: 'product',name: 'Продукт'},
+        {id:3,field: 'model',name: 'Модель'}
     ]
 });

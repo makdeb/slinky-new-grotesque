@@ -14,7 +14,9 @@ Ext.define('Notebook.controller.Product', {
         'product.Delete',
         'product.Search'
     ],
-    init: function () {        
+    init: function () {  
+        //this.getStore('SearchField').addListener('load',function () {alert('loaded');});
+        //this.getStore('SearchField').load();
         this.control({
             '#nb-add-cat': {
                 click: this.editCatList
@@ -42,6 +44,9 @@ Ext.define('Notebook.controller.Product', {
             },
             '#nb-search-product': {
                 click: this.searchProd
+            },
+            'product-search #nb-prod-srch-field': {
+                change: this.searchProdFieldChange
             }
         });
     },
@@ -209,5 +214,26 @@ Ext.define('Notebook.controller.Product', {
         //alert('ddd');
         var prodSearch=this.getView('product.Search').create();
         prodSearch.show();
+    },
+    searchProdFieldChange: function (thisCB,newVal,oldVal,eOpt) {
+        alert(newVal);
+        var srchField=thisCB.getStore().getById(newVal).get('field');
+        alert(srchField);
+        //var srchCont=Ext.getCmp('nb-prod-srch-cont');
+        Ext.getCmp('nb-prod-srch-cont').remove('nb-prod-srch-fval',true);
+        switch (srchField) {
+            case 'id':          
+            case 'product':   
+            case 'model':
+                var srchInput=Ext.create('Ext.form.field.Text',{
+                    id: 'nb-prod-srch-fval',
+                    labelWidth: 55,
+                    fieldLabel: 'Значение',
+                    width: 260                    
+                });
+                break;
+        }
+        //Ext.getCmp('nb-prod-srch-cont').remove('nb-prod-srch-fval',true);
+        Ext.getCmp('nb-prod-srch-cont').add(srchInput);
     }
 });
