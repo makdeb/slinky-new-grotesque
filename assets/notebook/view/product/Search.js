@@ -24,7 +24,8 @@ Ext.define('Notebook.view.product.Search',{
                    fieldLabel: 'Поле',
                    store: 'SearchField',
                    displayField: 'name',
-                   valueField: 'id'
+                   valueField: 'id',
+                   forceSelection: true
                 },
                 {
                     xtype: 'textfield',

@@ -225,6 +225,12 @@ Ext.define('Notebook.controller.Product', {
             case 'id':          
             case 'product':   
             case 'model':
+            case 'serialnum':
+            case 'factorynum':
+            case 'guarantee':
+            case 'name':
+            case 'personaldata':
+            case 'address':            
                 var srchInput=Ext.create('Ext.form.field.Text',{
                     id: 'nb-prod-srch-fval',
                     labelWidth: 55,
