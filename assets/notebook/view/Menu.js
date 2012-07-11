@@ -34,20 +34,28 @@ Ext.define('Notebook.view.Menu',{
                 items: [
                     {
                         text: 'Мастера',
+                        id: 'nb-dict-master',
                         icon: icons_path+'dir-mas.png'
                     },
                     {
                         text: 'Продавци',
+                        id: 'nb-dict-seller',
                         icon: icons_path+'dir-sell.png'
                     },
                     {
                         text: 'Шаблоны заметок',
+                        id: 'nb-dict-notetpl',
                         icon: icons_path+'dir-templ.png'
-                    }
+                    },
+                    {
+                        text: 'Статусы владельца',
+                        id: 'nb-dict-status',
+                        icon: icons_path+'dir-stat.png'
+                    }                    
                 ]
             }            
         },
-        '-',
+        //'-',
         {
             xtype: 'button',
             id: 'nb-new-warranty',
@@ -73,12 +81,30 @@ Ext.define('Notebook.view.Menu',{
         },  
         {
             xtype: 'button',
-            id: 'nb-copy-warranty',
-            text: 'Копировать'
+            id: 'nb-del-warranty',
+            text: 'Удалить',
+            icon: icons_path+'ord-del.png'            
         },
         {
             xtype: 'button',
-            text: 'Поиск'
+            id: 'nb-copy-warranty',
+            text: 'Копировать',
+            icon: icons_path+'copy.png'
+        },
+        {
+            xtype: 'splitbutton',
+            id: 'nb-search-product',
+            text: 'Поиск',
+            icon: icons_path+'ord-srch.png',
+            menu: {
+                items: [
+                    {
+                        text: 'Очистить результат',                        
+                        id: 'nb-search-product-reset',
+                        icon: icons_path+'srch-reset.png'
+                    }
+                ]
+            }
         },
         {
             xtype: 'button',
