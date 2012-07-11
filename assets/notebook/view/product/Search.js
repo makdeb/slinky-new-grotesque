@@ -25,14 +25,16 @@ Ext.define('Notebook.view.product.Search',{
                    store: 'SearchField',
                    displayField: 'name',
                    valueField: 'id',
-                   forceSelection: true
+                   forceSelection: true,
+                   allowBlank: false
                 },
                 {
                     xtype: 'textfield',
                     id: 'nb-prod-srch-fval',
                     labelWidth: 55,
                     fieldLabel: 'Значение',
-                    width: 260
+                    width: 260,
+                    allowBlank: false
                 }
             ]
         },
@@ -44,21 +46,26 @@ Ext.define('Notebook.view.product.Search',{
             items: [        
                 {
                     xtype: 'checkbox',
+                    id: 'nb-prod-srch-per',
                     width: 120,
                     margin: '0 0 0 45',
                     boxLabel: 'искать за период'
                 },
                 {
                     xtype: 'datefield',
+                    id: 'nb-prod-srch-fdate',
                     width: 110,
                     labelWidth: 20,
+                    format: 'd.m.Y',
                     margin: '0 5 0 65',
                     fieldLabel: 'С'
                 },
                 {
                     xtype: 'datefield',
+                    id: 'nb-prod-srch-sdate',
                     width: 110,
                     labelWidth: 20,
+                    format: 'd.m.Y',
                     fieldLabel: 'По'
                 }                
             ]
@@ -66,10 +73,12 @@ Ext.define('Notebook.view.product.Search',{
     ],
     buttons: [
         {
-            text: 'Поиск'
+            text: 'Поиск',
+            id: 'nb-prod-srch-win-search'
         },
         {
-            text: 'Закрыть'
+            text: 'Закрыть',
+            id: 'nb-prod-srch-win-close'
         }
     ]
 });

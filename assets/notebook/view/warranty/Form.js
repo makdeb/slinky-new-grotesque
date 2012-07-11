@@ -363,7 +363,7 @@ Ext.define('Notebook.view.warranty.Form',{
                             {   
                                 xtype: 'textarea',
                                 id: 'nb-war-guar-comm',
-                                fieldLabel: 'Коментарии',
+                                fieldLabel: 'Комментарии',
                                 labelWidth: 80,
                                 width: 535,
                                 height: 50                                

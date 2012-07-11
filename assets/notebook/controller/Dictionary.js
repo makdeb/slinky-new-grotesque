@@ -28,9 +28,6 @@ Ext.define('Notebook.controller.Dictionary',{
                             return false;
                         }
                     }
-                    //else {
-                    //    this.edtRecId=eObj.record.get('id');
-                    //}
                 },
                 edit: function(editor,eObj,eOpts) {
                     if (!this.edtRecId) {
@@ -95,10 +92,8 @@ Ext.define('Notebook.controller.Dictionary',{
         }
     },
     dictDel: function () {
-        //var dictStore=this.getStore('Master');
         var dictGridSelModel=Ext.getCmp('nb-dict-grid').getSelectionModel();
         if (dictGridSelModel.hasSelection()) {
-            //dictStore.remove(dictGridSelModel.getSelection());
             Ext.Msg.confirm('Сообщение','Удалить запись?',function (btn) {
                 if (btn=='yes') {
                     var thisController=this;

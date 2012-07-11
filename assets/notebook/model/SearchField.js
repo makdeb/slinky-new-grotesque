@@ -1,4 +1,4 @@
 Ext.define('Notebook.model.SearchField',{
     extend: 'Ext.data.Model',
-    fields: ['id','field','name']
+    fields: ['id','table','field','name']
 });

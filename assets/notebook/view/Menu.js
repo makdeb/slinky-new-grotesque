@@ -55,7 +55,7 @@ Ext.define('Notebook.view.Menu',{
                 ]
             }            
         },
-        '-',
+        //'-',
         {
             xtype: 'button',
             id: 'nb-new-warranty',
@@ -81,15 +81,30 @@ Ext.define('Notebook.view.Menu',{
         },  
         {
             xtype: 'button',
+            id: 'nb-del-warranty',
+            text: 'Удалить',
+            icon: icons_path+'ord-del.png'            
+        },
+        {
+            xtype: 'button',
             id: 'nb-copy-warranty',
             text: 'Копировать',
             icon: icons_path+'copy.png'
         },
         {
-            xtype: 'button',
+            xtype: 'splitbutton',
             id: 'nb-search-product',
             text: 'Поиск',
-            icon: icons_path+'ord-srch.png'
+            icon: icons_path+'ord-srch.png',
+            menu: {
+                items: [
+                    {
+                        text: 'Очистить результат',                        
+                        id: 'nb-search-product-reset',
+                        icon: icons_path+'srch-reset.png'
+                    }
+                ]
+            }
         },
         {
             xtype: 'button',

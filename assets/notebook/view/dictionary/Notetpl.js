@@ -29,11 +29,13 @@ Ext.define('Notebook.view.dictionary.Notetpl',{
             tbar: [
                 {
                     text: 'Добавить',
-                    id: 'nb-dict-win-add'
+                    id: 'nb-dict-win-add',
+                    icon: icons_path+'sign-plus.png'
                 },
                 {
                     text: 'Удалить',
-                    id: 'nb-dict-win-del'
+                    id: 'nb-dict-win-del',
+                    icon: icons_path+'sign-minus.png'
                 }                
             ]
         }
