@@ -504,7 +504,7 @@ class Notebook extends CI_Controller {
 		
 		// проверка отсутствия удаляемого заказа в Корзине
 		if ($this->orders_model->is_in_trash($id)) {
-			echo '{"success":false,"message":Заказ уже находится в Корзине"}';
+			echo '{"success":false,"message":"Заказ уже находится в Корзине"}';
 		 	return;
 		}
 		
