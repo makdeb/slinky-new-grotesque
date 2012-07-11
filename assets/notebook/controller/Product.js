@@ -1,17 +1,22 @@
 Ext.define('Notebook.controller.Product', {
     extend: 'Ext.app.Controller',
     models: [
-        'Product'
+        'Product',
+        'SearchField'
     ],
     stores: [
-        'Product'
+        'Product',
+        'SearchField'
     ],    
     views: [
         'product.List',
         'product.Edit',
-        'product.Delete'
+        'product.Delete',
+        'product.Search'
     ],
-    init: function () {        
+    init: function () {  
+        //this.getStore('SearchField').addListener('load',function () {alert('loaded');});
+        //this.getStore('SearchField').load();
         this.control({
             '#nb-add-cat': {
                 click: this.editCatList
@@ -36,7 +41,22 @@ Ext.define('Notebook.controller.Product', {
             },            
             '#nb-product-tree': {
                 itemclick: this.warLoad
-            }           
+            },
+            '#nb-search-product': {
+                click: this.searchProd
+            },
+            'product-search #nb-prod-srch-field': {
+                change: this.searchProdFieldChange
+            },
+            'product-search button#nb-prod-srch-win-search': {
+                click: this.searchWinOk
+            },
+            'product-search button#nb-prod-srch-win-close': {
+                click: this.searchWinClose
+            }, 
+            '#nb-search-product-reset': {
+                click: this.searchProdReset
+            }
         });
     },
     editCatList: function (button) {
@@ -45,9 +65,7 @@ Ext.define('Notebook.controller.Product', {
         //отримуємо nb-cat-win-container крнтейнер
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');
         //отримуємо кеземпляр моделі для вибраної вузла
-        alert(Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0]);
         this.catEdtWin.selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
-        alert(this.catEdtWin.selCat);
         //в залежності від того, додаємо нову чи редагуємо існуючу категорію,
         //встановлюємо властивість екземпляра вюшки catAdd,
         //прописуємо відповідне повідомлення у вікні
@@ -200,5 +218,126 @@ Ext.define('Notebook.controller.Product', {
             //викликаємо метод контроллера, що заповнює форму
             this.getController('Warranty').fillForm(warId);
         }
+    },
+    searchProd: function () {
+        this.prodSearchWin=this.getView('product.Search').create();
+        this.prodSearchWin.show();
+    },
+    searchProdFieldChange: function (thisCB,newVal,oldVal,eOpt) {
+        //отримуємо поле по якшому здійснюється пошук
+        var srchField=thisCB.getStore().getById(newVal).get('field');
+        //в залежності від вибраного поля генеруємо відповідне поле вводу
+        Ext.getCmp('nb-prod-srch-cont').remove('nb-prod-srch-fval',true);
+        switch (srchField) {
+            case 'id':          
+            case 'product':   
+            case 'model':
+            case 'serialnum':
+            case 'factorynum':
+            case 'guarantee':
+            case 'name':
+            case 'personaldata':
+            case 'address':
+            case 'complaints':
+            case 'preformance':
+            case 'notes':    
+            case 'check':
+            case 'comments':
+            case 'total':    
+                var srchInput=Ext.create('Ext.form.field.Text',{
+                    id: 'nb-prod-srch-fval',
+                    labelWidth: 55,
+                    fieldLabel: 'Значение',
+                    width: 260,
+                    allowBlank: false
+                });
+                break;
+            case 'date_start':
+            case 'date_end':
+            case 'notified':            
+                var srchInput=Ext.create('Ext.form.field.Date',{
+                    id: 'nb-prod-srch-fval',
+                    format: 'd.m.Y',
+                    labelWidth: 55,
+                    fieldLabel: 'Значение',
+                    width: 260,
+                    allowBlank: false                    
+                });
+                break;
+            case 'blacklistID':            
+                var srchInput=Ext.create('Ext.form.field.ComboBox',{
+                    id: 'nb-prod-srch-fval',
+                    labelWidth: 55,
+                    fieldLabel: 'Значение',
+                    width: 260,
+                    store: 'Status',
+                    displayField: 'name',
+                    valueField: 'id',
+                    forceSelection: true,
+                    allowBlank: false
+                });
+                break;  
+            case 'sellerID':            
+                var srchInput=Ext.create('Ext.form.field.ComboBox',{
+                    id: 'nb-prod-srch-fval',
+                    labelWidth: 55,
+                    fieldLabel: 'Значение',
+                    width: 260,
+                    store: 'Seller',
+                    displayField: 'name',
+                    valueField: 'id',
+                    forceSelection: true,
+                    allowBlank: false
+                });
+                break; 
+            case 'masterID':            
+                var srchInput=Ext.create('Ext.form.field.ComboBox',{
+                    id: 'nb-prod-srch-fval',
+                    labelWidth: 55,
+                    fieldLabel: 'Значение',
+                    width: 260,
+                    store: 'Master',
+                    displayField: 'name',
+                    valueField: 'id',
+                    forceSelection: true,
+                    allowBlank: false
+                });
+                break; 
+        }
+        Ext.getCmp('nb-prod-srch-cont').add(srchInput);
+    },
+    searchWinOk: function () {
+        if (Ext.getCmp('nb-prod-srch-field').isValid()) {
+            var srchField=this.getStore('SearchField').getById(Ext.getCmp('nb-prod-srch-field').getValue());
+            var prodLoadParams={};
+            prodLoadParams.params={};
+            prodLoadParams.params.search=1;
+            prodLoadParams.params.table=srchField.get('table');
+            prodLoadParams.params.field=srchField.get('field');
+            switch (prodLoadParams.params.field) {
+                case 'date_start':
+                case 'date_end':
+                case 'notified':
+                    prodLoadParams.params.search_terms=Ext.Date.format(Ext.getCmp('nb-prod-srch-fval').getValue(),'d.m.Y');
+                    break;
+                default:
+                    prodLoadParams.params.search_terms=Ext.getCmp('nb-prod-srch-fval').getValue();
+                    break;
+            }               
+            prodLoadParams.params.between=0;
+            if (Ext.getCmp('nb-prod-srch-per').getValue()) {
+                prodLoadParams.params.between=1;
+                prodLoadParams.params.first_date=Ext.Date.format(Ext.getCmp('nb-prod-srch-fdate').getValue(),'d.m.Y');
+                prodLoadParams.params.second_date=Ext.Date.format(Ext.getCmp('nb-prod-srch-sdate').getValue(),'d.m.Y');
+            }
+            this.getStore('Product').load(prodLoadParams);
+            this.prodSearchWin.close();
+        }
+    },
+    searchWinClose: function () {
+        this.prodSearchWin.close();
+    },
+    searchProdReset: function () {
+        this.getStore('Product').load();
     }
 });

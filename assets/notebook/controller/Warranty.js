@@ -20,7 +20,8 @@ Ext.define('Notebook.controller.Warranty',{
     ],    
     views: [
         'warranty.Form',
-        'warranty.Ptemplate'
+        'warranty.Ptemplate',
+        'warranty.Delete'
     ],  
     init: function () {
         this.control({
@@ -32,7 +33,16 @@ Ext.define('Notebook.controller.Warranty',{
             },
             'main-menu button#nb-save-warranty': {
                 click: this.saveWarranty
-            },    
+            },   
+            'main-menu button#nb-del-warranty': {
+                click: this.delWarranty
+            },
+            'button#nb-war-del-win-ok': {
+                click: this.delWarWinOk
+            },
+            'button#nb-war-del-win-cancel': {
+                click: this.delWarWinCancel
+            },            
             'main-menu button#nb-copy-warranty': {
                 click: this.copyWarranty
             },
@@ -263,40 +273,7 @@ Ext.define('Notebook.controller.Warranty',{
         var warDet=Ext.getCmp('nb-war-det');
         var warTrans=Ext.getCmp('nb-war-trans');
         var warTotalPrice=Ext.getCmp('nb-war-total-price');
-        var warGDate=Ext.getCmp('nb-war-gdate');
-        
-//        if (!warProd.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Изделие"');
-//            return false;
-//        }
-//        if (!warCust.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Владелец"');
-//            return false;
-//        }  
-//        if (!warAdr.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Адресс"');
-//            return false;
-//        }   
-//        if (!warHPhone.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
-//            return false;
-//        }   
-//        if (!warWPhone.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
-//            return false;
-//        } 
-//        if (!warPhone.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Телефон"');
-//            return false;
-//        }             
-//        if (!warDet.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Деталі"');
-//            return false;
-//        }   
-//        if (!warWork.isValid()) {
-//            Ext.Msg.alert('Сообщение','Неверно заполнено поле "Робота"');
-//            return false;
-//        }                      
+        var warGDate=Ext.getCmp('nb-war-gdate');                     
         var ajaxParams={};
         if (action!='copy_cust') {
             if (action=='update' || action=='copy') {
@@ -354,12 +331,14 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-date-end').setValue('');        
         Ext.getCmp('nb-war-in-workshop').setValue(0);        
         Ext.getCmp('nb-war-prod').setValue('');
+        Ext.getCmp('nb-war-prod').clearInvalid();
         Ext.getCmp('nb-war-model').setValue('');
         Ext.getCmp('nb-war-ser-num').setValue('');
         Ext.getCmp('nb-war-fac-num').setValue('');
         Ext.getCmp('nb-war-guar').setValue('');
         Ext.getCmp('nb-war-cat').setValue('2');
         Ext.getCmp('nb-war-cust').setValue('');
+        Ext.getCmp('nb-war-cust').clearInvalid();
         Ext.getCmp('nb-war-cust-info').setValue('');
         Ext.getCmp('nb-war-adr').setValue('');
         Ext.getCmp('nb-war-hphone').setValue('');
@@ -401,24 +380,24 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-id').setValue(json.id);
                     //оновлюємо дерево...
                     Ext.getCmp('nb-product-tree').getStore().load(); 
-                    Ext.Msg.alert('Повідомлення',json.message);  
+                    Ext.Msg.alert('Сообщение',json.message);  
                 }
                 else {
-                    Ext.Msg.alert('Повідомлення',json.message);  
+                    Ext.Msg.alert('Сообщение',json.message);  
                 }
             }
             ajaxConf.failure=function () {
-                Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
+                Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
             }        
             Ext.Ajax.request(ajaxConf);
         }
         else {
-            Ext.Msg.alert('Повідомлення','Повторний прийом введеного замовлення не можливий.');            
+            Ext.Msg.alert('Сообщение','Повторный прийом введеного заказа не возможен.');            
         }
     },
     saveWarranty: function () {
         //збереження можливе лише коли стоїть відмітка про те, що замовлення не нове
-        if (!this.isNew) {
+        if (!this.isNew) {            
             //отримуємо значення полів форми         
             var ajaxConf={};
             ajaxConf.method='POST';
@@ -431,22 +410,63 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
-                    //оновлюємо дерево...
+                    //оновлюємо дерево...                    
                     Ext.getCmp('nb-product-tree').getStore().load();
-                    Ext.Msg.alert('Повідомлення',json.message);
+                    Ext.Msg.alert('Сообщение',json.message);
                 }
                 else {
-                    Ext.Msg.alert('Повідомлення',json.message);
+                    Ext.Msg.alert('Сообщение',json.message);
                 }
             }
             ajaxConf.failure=function () {
-                Ext.Msg.alert('Повідомлення','Помилка при AJAX запиті');
+                Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
             }        
             Ext.Ajax.request(ajaxConf); 
         }
         else {
-            Ext.Msg.alert('Повідомлення','Збереження не можливе при введенні нового замовлення. Необхідно виконати прийом.');
+            Ext.Msg.alert('Сообщение','Сохранение не возможно при вводе нового заказа. Необходимо выполнить прием.');
         }
+    },
+    delWarranty: function () {
+        if (!this.isNew) {
+            this.warDelWin=this.getView('warranty.Delete').create();
+            this.warDelWin.getComponent('nb-war-del-win-container')
+                                .getComponent('nb-war-del-win-message')
+                                    .update('Удалить заказ №'+Ext.getCmp('nb-war-id').getValue()+' ?');            
+            this.warDelWin.show();
+        }
+        else {
+            Ext.Msg.alert('Сообщение','Удалить можно только сохраненній заказ');
+        }        
+    },
+    delWarWinOk: function () {
+        var thisController=this;
+        //отримуємо значення полів форми         
+        var ajaxConf={};
+        ajaxConf.method='GET';
+        ajaxConf.url='notebook/remove_order';
+        ajaxConf.params={}; 
+        ajaxConf.params.id=Ext.getCmp('nb-war-id').getValue();
+        ajaxConf.success=function (resp,opts) {
+            var json=Ext.decode(resp.responseText);
+            if (json.success) {
+                //оновлюємо дерево...
+                thisController.newWarranty();
+                Ext.getCmp('nb-product-tree').getStore().load();
+                Ext.Msg.alert('Сообщение',json.message);
+            }
+            else {
+                Ext.Msg.alert('Сообщение',json.message);
+            }
+        }
+        ajaxConf.failure=function () {
+            Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
+        }        
+        Ext.Ajax.request(ajaxConf); 
+        this.warDelWin.close();        
+    },
+    delWarWinCancel: function () {
+        this.warDelWin.close();
     },
     copyWarranty: function () {
         if (!this.isNew) {
@@ -610,8 +630,7 @@ Ext.define('Notebook.controller.Warranty',{
         }
     },
     ptplPrint: function () {
-        var ptplWinCont=this.ptplWin.getComponent('nb-ptpl-win-container');
-        //alert(this.ptplWin.getComponent('nb-ptpl-win-container').getComponent('nb-ptpl-win-message').getValue());
+        var ptplWinCont=this.ptplWin.getComponent('nb-ptpl-win-container');        
         if (ptplWinCont.getComponent('nb-ptpl-win-templ').isValid()) {            
             window.open(print_url+ptplWinCont.getComponent('nb-ptpl-win-templ').getValue()+'/'+Ext.getCmp('nb-war-id').getValue(),'_blank');
             this.ptplWin.close();

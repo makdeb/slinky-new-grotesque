@@ -4,7 +4,8 @@ var icons_path='http://localhost/slinky-new-grotesque/assets/extjs/resources/the
 var print_url='http://dda.loc/print/';
 
 Ext.require([
-    'Ext.window.MessageBox'
+    'Ext.window.MessageBox',
+    'Ext.grid.plugin.CellEditing'
 ]);
 
 Ext.application({
@@ -14,7 +15,8 @@ Ext.application({
     controllers: [
         'Menu',
         'Product', 
-        'Warranty'               
+        'Warranty',
+        'Dictionary'
     ],
     launch: function() {
         //ініціалізація менеджера підказок
@@ -29,10 +31,10 @@ Ext.application({
         });
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanumplus:  function(val) {
-                return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]{1,}$/.test(val);
+                return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\_\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]{1,}$/.test(val);
             },
             cyralphanumplusText: 'Допустимые символы кирилици, латыни, цифри, знаки пунктуации и операций',
-            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]/
+            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s\_\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             phone:  function(val) {
