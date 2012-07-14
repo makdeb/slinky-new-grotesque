@@ -328,10 +328,16 @@ class Notebook extends CI_Controller {
 		}	
 		
 		// если параметры $name и $id не указаны или они недопустимы -- ошибка	
-		if ((!$id)||(!$name)||($id==1)) {
+		if ((!$id)||(!$name)) {
 			 echo '{"success":false,"message":"Ошибка при переименовании елемента"}'; 
 			 return;
 		 }
+		 
+		 if (($id==1)and($unit!='template')) {
+		 	 echo '{"success":false,"message":"Ошибка при переименовании елемента"}'; 
+			 return;
+		 }
+		 
 		// запрет переименования Корзины
 		if (($unit=='category')and($id==1)) {
 			echo '{"success":false,"message":"Ошибка при переименовании Корзины"}';
@@ -398,10 +404,15 @@ class Notebook extends CI_Controller {
 		}	
 		
 		// если параметр $id не указан или он недопустим -- ошибка	
-		if ((!$id)||($id==1)) {
+		if (!$id) {
 			 echo '{"success":false,"message":"Ошибка при удалении елемента"}'; 
 			 return;
 		 }
+		
+		if (($id==1)and($unit!='template')) {
+			echo '{"success":false,"message":"Ошибка при удалении елемента"}'; 
+			return;
+		}
 		
 		// проверка существования записи с заданым id
 		if ($this->notebook_model->get_units($table,$id)===FALSE) {
@@ -1174,7 +1185,7 @@ class Notebook extends CI_Controller {
 
 				foreach ($data['orders'] as $order)	{
 						foreach ($order as $field => $value) {
-							$data['json'] = preg_replace('"' .$value .'"','p' .$value,$data['json'],1);
+							$data['json'] = str_replace('"id":"' .$value .'"','"id":"p' .$value .'"',$data['json']);
 						}
 				}
 			}	
