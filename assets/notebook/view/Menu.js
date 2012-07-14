@@ -38,7 +38,7 @@ Ext.define('Notebook.view.Menu',{
                         icon: icons_path+'dir-mas.png'
                     },
                     {
-                        text: 'Продавци',
+                        text: 'Продавцы',
                         id: 'nb-dict-seller',
                         icon: icons_path+'dir-sell.png'
                     },
