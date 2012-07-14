@@ -238,8 +238,11 @@ Ext.define('Notebook.controller.Product', {
             case 'name':
             case 'personaldata':
             case 'address':
+            case 'phone':
+            case 'wphone':
+            case 'hphone':
             case 'complaints':
-            case 'preformance':
+            case 'performance':
             case 'notes':    
             case 'check':
             case 'comments':
@@ -255,6 +258,7 @@ Ext.define('Notebook.controller.Product', {
             case 'date_start':
             case 'date_end':
             case 'notified':            
+            case 'gdate':    
                 var srchInput=Ext.create('Ext.form.field.Date',{
                     id: 'nb-prod-srch-fval',
                     format: 'd.m.Y',
@@ -263,20 +267,7 @@ Ext.define('Notebook.controller.Product', {
                     width: 260,
                     allowBlank: false                    
                 });
-                break;
-            case 'blacklistID':            
-                var srchInput=Ext.create('Ext.form.field.ComboBox',{
-                    id: 'nb-prod-srch-fval',
-                    labelWidth: 55,
-                    fieldLabel: 'Значение',
-                    width: 260,
-                    store: 'Status',
-                    displayField: 'name',
-                    valueField: 'id',
-                    forceSelection: true,
-                    allowBlank: false
-                });
-                break;  
+                break; 
             case 'sellerID':            
                 var srchInput=Ext.create('Ext.form.field.ComboBox',{
                     id: 'nb-prod-srch-fval',
@@ -318,6 +309,7 @@ Ext.define('Notebook.controller.Product', {
                 case 'date_start':
                 case 'date_end':
                 case 'notified':
+                case 'gdate':    
                     prodLoadParams.params.search_terms=Ext.Date.format(Ext.getCmp('nb-prod-srch-fval').getValue(),'d.m.Y');
                     break;
                 default:

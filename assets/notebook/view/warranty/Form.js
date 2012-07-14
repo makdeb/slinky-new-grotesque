@@ -174,7 +174,7 @@ Ext.define('Notebook.view.warranty.Form',{
                             {   
                                 xtype: 'textfield',
                                 id:'nb-war-adr',
-                                fieldLabel: 'Адресс',
+                                fieldLabel: 'Адрес',
                                 labelWidth: 80,
                                 width: 535,
                                 vtype: 'cyralphanumplus'
@@ -278,7 +278,7 @@ Ext.define('Notebook.view.warranty.Form',{
                             {   
                                 xtype: 'textarea',
                                 id:'nb-war-pref',
-                                fieldLabel: 'Проделаная работа',
+                                fieldLabel: 'Проделанная работа',
                                 labelWidth: 80,
                                 width: 535,
                                 height: 50                                
@@ -342,7 +342,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                     {
                                         xtype: 'combobox',
                                         id: 'nb-war-seller',
-                                        fieldLabel: 'Продавець',
+                                        fieldLabel: 'Продавец',
                                         labelWidth: 80,
                                         width: 265,
                                         store: 'Seller',
