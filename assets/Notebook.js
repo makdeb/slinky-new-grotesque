@@ -31,10 +31,10 @@ Ext.application({
         });
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanumplus:  function(val) {
-                return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\_\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>\,\.]{1,}$/.test(val);
+                return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s\_\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>\,\.\?\@]{1,}$/.test(val);
             },
             cyralphanumplusText: 'Допустимые символы кирилици, латыни, цифри, знаки пунктуации и операций',
-            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s\_\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>\,\.]/
+            cyralphanumplusMask: /[а-яіїєА-ЯІЇЄa-zA-Z\d\s\_\+\\\-\/\(\)\{\}\'\"\!\&\=\*\%\#\<\>\,\.\@\?]/
         });        
         Ext.apply(Ext.form.field.VTypes, {
             phone:  function(val) {

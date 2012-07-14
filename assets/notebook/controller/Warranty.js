@@ -436,7 +436,7 @@ Ext.define('Notebook.controller.Warranty',{
             this.warDelWin.show();
         }
         else {
-            Ext.Msg.alert('Сообщение','Удалить можно только сохраненній заказ');
+            Ext.Msg.alert('Сообщение','Удалить можно только сохраненный заказ');
         }        
     },
     delWarWinOk: function () {
