@@ -31,6 +31,9 @@ Ext.define('Notebook.controller.Warranty',{
             'main-menu button#nb-rec-warranty': {
                 click: this.recWarranty
             },
+            'main-menu button#nb-out-warranty': {
+                click: this.outWarranty
+            },            
             'main-menu button#nb-save-warranty': {
                 click: this.saveWarranty
             },   
@@ -393,6 +396,32 @@ Ext.define('Notebook.controller.Warranty',{
         }
         else {
             Ext.Msg.alert('Сообщение','Повторный прийом введеного заказа не возможен.');            
+        }
+    },    
+    outWarranty: function() {
+        if (!this.isNew) {
+            var ajaxConf={};
+            ajaxConf.method='GET';
+            ajaxConf.url='notebook/close_order'; 
+            ajaxConf.params={};
+            ajaxConf.params.id=Ext.getCmp('nb-war-id').getValue();
+            ajaxConf.success=function (resp,opts) {
+                var json=Ext.decode(resp.responseText);
+                if (json.success) {
+                    Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.date,'Y-m-d'));
+                    Ext.Msg.alert('Сообщение','Заказ успешно выдано');  
+                }
+                else {
+                    Ext.Msg.alert('Сообщение',json.message);  
+                }
+            }
+            ajaxConf.failure=function () {
+                Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
+            }        
+            Ext.Ajax.request(ajaxConf);
+        }
+        else {
+            Ext.Msg.alert('Сообщение','Выдача не принятого заказа не возможна');            
         }
     },
     saveWarranty: function () {

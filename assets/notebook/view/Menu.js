@@ -70,6 +70,7 @@ Ext.define('Notebook.view.Menu',{
         },
         {
             xtype: 'button',
+            id: 'nb-out-warranty',
             text: 'Выдача',
             icon: icons_path+'ord-out.png'
         },
