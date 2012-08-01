@@ -301,6 +301,16 @@ Ext.define('Notebook.controller.Product', {
         if (Ext.getCmp('nb-prod-srch-field').isValid()) {
             var srchField=this.getStore('SearchField').getById(Ext.getCmp('nb-prod-srch-field').getValue());
             var prodLoadParams={};
+            prodLoadParams.scope=this;
+            prodLoadParams.callback=function(records, operation, success) {
+                    var json=this.getStore('Product').getProxy().getReader().rawData;
+                    if (success) {
+                        Ext.Msg.alert('Сообщение','Найдено '+json.count+' заказ(ов)');
+                    }
+                    else {
+                        Ext.Msg.alert('Сообщение',json.message);
+                    }
+                }
             prodLoadParams.params={};
             prodLoadParams.params.search=1;
             prodLoadParams.params.table=srchField.get('table');
