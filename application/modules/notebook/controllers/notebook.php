@@ -554,7 +554,7 @@ class Notebook extends CI_Controller {
 		//вибір замовлення із заданим id
 			$query_result = $this->notebook_model->get_all_fields($id);
 			if ($query_result===FALSE) {
-				echo '{"success":false,"message":"Ошибка выбора елемента"}}'; // в случае отсутствия заказа с указанным id -- ошибка
+				echo '{"success":false,"message":"Ошибка выбора елемента"}'; // в случае отсутствия заказа с указанным id -- ошибка
 				return;
 			};
 			$data['records'] = json_encode($query_result);	
