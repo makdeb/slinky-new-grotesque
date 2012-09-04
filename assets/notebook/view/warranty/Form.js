@@ -26,7 +26,21 @@ Ext.define('Notebook.view.warranty.Form',{
                         fieldLabel: '№ п\п',
                         width: 120,
                         readOnly: true
-                    },                    
+                    }, 
+                    {
+                    	xtype: 'box',                    	
+                    	width: 105,
+                    	id: 'nb-war-done-label',
+                    	padding: '3 0 0 0',
+                    	html: 'выполнен',
+                    	autoEl: {
+                    		tag: 'span'                    		                    	
+                    	},
+                    	style: {
+                    		color: '#ff0000',
+                    		fontWeight: 'bold'	
+                    	}
+                    },
                     {
                         xtype: 'datefield',
                         id:'nb-war-date-start',
@@ -34,7 +48,7 @@ Ext.define('Notebook.view.warranty.Form',{
                         fieldLabel: 'Принято',
                         labelWidth: 60,
                         width: 150,
-                        margin: '0 5 0 110',
+                        //margin: '0 5 0 0',
                         readOnly: true
                     },
                     {

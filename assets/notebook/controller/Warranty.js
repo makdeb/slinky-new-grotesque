@@ -33,7 +33,10 @@ Ext.define('Notebook.controller.Warranty',{
             },
             'main-menu button#nb-out-warranty': {
                 click: this.outWarranty
-            },            
+            },  
+            'main-menu button#nb-done-warranty': {
+                click: this.doneWarranty
+            },             
             'main-menu button#nb-save-warranty': {
                 click: this.saveWarranty
             },   
@@ -57,7 +60,10 @@ Ext.define('Notebook.controller.Warranty',{
             		//друкуємо пустий бланк...  
             		window.open(empty_print_url,'_blank');
             	}
-            },            
+            },
+            'main-menu button#nb-db-backup': {
+            	click: this.backupDb
+            },
             'warranty-form button#nb-war-upload-file': {
                 click: this.uploadFile
             },            
@@ -345,7 +351,14 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-ser-num').setValue('');
         Ext.getCmp('nb-war-fac-num').setValue('');
         Ext.getCmp('nb-war-guar').setValue('');
-        Ext.getCmp('nb-war-cat').setValue('2');
+        //в новому замовленні проставляємо категорію, якщо вона вибрана в дереві продуктів
+        var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {                    
+        	Ext.getCmp('nb-war-cat').setValue(selCat.get('id').replace(/[^0-9]/,''));
+        }
+        else {
+        	Ext.getCmp('nb-war-cat').setValue('2');
+        }                
         Ext.getCmp('nb-war-cust').setValue('');
         Ext.getCmp('nb-war-cust').clearInvalid();
         Ext.getCmp('nb-war-cust-info').setValue('');
@@ -429,6 +442,9 @@ Ext.define('Notebook.controller.Warranty',{
         else {
             Ext.Msg.alert('Сообщение','Выдача не принятого заказа не возможна');            
         }
+    },
+    doneWarranty: function () {
+    	alert(Ext.getCmp('nb-war-done-label').update('trollolo'));
     },
     saveWarranty: function () {
         //збереження можливе лише коли стоїть відмітка про те, що замовлення не нове
@@ -677,7 +693,7 @@ Ext.define('Notebook.controller.Warranty',{
     warPrint: function () {
     	//ігноруемо вибір темлейта...так треба, так простіше
     	if (ignore_logic_no_template_select) {
-    		window.open(print_url+'/'+Ext.getCmp('nb-war-id').getValue(),'_blank');
+    		window.open(print_url+Ext.getCmp('nb-war-id').getValue(),'_blank');
     	}
     	else {
 	        var selWar=Ext.getCmp('nb-war-id').getValue();
@@ -689,6 +705,25 @@ Ext.define('Notebook.controller.Warranty',{
 	            Ext.Msg.alert('Сообщение','Выберите заказ, или сохраните текущий');
 	        }
     	}
+    },
+    backupDb: function () {
+    	//робимо бекап бд
+    	Ext.Ajax.request({    		
+    		url: '',
+    		method: 'get',
+    		success: function (resp,opts) {
+    			var json=Ext.decode(resp.responseText);
+    			if (json.success) {
+    				Ext.Msg.alert('Сообщение','<a href="#">dfdf</a>');
+    			}
+    			else {
+    				Ext.Msg.alert('Сообщение',json.msg);
+    			}
+    		},
+    		failure: function () {
+    			Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
+    		}
+    	});
     }
 });
 

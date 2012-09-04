@@ -75,6 +75,11 @@ Ext.define('Notebook.view.Menu',{
             icon: icons_path+'ord-out.png'
         },
         {
+        	xtype: 'button',
+        	id: 'nb-done-warranty',
+        	text: 'Выполнить\\Отменить выполнение'
+        },
+        {
             xtype: 'button',
             id: 'nb-save-warranty',
             text: 'Сохранить',
@@ -123,6 +128,11 @@ Ext.define('Notebook.view.Menu',{
             	    }    
             	]
             }
+        },
+        {
+        	xtype: 'button',
+        	id: 'nb-db-backup',
+        	text: 'Бэкап БД'
         }
     ]    
 //    items: [
