@@ -108,10 +108,21 @@ Ext.define('Notebook.view.Menu',{
             }
         },
         {
-            xtype: 'button',
+            xtype: 'splitbutton',
             id: 'nb-print-warranty',
             text: 'Печать',
-            icon: icons_path+'ord-print.png'
+            icon: icons_path+'ord-print.png',
+            //чудо-кнока для друку пустого бланка
+            menu: {
+            	items: [
+            	    {
+            	    	xtype: 'button',
+            	    	id: 'nb-print-empty-warranty',
+            	    	text: 'Печать пустого бланка',
+            	    	icon: icons_path+'ord-print-empty.png',
+            	    }    
+            	]
+            }
         }
     ]    
 //    items: [

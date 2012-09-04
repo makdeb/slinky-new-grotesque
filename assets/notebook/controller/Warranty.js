@@ -52,6 +52,12 @@ Ext.define('Notebook.controller.Warranty',{
             'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
+            'main-menu button#nb-print-empty-warranty': {
+            	click: function () {
+            		//друкуємо пустий бланк...  
+            		window.open(empty_print_url,'_blank');
+            	}
+            },            
             'warranty-form button#nb-war-upload-file': {
                 click: this.uploadFile
             },            
@@ -155,7 +161,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
                     Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
-                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+                    //Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
                     Ext.getCmp('nb-war-prod').setValue(json.order.product);
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
@@ -207,7 +213,7 @@ Ext.define('Notebook.controller.Warranty',{
         var invalidFields='';
         Ext.each(Ext.ComponentQuery.query(
             '#nb-war-id,'+
-            '#nb-war-in-workshop,'+
+            //'#nb-war-in-workshop,'+
             '#nb-war-prod,'+
             '#nb-war-model,'+
             '#nb-war-ser-num,'+
@@ -248,7 +254,7 @@ Ext.define('Notebook.controller.Warranty',{
         //var warStartDate=Ext.getCmp('nb-war-date-start');
         //var warEndDate=Ext.getCmp('nb-war-date-end');
         var warId=Ext.getCmp('nb-war-id');            
-        var warInWS=Ext.getCmp('nb-war-in-workshop');
+        //var warInWS=Ext.getCmp('nb-war-in-workshop');
         var warProd=Ext.getCmp('nb-war-prod');
         var warModel=Ext.getCmp('nb-war-model');
         var warSerNum=Ext.getCmp('nb-war-ser-num');
@@ -283,12 +289,12 @@ Ext.define('Notebook.controller.Warranty',{
                 ajaxParams.id=warId.getValue();
             }        
             ajaxParams.categoryID=warCat.getValue();
-            if (warInWS.getValue()) {
-                ajaxParams.type=1;
-            }
-            else {
-                ajaxParams.type=0;
-            }        
+            //if (warInWS.getValue()) {
+            //    ajaxParams.type=1;
+            //}
+            //else {
+            //    ajaxParams.type=0;
+            //}        
             ajaxParams.model=warModel.getValue();
             ajaxParams.product=warProd.getValue();
             ajaxParams.serialnum=warSerNum.getValue();
@@ -332,7 +338,7 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-id').setValue('');
         Ext.getCmp('nb-war-date-start').setValue('');
         Ext.getCmp('nb-war-date-end').setValue('');        
-        Ext.getCmp('nb-war-in-workshop').setValue(0);        
+        //Ext.getCmp('nb-war-in-workshop').setValue(0);        
         Ext.getCmp('nb-war-prod').setValue('');
         Ext.getCmp('nb-war-prod').clearInvalid();
         Ext.getCmp('nb-war-model').setValue('');
@@ -513,7 +519,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
                     Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
-                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+                    //Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
                     Ext.getCmp('nb-war-prod').setValue(json.order.product);
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
@@ -579,7 +585,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
                     Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
-                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+                    //Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
                     Ext.getCmp('nb-war-prod').setValue(json.order.product);
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
@@ -669,14 +675,20 @@ Ext.define('Notebook.controller.Warranty',{
         }
     },
     warPrint: function () {
-        var selWar=Ext.getCmp('nb-war-id').getValue();
-        if (selWar!=undefined && selWar!='') {
-            this.ptplWin=this.getView('warranty.Ptemplate').create();
-            this.ptplWin.show();
-        }
-        else {
-            Ext.Msg.alert('Сообщение','Выберите заказ, или сохраните текущий');
-        }
+    	//ігноруемо вибір темлейта...так треба, так простіше
+    	if (ignore_logic_no_template_select) {
+    		window.open(print_url+'/'+Ext.getCmp('nb-war-id').getValue(),'_blank');
+    	}
+    	else {
+	        var selWar=Ext.getCmp('nb-war-id').getValue();
+	        if (selWar!=undefined && selWar!='') {
+	            this.ptplWin=this.getView('warranty.Ptemplate').create();
+	            this.ptplWin.show();
+	        }
+	        else {
+	            Ext.Msg.alert('Сообщение','Выберите заказ, или сохраните текущий');
+	        }
+    	}
     }
 });
 
