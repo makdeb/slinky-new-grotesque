@@ -261,12 +261,13 @@ Ext.define('Notebook.view.warranty.Form',{
                                     //    valueField: 'id',
                                     //    forceSelection: true                                         
                                     //},
-                                    {
-                                        xtype: 'button',
-                                        id: 'nb-war-copy-cust-info',
-                                        text: 'Копировать',
-                                        icon: icons_path+'copy.png'
-                                    }
+                                    //copy client button
+                                    //{
+                                    //    xtype: 'button',
+                                    //    id: 'nb-war-copy-cust-info',
+                                    //    text: 'Копировать',
+                                    //    icon: icons_path+'copy.png'
+                                    //}
                                 ]
                             }                             
                         ]
