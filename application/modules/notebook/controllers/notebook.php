@@ -96,9 +96,11 @@ class Notebook extends CI_Controller {
 	   В случае, если параметр $between задан, дополнительно проверяется, находятся ли заказы по дате приема 
 	   между $first_date и $second_date (данная проверка реализована в методе _search() данного контроллера).
 	*/
-	public function treeview($node=0,$search=0,$table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='') {
+	public function treeview($node=0,$search=0,$table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0) {
 		$node = $this->input->get('node');	// принимаем параметр родительской категории из url
 		$search = $this->input->get('search'); // принимаем параметр поиска из url
+		$filter = $this->input->get('filter');
+		$done = $this->input->get('done');
 		
 		// если параметр поиска задан и не равен нулю, переходим на вспомогательную функцию поиска _search(),
 		// в которую передаются критерии поиска из URL.
@@ -111,7 +113,7 @@ class Notebook extends CI_Controller {
 			$first_date = $this->input->get('first_date');
 			$second_date = $this->input->get('second_date');
 			
-			$this->_search($table,$field,$search_terms,$between,$first_date,$second_date);
+			$this->_search($table,$field,$search_terms,$between,$first_date,$second_date,$filter,$done);
 			
 			return;
 		}		
@@ -164,11 +166,15 @@ class Notebook extends CI_Controller {
 				$data['count_cat'] = count($data['categories']);
 			
 			// аналогично для заказов с CategoryID равным нашему параметру
-				$data['orders'] = $this->orders_model->get_id($node);
+				$data['orders'] = $this->orders_model->get_id($node,$filter,$done);
 				$data['count_ord'] = count($data['orders']);
 				
 			// кодируем json-строку из результатов выборки
-			$data['records'] = json_encode($this->notebook_model->get_treeview($node));	
+			if ($filter) {
+				$data['records'] = json_encode($this->notebook_model->get_treeview_filtered($node,$done));
+			} else {
+				$data['records'] = json_encode($this->notebook_model->get_treeview($node));
+			}
 			$data['error1'] = json_last_error();
 			
 			//проверка ошибок
@@ -575,7 +581,8 @@ class Notebook extends CI_Controller {
 	}
 
 	// функция fill_customer(), реализующая создание нового заказа на основе данных клиента
-	public function fill_customer() {
+	// * была упразднена по неизвестным причинам:)...
+/*	public function fill_customer() {
 
 		$data = array();
 		$result = array();	
@@ -641,6 +648,7 @@ class Notebook extends CI_Controller {
 				}
 		echo $data['json'];
 	}
+*/
 	
 	// функция update_order(), реализующая изменение данных заказа
 	public function update_order() {
@@ -665,7 +673,6 @@ class Notebook extends CI_Controller {
 		// заполняем массив $data данными из формы
 
 		$data['categoryID']  = $this->input->post('categoryID');
-		$data['type']  = $this->input->post('type');
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
 		if (!($data['product']  = $this->input->post('product'))) {
@@ -785,7 +792,6 @@ class Notebook extends CI_Controller {
 		if (!($data['categoryID']  = $this->input->post('categoryID'))) {
 			$data['categoryID'] = 2;
 		};
-		$data['type']  = $this->input->post('type');
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
 		if (!($data['product']  = $this->input->post('product'))) {
@@ -882,10 +888,11 @@ class Notebook extends CI_Controller {
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
 		$data['personaldata'] = $this->input->post('personaldata');
+		/*
 		if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
 			$data['blacklistID'] = 1;
 		};
-				
+		*/				
 		$insert_id = $this->customers_model->insert_data($data);
 		
 		if ($insert_id==FALSE) {
@@ -905,7 +912,6 @@ class Notebook extends CI_Controller {
 		if (!($data['categoryID']  = $this->input->post('categoryID'))) {
 			$data['categoryID'] = 2;
 		};
-		$data['type']  = $this->input->post('type');
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
 		if (!($data['product']  = $this->input->post('product'))) {
@@ -916,6 +922,7 @@ class Notebook extends CI_Controller {
 		$data['factorynum'] = $this->input->post('factorynum');
 		$data['guarantee']  = $this->input->post('guarantee');
 		
+		/*
 		// для полей типа date производим проверку наличия значения в поле.
 		// При отсутствии такого значения записываем NULL,
 		// при наличии - преобразованное из строки в тип date значение
@@ -928,14 +935,13 @@ class Notebook extends CI_Controller {
 		
 		$data['complaints']  = $this->input->post('complaints');
 		$data['performance']  = $this->input->post('performance');
+		*/
 		$data['notes']  = $this->input->post('notes') .' (' .'Копия с заказа №' .$id .')'; // запись номера исходного заказа в заметки
 		// проверка номера продавца,
 		// если отсутствует - записываем значение по умочанию
 		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
 			$data['sellerID']  = 1;
-		}
-		$data['check']  = $this->input->post('check');
-		$data['comments']  = $this->input->post('comments');
+		};
 		// проверка номера мастера,
 		// если отсутствует - записываем значение по умочанию
 		if (!($data['masterID']  = $this->input->post('masterID'))) {
@@ -944,6 +950,9 @@ class Notebook extends CI_Controller {
 		if (!($data['master2ID']  = $this->input->post('master2ID'))) {
 			$data['master2ID'] = 1;
 		};
+		/*
+		$data['check']  = $this->input->post('check');
+		$data['comments']  = $this->input->post('comments');
 		$data['worksum']  = $this->input->post('worksum');
 		$data['worksum2']  = $this->input->post('worksum2');
 		$data['details']  = $this->input->post('details');
@@ -956,6 +965,7 @@ class Notebook extends CI_Controller {
 			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('gdate'));
 			$data['gdate']  = $date->format('Y-m-d');
 		}
+		*/
 		
 		$new_order = $this->orders_model->insert_data($data); // id нового заказа, основанного на исходном
 		
@@ -1083,8 +1093,9 @@ class Notebook extends CI_Controller {
 	   
 	   * проверка дат в диапазоне ведется только по дате приема заказа.   
 	*/
-	private function _search($table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='') {
-		
+	
+	
+	private function _search($table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0) {
 		// если параметр $table не указывает на существующую таблицу -- ошибка		
 		if (($table!='orders')and($table!='customers')) {
 			echo '{"success":false,"message":"Ошибка получения данных"}';
@@ -1125,7 +1136,7 @@ class Notebook extends CI_Controller {
 			for ($i = 0; $i < $data['count_cust']; $i++) 
 			{	
 				
-				$data['iter'] = $this->orders_model->search_id($field,$new[$i],$between,$first_date,$second_date); // порядковые номера заказов
+				$data['iter'] = $this->orders_model->search_id($field,$new[$i],$between,$first_date,$second_date,$filter,$done); // порядковые номера заказов
 				if (!$data['iter']) {
 					$data['iter'] = array(); // если результат поиска FALSE -- очищаем массив итераций 
 				}
@@ -1146,18 +1157,20 @@ class Notebook extends CI_Controller {
 			// кодируем json-строку из результатов выборки, полученной при слиянии массивов на каждой итерации
 			for ($i = 0; $i < $data['count_cust']; $i++) 
 			{	
-				$data['iter'] = $this->orders_model->search($field,$new[$i],$between,$first_date,$second_date);
+				$data['iter'] = $this->orders_model->search($field,$new[$i],$between,$first_date,$second_date,$filter,$done);
 				if (!$data['iter']) {
 					$data['iter'] = array();
 				}
 				$data['records'] = array_merge($data['iter'],$data['records']);
-			}
+      		}
+			uasort($data['records'], function($a, $b) {  if ($a<$b) return -1; elseif ($a==$b) return 0; else return 1; });
+			rsort($data['records']); // сортируем массив в обратном порядке, для отображения в боковой панели от "последнего"
 			
 			$data['records'] = json_encode($data['records']);
 			$data['error1'] = json_last_error();
 		} else {
 		// если поиск производится по полям таблицы заказов	
-		$data['orders'] = $this->orders_model->search_id($field,$search_terms,$between,$first_date,$second_date);
+		$data['orders'] = $this->orders_model->search_id($field,$search_terms,$between,$first_date,$second_date,$filter,$done);
 		$data['count_ord'] = count($data['orders']);
 		if ($data['orders']===FALSE) {
 			echo '{"success":false,"message":"Поиск не дал результатов"}';
@@ -1168,7 +1181,7 @@ class Notebook extends CI_Controller {
 		}
 		
 		// кодируем json-строку из результатов выборки
-		$data['records'] = json_encode($this->orders_model->search($field,$search_terms,$between,$first_date,$second_date));	
+		$data['records'] = json_encode($this->orders_model->search($field,$search_terms,$between,$first_date,$second_date,$filter,$done));		
 		$data['error1'] = json_last_error();
 		
 		}	
@@ -1191,6 +1204,46 @@ class Notebook extends CI_Controller {
 			}	
 		//вывод результата
 		echo $data['json'];
+	}
+	
+	// функция выдачи заказа (либо отмены выдачи)
+	public function done_order($id='') 
+	{
+		$id = $this->input->get('id');  // принимаем параметр заказа из url
+		
+		if (($id!=='')and($id!=NULL)) 
+		{
+			$id = preg_replace("/[^0-9]/", '', $id); // преобразуем строку формата "pID" из url в строку с числовым значением	
+		}
+		
+		// в случае отсутствия параметра - ошибка
+		if (!$id) { 
+			echo '{"success":false,"message":"Ошибка выбора заказа"}';
+			return;
+		 }
+		
+		// проверка существования записи с заданым id
+		if ($this->orders_model->get_unit($id)===FALSE) {
+			echo '{"success":false,"message":"Ошибка выбора записи"}';
+		 	return;
+		}
+		
+		$data = array();
+		
+		$data['done']= $this->orders_model->get_done_id($id);
+		
+		if ($data['done']==TRUE) {
+			$data['done'] = 0;      // заказ не выполнен
+		} else $data['done'] = 1;   // заказ выполнен
+		// обновляем данные
+		$query = $this->orders_model->update_itemid('',$id,$data);
+		
+			if ($query===FALSE) {
+					echo '{"success":false,"message":"Ошибка сохранения данных"}'; 
+					return;
+				}
+		// вывод json-строки
+		echo '{"success":true,"done":"' .$data['done'] .'"}';	
 	}
 }
 
