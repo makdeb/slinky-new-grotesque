@@ -248,18 +248,19 @@ Ext.define('Notebook.view.warranty.Form',{
                                         labelWidth: 80,
                                         width: 175
                                     },
-                                    {
-                                        xtype: 'combobox',
-                                        id: 'nb-war-cust-state',
-                                        fieldLabel: 'Статус',
-                                        labelWidth: 80,
-                                        width: 260,
-                                        padding: '0 2 0 2',
-                                        store: 'Status',
-                                        displayField: 'name',
-                                        valueField: 'id',
-                                        forceSelection: true                                         
-                                    },
+                                    //blacklist
+                                    //{
+                                    //    xtype: 'combobox',
+                                    //    id: 'nb-war-cust-state',
+                                    //    fieldLabel: 'Статус',
+                                    //    labelWidth: 80,
+                                    //    width: 260,
+                                    //    padding: '0 2 0 2',
+                                    //    store: 'Status',
+                                    //    displayField: 'name',
+                                    //    valueField: 'id',
+                                    //    forceSelection: true                                         
+                                    //},
                                     {
                                         xtype: 'button',
                                         id: 'nb-war-copy-cust-info',

@@ -6,7 +6,8 @@ Ext.define('Notebook.controller.Warranty',{
         'Category',
         'Master',
         'Seller',
-        'Status',
+        //blacklist
+        //'Status',
         'Notetpl',
         'Ptemplate'
     ],
@@ -14,7 +15,8 @@ Ext.define('Notebook.controller.Warranty',{
         'Category',
         'Master',
         'Seller',
-        'Status',
+        //blacklist
+        //'Status',
         'Notetpl',
         'Ptemplate'
     ],    
@@ -181,7 +183,8 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
-                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
+                    //blacklist
+                    //Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
@@ -274,7 +277,8 @@ Ext.define('Notebook.controller.Warranty',{
         var warWPhone=Ext.getCmp('nb-war-wphone');
         var warPhone=Ext.getCmp('nb-war-phone');
         var warNotifDate=Ext.getCmp('nb-war-date-notif');
-        var warCustState=Ext.getCmp('nb-war-cust-state');
+        //blacklist
+        //var warCustState=Ext.getCmp('nb-war-cust-state');
         var warCompl=Ext.getCmp('nd-war-compl');
         var warPref=Ext.getCmp('nb-war-pref');
         var warNotes=Ext.getCmp('nb-war-notes');
@@ -367,7 +371,8 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-wphone').setValue('');
         Ext.getCmp('nb-war-phone').setValue('');
         Ext.getCmp('nb-war-date-notif').setValue('');
-        Ext.getCmp('nb-war-cust-state').setValue('1');
+        //blacklist
+        //Ext.getCmp('nb-war-cust-state').setValue('1');
         Ext.getCmp('nd-war-compl').setValue('');
         Ext.getCmp('nb-war-pref').setValue('');
         Ext.getCmp('nb-war-notes').setValue('');
@@ -549,7 +554,8 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
-                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
+                    //blacklist
+                    //Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
@@ -615,7 +621,8 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
-                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
+                    //blacklist
+                    //Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
