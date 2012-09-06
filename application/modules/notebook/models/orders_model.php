@@ -21,10 +21,14 @@ class Orders_model extends CI_Model {
 	}
 	
 	//  функция возврата списка id заказов, относящихся к конкретной категории
-		public function get_id($categoryID=FALSE) 
+		public function get_id($categoryID=FALSE,$filter=FALSE,$done=FALSE) 
 	{
 		$this->db->select('id');
-		$query = $this->db->get_where($this->table,array('categoryID'=>$categoryID));
+		if ($filter) {
+			$query = $this->db->get_where($this->table,array('categoryID'=>$categoryID,'done'=>$done));
+		} else {
+			$query = $this->db->get_where($this->table,array('categoryID'=>$categoryID));
+		}
 		return $query->result();	
 	}
 	
@@ -37,6 +41,20 @@ class Orders_model extends CI_Model {
 		if ($query->num_rows() > 0) {
 			$row = $query->row();
 			return $row->customerID;
+		} else {
+			return FALSE;
+		}
+	}	
+	
+	// 	функция возврата идентификатора($done==0 или 1) выполнения заказа, заданного параметром id	
+		public function get_done_id($order=FALSE) 
+	{
+		$this->db->select('done');
+		$query = $this->db->get_where($this->table,array('id'=>$order));
+		
+		if ($query->num_rows() > 0) {
+			$row = $query->row();
+			return $row->done;
 		} else {
 			return FALSE;
 		}
@@ -79,7 +97,7 @@ class Orders_model extends CI_Model {
 	
 	// функция search_id() возвращает ассоц. масив порядковых номеров заказов,
 	// найденных по критериям $terms в поле $field (а также, если необходимо, с проверкой диапазона дат приема заказов, если параметр $between не равен нулю)
-	public function search_id($field=FALSE,$terms='',$between=0,$first_date='',$second_date='') 
+	public function search_id($field=FALSE,$terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0) 
 	{	
 		// если поля даты - преобразовываем дату в нужный формат
 		if (($field=='date_start')or($field=='date_end')or($field=='notified')or($field=='gdate'))
@@ -105,6 +123,9 @@ class Orders_model extends CI_Model {
 			$this->db->where('date_start >=', $first_date); 
 			$this->db->where('date_start <=', $second_date); 
 		}
+		if ($filter) {
+			$this->db->where('done',$done);
+		}
 		$this->db->where_not_in('categoryID', 1); // исключаем корзину
 		$query = $this->db->get($this->table);
 		
@@ -116,7 +137,7 @@ class Orders_model extends CI_Model {
 	
 	// функция search() возвращает ассоц. масив порядковых номеров заказов и назв. продукта,
 	// найденных по критериям $terms в поле $field (а также, если необходимо, с проверкой диапазона дат приема заказов, если параметр $between не равен нулю)
-	public function search($field=FALSE,$terms='',$between=0,$first_date='',$second_date='') 
+	public function search($field=FALSE,$terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0)  
 	{	
 		// если поля даты - преобразовываем дату в нужный формат
 		if (($field=='date_start')or($field=='date_end')or($field=='notified')or($field=='gdate'))
@@ -143,7 +164,10 @@ class Orders_model extends CI_Model {
 			$this->db->where('date_start >=', $first_date); 
 			$this->db->where('date_start <=', $second_date); 
 		}
-		$this->db->where_not_in('categoryID', 1); // исключаем корзину
+		if ($filter) {
+			$this->db->where('done',$done);
+		}
+		$this->db->where_not_in('categoryID', 1)->order_by('id','desc'); // исключаем корзину
 		$query = $this->db->get($this->table);
 		
 		if ($query->num_rows() > 0)
