@@ -681,7 +681,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
-		$data['guarantee']  = $this->input->post('guarantee');
+		//$data['guarantee']  = $this->input->post('guarantee');
 		
 		// для полей типа date производим проверку наличия значения в поле.
 		// При отсутствии такого значения записываем NULL,
@@ -800,7 +800,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
-		$data['guarantee']  = $this->input->post('guarantee');
+		//$data['guarantee']  = $this->input->post('guarantee');
 		
 		// для полей типа date производим проверку наличия значения в поле.
 		// При отсутствии такого значения записываем NULL,
@@ -920,7 +920,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
-		$data['guarantee']  = $this->input->post('guarantee');
+		//$data['guarantee']  = $this->input->post('guarantee');
 		
 		/*
 		// для полей типа date производим проверку наличия значения в поле.
