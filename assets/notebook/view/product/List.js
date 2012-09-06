@@ -14,14 +14,14 @@ Ext.define('Notebook.view.product.List', {
                 tbar: {
                 	items: [
                 		{
-                			icon: icons_path+'cat-add.png',
+                			icon: icons_path+'ord-filter.png',
                 			tooltip: 'Применить\\Отменить фильтр',
                 			id: 'nb-prod-filter',
                 			enableToggle: true
                 		},
                 		'-',
                 		{
-                			icon: icons_path+'cat-add.png',
+                			icon: icons_path+'ord-is-done.png',
                 			tooltip: 'Показать только в ремонте\\Показать выданые',
                 			id: 'nb-prod-is-done-filter',
                 			enableToggle: true	

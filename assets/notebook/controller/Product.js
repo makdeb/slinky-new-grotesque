@@ -64,10 +64,23 @@ Ext.define('Notebook.controller.Product', {
     },
     toggleFilter: function (button) {
     	if (button.pressed) {
-    		//alert('dfdfdfdfdf');
+            var prodLoadParams={};
+            prodLoadParams.scope=this;
+            prodLoadParams.callback=function(records, operation, success) {
+
+                }
+            prodLoadParams.params={};
+            prodLoadParams.params.filter=1;   
+            if (Ext.getCmp('').pressed) {
+            	prodLoadParams.params.done=1;
+            }
+            else {
+            	prodLoadParams.params.done=0;
+            }
+            this.getStore('Product').load(prodLoadParams);
     	}
     	else {
-    		//
+    		this.getStore('Product').load();
     	}
     },
     editCatList: function (button) {

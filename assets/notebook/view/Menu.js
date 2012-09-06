@@ -124,7 +124,7 @@ Ext.define('Notebook.view.Menu',{
             	    	xtype: 'button',
             	    	id: 'nb-print-empty-warranty',
             	    	text: 'Печать пустого бланка',
-            	    	icon: icons_path+'ord-print-empty.png',
+            	    	icon: icons_path+'ord-print-empty.png'
             	    }    
             	]
             }
@@ -133,7 +133,8 @@ Ext.define('Notebook.view.Menu',{
         {
         	xtype: 'button',
         	id: 'nb-db-backup',
-        	text: 'Бэкап БД'
+        	text: 'Бэкап БД',
+        	icon: icons_path+'db-bckup.png'
         }
     ]    
 //    items: [
