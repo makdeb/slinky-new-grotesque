@@ -1245,6 +1245,33 @@ class Notebook extends CI_Controller {
 		// вывод json-строки
 		echo '{"success":true,"done":"' .$data['done'] .'"}';	
 	}
+	
+	// функция backup() осуществления резервного копирования базы данных
+	public function backup()
+	{	
+		$prefs = array(
+                'tables'      => array(),
+                'ignore'      => array(),
+                'format'      => 'zip',
+                'filename'    => 'base_' .date("d-m-Y"),
+                'add_drop'    => TRUE,
+                'add_insert'  => TRUE,
+                'newline'     => "\n" 
+              );
+			  
+		// Load the DB utility class
+		$this->load->dbutil();
+		
+		// Backup your entire database and assign it to a variable
+		$backup =& $this->dbutil->backup($prefs); 
+		
+		// Load the file helper and write the file to your server
+		$this->load->helper('file');
+		if (! write_file('./backup/base_' .date("d-m-Y") .'.zip', $backup)) {
+			echo '{"success":false,"message":"Ошибка сохранения базы"}';
+			return;
+		} else echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/base_' .date("d-m-Y") .'.zip"}';
+	}
 }
 
 /* End of file notebook.php */
