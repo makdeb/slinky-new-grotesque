@@ -76,8 +76,8 @@ Ext.define('Notebook.view.Menu',{
         },
         {
         	xtype: 'button',
-        	id: 'nb-done-warranty',
-        	text: 'Выполнить\\Отменить выполнение'
+        	id: 'nb-toggle-done-warranty',
+        	text: 'Выполнить'
         },
         {
             xtype: 'button',
@@ -129,6 +129,7 @@ Ext.define('Notebook.view.Menu',{
             	]
             }
         },
+        '->',
         {
         	xtype: 'button',
         	id: 'nb-db-backup',

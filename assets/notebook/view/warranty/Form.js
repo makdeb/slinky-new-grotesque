@@ -28,27 +28,13 @@ Ext.define('Notebook.view.warranty.Form',{
                         readOnly: true
                     }, 
                     {
-                    	xtype: 'box',                    	
-                    	width: 105,
-                    	id: 'nb-war-done-label',
-                    	padding: '3 0 0 0',
-                    	html: 'выполнен',
-                    	autoEl: {
-                    		tag: 'span'                    		                    	
-                    	},
-                    	style: {
-                    		color: '#ff0000',
-                    		fontWeight: 'bold'	
-                    	}
-                    },
-                    {
                         xtype: 'datefield',
                         id:'nb-war-date-start',
                         format: 'd.m.Y',
                         fieldLabel: 'Принято',
                         labelWidth: 60,
                         width: 150,
-                        //margin: '0 5 0 0',
+                        margin: '0 5 0 110',
                         readOnly: true
                     },
                     {
@@ -248,6 +234,21 @@ Ext.define('Notebook.view.warranty.Form',{
                                         labelWidth: 80,
                                         width: 175
                                     },
+                                    {
+                                    	xtype: 'box',                    	
+                                    	width: 105,
+                                    	id: 'nb-war-done-label',
+                                    	margin: '0 0 0 10',
+                                    	padding: '3 0 0 0',
+                                    	html: 'не выполнен',
+                                    	autoEl: {
+                                    		tag: 'span'                    		                    	
+                                    	},
+                                    	style: {
+                                    		color: '#0B486B',
+                                    		fontWeight: 'bold'	
+                                    	}
+                                    }
                                     //blacklist
                                     //{
                                     //    xtype: 'combobox',

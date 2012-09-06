@@ -15,13 +15,16 @@ Ext.define('Notebook.view.product.List', {
                 	items: [
                 		{
                 			icon: icons_path+'cat-add.png',
-                			tooltip: 'Показать все',
-                			toggleGroup: 'nb-prod-prim-filter'
+                			tooltip: 'Применить\\Отменить фильтр',
+                			id: 'nb-prod-filter',
+                			enableToggle: true
                 		},
+                		'-',
                 		{
                 			icon: icons_path+'cat-add.png',
-                			tooltip: 'Показать только в ремонте',
-                			toggleGroup: 'nb-prod-prim-filter'
+                			tooltip: 'Показать только в ремонте\\Показать выданые',
+                			id: 'nb-prod-is-done-filter',
+                			enableToggle: true	
                 		}                		
                 	]
                 },
