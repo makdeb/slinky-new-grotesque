@@ -2,7 +2,7 @@ Ext.define('Notebook.store.Status',{
     extend: 'Ext.data.Store',
     requires: 'Notebook.model.Status',
     model: 'Notebook.model.Status',
-    autoLoad: true,
+    autoLoad: false,
     proxy: {
         type: 'ajax',
         url: 'notebook/check',

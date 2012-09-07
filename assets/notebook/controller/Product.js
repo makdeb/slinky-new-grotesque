@@ -64,20 +64,22 @@ Ext.define('Notebook.controller.Product', {
     },
     toggleFilter: function (button) {
     	if (button.pressed) {
-            var prodLoadParams={};
-            prodLoadParams.scope=this;
-            prodLoadParams.callback=function(records, operation, success) {
-
-                }
-            prodLoadParams.params={};
-            prodLoadParams.params.filter=1;   
-            if (Ext.getCmp('').pressed) {
-            	prodLoadParams.params.done=1;
+            //var prodLoadParams={};
+            //prodLoadParams.scope=this;
+            //prodLoadParams.callback=function(records, operation, success) {
+            //
+            //    }
+            //prodLoadParams.params={};
+            //prodLoadParams.params.filter=1;  
+    		this.getStore('Product').getProxy().extraParams={};
+    		this.getStore('Product').getProxy().extraParams.filter=1;
+            if (Ext.getCmp('nb-prod-is-done-filter').pressed) {
+            	this.getStore('Product').getProxy().extraParams.done=1;
             }
             else {
-            	prodLoadParams.params.done=0;
+            	this.getStore('Product').getProxy().extraParams.done=0;
             }
-            this.getStore('Product').load(prodLoadParams);
+            this.getStore('Product').load();
     	}
     	else {
     		this.getStore('Product').load();

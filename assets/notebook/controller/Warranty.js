@@ -460,14 +460,14 @@ Ext.define('Notebook.controller.Warranty',{
     toggleDoneWarranty: function () {
     	var warId=Ext.getCmp('nb-war-id').getValue();
 	    	if (warId!='' && warId!=undefined) {
-	    		ajaxConfig={};
-	    		ajaxConfig.url='notebook/done_order';
-	    		ajaxConfig.method='GET';
-	    		ajaxConfig.params={};
-	    		ajaxConfig.params.id=warId;
+	    		ajaxConf={};
+	    		ajaxConf.url='notebook/done_order';
+	    		ajaxConf.method='GET';
+	    		ajaxConf.params={};
+	    		ajaxConf.params.id=warId;
 	    		ajaxConf.success=function (resp,opts) {
 	    			var json=Ext.decode(resp.responseText);
-	    			if (json.success) {
+	    			if (json.success) {	    				
 	    				if (json.done==1) {
 	    					Ext.getCmp('nb-war-done-label').update('выполнен');
 	    				}
@@ -483,6 +483,7 @@ Ext.define('Notebook.controller.Warranty',{
 	    			Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
 	    		}
 	    		Ext.Ajax.request(ajaxConf);
+	    		this.getStore('Product').load();
     	}
 	    else {
 	    	Ext.Msg.alert('Сообщение','Установка отметки о выполнении//не выполнении не принятого заказа не возможна');
