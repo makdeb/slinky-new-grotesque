@@ -79,11 +79,12 @@ Ext.define('Notebook.controller.Product', {
             else {
             	this.getStore('Product').getProxy().extraParams.done=0;
             }
-            this.getStore('Product').load();
+            //this.getStore('Product').load({node: this.getStore('Product').getNodeById('c3')});
     	}
     	else {
-    		this.getStore('Product').load();
+    		this.getStore('Product').getProxy().extraParams={};    		
     	}
+    	this.getStore('Product').load();
     },
     editCatList: function (button) {
         //створюємо екземпляр вюшки для додання\редагування категорії

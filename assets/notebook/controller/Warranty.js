@@ -483,7 +483,8 @@ Ext.define('Notebook.controller.Warranty',{
 	    			Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
 	    		}
 	    		Ext.Ajax.request(ajaxConf);
-	    		this.getStore('Product').load();
+	    		//перезавантажуємо відкриту категорію
+	    		this.getStore('Product').load({node: this.getStore('Product').getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())});
     	}
 	    else {
 	    	Ext.Msg.alert('Сообщение','Установка отметки о выполнении//не выполнении не принятого заказа не возможна');
