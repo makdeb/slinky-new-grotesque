@@ -185,9 +185,11 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
     				if (json.order.done==1) {
+    					Ext.getCmp('nb-toggle-done-warranty').setText('Отменить');
     					Ext.getCmp('nb-war-done-label').update('выполнен');
     				}
     				else {
+    					Ext.getCmp('nb-toggle-done-warranty').setText('Выполнить');
     					Ext.getCmp('nb-war-done-label').update('не выполнен');
     				}                    
                     //blacklist
@@ -460,6 +462,7 @@ Ext.define('Notebook.controller.Warranty',{
     toggleDoneWarranty: function () {
     	var warId=Ext.getCmp('nb-war-id').getValue();
 	    	if (warId!='' && warId!=undefined) {
+	    		thisController=this;
 	    		ajaxConf={};
 	    		ajaxConf.url='notebook/done_order';
 	    		ajaxConf.method='GET';
@@ -469,10 +472,16 @@ Ext.define('Notebook.controller.Warranty',{
 	    			var json=Ext.decode(resp.responseText);
 	    			if (json.success) {	    				
 	    				if (json.done==1) {
+	    					Ext.getCmp('nb-toggle-done-warranty').setText('Отменить');
 	    					Ext.getCmp('nb-war-done-label').update('выполнен');
 	    				}
 	    				else {
+	    					Ext.getCmp('nb-toggle-done-warranty').setText('Выполнить');
 	    					Ext.getCmp('nb-war-done-label').update('не выполнен');
+	    				}
+	    	    		//перезавантажуємо відкриту категорію
+	    				if (Ext.getCmp('nb-prod-filter').pressed) {
+	    					thisController.getStore('Product').load({node: thisController.getStore('Product').getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())});
 	    				}
 	    			}
 	    			else {
@@ -483,8 +492,6 @@ Ext.define('Notebook.controller.Warranty',{
 	    			Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
 	    		}
 	    		Ext.Ajax.request(ajaxConf);
-	    		//перезавантажуємо відкриту категорію
-	    		this.getStore('Product').load({node: this.getStore('Product').getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())});
     	}
 	    else {
 	    	Ext.Msg.alert('Сообщение','Установка отметки о выполнении//не выполнении не принятого заказа не возможна');
@@ -762,15 +769,15 @@ Ext.define('Notebook.controller.Warranty',{
     backupDb: function () {
     	//робимо бекап бд
     	Ext.Ajax.request({    		
-    		url: '',
+    		url: 'notebook/backup',
     		method: 'get',
     		success: function (resp,opts) {
     			var json=Ext.decode(resp.responseText);
     			if (json.success) {
-    				Ext.Msg.alert('Сообщение','<a href="#">dfdf</a>');
+    				Ext.Msg.alert('Сообщение',json.message+' (<a href="'+json.link+'">Скачать</a>)');
     			}
     			else {
-    				Ext.Msg.alert('Сообщение',json.msg);
+    				Ext.Msg.alert('Сообщение',json.message);
     			}
     		},
     		failure: function () {

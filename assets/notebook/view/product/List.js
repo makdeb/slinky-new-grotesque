@@ -15,7 +15,7 @@ Ext.define('Notebook.view.product.List', {
                 	items: [
                 		{
                 			icon: icons_path+'ord-filter.png',
-                			tooltip: 'Применить\\Отменить фильтр',
+                			tooltip: 'Применить\\Снять фильтр',
                 			id: 'nb-prod-filter',
                 			enableToggle: true
                 		},
