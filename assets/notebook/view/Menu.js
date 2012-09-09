@@ -77,7 +77,8 @@ Ext.define('Notebook.view.Menu',{
         {
         	xtype: 'button',
         	id: 'nb-toggle-done-warranty',
-        	text: 'Выполнить'
+        	text: 'Выполнить',
+        	icon: icons_path+'ord-done.png'
         },
         {
             xtype: 'button',
