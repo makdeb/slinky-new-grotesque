@@ -1,7 +1,13 @@
-//шлях до іконок
+//...аплоади
 var uploads_path='http://localhost/slinky-new-grotesque/uploads/';
+//шлях до іконок
 var icons_path='http://localhost/slinky-new-grotesque/assets/extjs/resources/themes/images/custom/';
+//url для друку бланку
 var print_url='http://dda.loc/print/';
+//url для друку пустого бланку
+var empty_print_url='http://dda.loc/print/999999';
+//не выдображає вікно вибору темплейту для друку
+var ignore_logic_no_template_select= true; 
 
 Ext.require([
     'Ext.window.MessageBox',

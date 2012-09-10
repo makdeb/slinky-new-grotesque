@@ -18,6 +18,9 @@ Ext.define('Notebook.controller.Product', {
         //this.getStore('SearchField').addListener('load',function () {alert('loaded');});
         //this.getStore('SearchField').load();
         this.control({
+        	'product-list button#nb-prod-filter': {
+        		click: this.toggleFilter
+        	},
             '#nb-add-cat': {
                 click: this.editCatList
             },
@@ -58,6 +61,22 @@ Ext.define('Notebook.controller.Product', {
                 click: this.searchProdReset
             }
         });
+    },
+    toggleFilter: function (button) {
+    	if (button.pressed) {
+    		this.getStore('Product').getProxy().extraParams={};
+    		this.getStore('Product').getProxy().extraParams.filter=1;
+            if (Ext.getCmp('nb-prod-is-done-filter').pressed) {
+            	this.getStore('Product').getProxy().extraParams.done=1;
+            }
+            else {
+            	this.getStore('Product').getProxy().extraParams.done=0;
+            }
+    	}
+    	else {
+    		this.getStore('Product').getProxy().extraParams={};    		
+    	}
+    	this.getStore('Product').load();
     },
     editCatList: function (button) {
         //створюємо екземпляр вюшки для додання\редагування категорії

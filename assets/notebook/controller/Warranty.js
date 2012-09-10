@@ -6,7 +6,8 @@ Ext.define('Notebook.controller.Warranty',{
         'Category',
         'Master',
         'Seller',
-        'Status',
+        //blacklist
+        //'Status',
         'Notetpl',
         'Ptemplate'
     ],
@@ -14,7 +15,8 @@ Ext.define('Notebook.controller.Warranty',{
         'Category',
         'Master',
         'Seller',
-        'Status',
+        //blacklist
+        //'Status',
         'Notetpl',
         'Ptemplate'
     ],    
@@ -33,7 +35,10 @@ Ext.define('Notebook.controller.Warranty',{
             },
             'main-menu button#nb-out-warranty': {
                 click: this.outWarranty
-            },            
+            },  
+            'main-menu button#nb-toggle-done-warranty': {
+                click: this.toggleDoneWarranty
+            },             
             'main-menu button#nb-save-warranty': {
                 click: this.saveWarranty
             },   
@@ -52,12 +57,22 @@ Ext.define('Notebook.controller.Warranty',{
             'main-menu button#nb-print-warranty': {
                 click: this.warPrint
             },
+            'main-menu button#nb-print-empty-warranty': {
+            	click: function () {
+            		//друкуємо пустий бланк...  
+            		window.open(empty_print_url,'_blank');
+            	}
+            },
+            'main-menu button#nb-db-backup': {
+            	click: this.backupDb
+            },
             'warranty-form button#nb-war-upload-file': {
                 click: this.uploadFile
-            },            
-            'warranty-form button#nb-war-copy-cust-info': {
-                click: this.copyCustInfo
             },
+            //copy client button
+            //'warranty-form button#nb-war-copy-cust-info': {
+            //    click: this.copyCustInfo
+            //},
             'warranty-form button#nb-war-add-note-templ': {
                 click: function () {
                     var warNotes=Ext.getCmp('nb-war-notes');
@@ -154,8 +169,8 @@ Ext.define('Notebook.controller.Warranty',{
                     //при успішному виконанні запиту заповнюємо поля форми
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
-                    Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
-                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+                    Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));                       
+                    //Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
                     Ext.getCmp('nb-war-prod').setValue(json.order.product);
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
@@ -169,7 +184,16 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
-                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
+    				if (json.order.done==1) {
+    					Ext.getCmp('nb-toggle-done-warranty').setText('Отменить');
+    					Ext.getCmp('nb-war-done-label').update('выполнен');
+    				}
+    				else {
+    					Ext.getCmp('nb-toggle-done-warranty').setText('Выполнить');
+    					Ext.getCmp('nb-war-done-label').update('не выполнен');
+    				}                    
+                    //blacklist
+                    //Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
@@ -207,7 +231,7 @@ Ext.define('Notebook.controller.Warranty',{
         var invalidFields='';
         Ext.each(Ext.ComponentQuery.query(
             '#nb-war-id,'+
-            '#nb-war-in-workshop,'+
+            //'#nb-war-in-workshop,'+
             '#nb-war-prod,'+
             '#nb-war-model,'+
             '#nb-war-ser-num,'+
@@ -248,7 +272,7 @@ Ext.define('Notebook.controller.Warranty',{
         //var warStartDate=Ext.getCmp('nb-war-date-start');
         //var warEndDate=Ext.getCmp('nb-war-date-end');
         var warId=Ext.getCmp('nb-war-id');            
-        var warInWS=Ext.getCmp('nb-war-in-workshop');
+        //var warInWS=Ext.getCmp('nb-war-in-workshop');
         var warProd=Ext.getCmp('nb-war-prod');
         var warModel=Ext.getCmp('nb-war-model');
         var warSerNum=Ext.getCmp('nb-war-ser-num');
@@ -262,7 +286,8 @@ Ext.define('Notebook.controller.Warranty',{
         var warWPhone=Ext.getCmp('nb-war-wphone');
         var warPhone=Ext.getCmp('nb-war-phone');
         var warNotifDate=Ext.getCmp('nb-war-date-notif');
-        var warCustState=Ext.getCmp('nb-war-cust-state');
+        //blacklist
+        //var warCustState=Ext.getCmp('nb-war-cust-state');
         var warCompl=Ext.getCmp('nd-war-compl');
         var warPref=Ext.getCmp('nb-war-pref');
         var warNotes=Ext.getCmp('nb-war-notes');
@@ -283,12 +308,12 @@ Ext.define('Notebook.controller.Warranty',{
                 ajaxParams.id=warId.getValue();
             }        
             ajaxParams.categoryID=warCat.getValue();
-            if (warInWS.getValue()) {
-                ajaxParams.type=1;
-            }
-            else {
-                ajaxParams.type=0;
-            }        
+            //if (warInWS.getValue()) {
+            //    ajaxParams.type=1;
+            //}
+            //else {
+            //    ajaxParams.type=0;
+            //}        
             ajaxParams.model=warModel.getValue();
             ajaxParams.product=warProd.getValue();
             ajaxParams.serialnum=warSerNum.getValue();
@@ -322,7 +347,8 @@ Ext.define('Notebook.controller.Warranty',{
         ajaxParams.wphone=warWPhone.getValue();
         ajaxParams.hphone=warHPhone.getValue();
         ajaxParams.personaldata=warCustInfo.getValue();
-        ajaxParams.blacklistID=warCustState.getValue();          
+        //blacklist
+        //ajaxParams.blacklistID=warCustState.getValue();          
         return ajaxParams;
     },
     newWarranty: function() {
@@ -332,14 +358,21 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-id').setValue('');
         Ext.getCmp('nb-war-date-start').setValue('');
         Ext.getCmp('nb-war-date-end').setValue('');        
-        Ext.getCmp('nb-war-in-workshop').setValue(0);        
+        //Ext.getCmp('nb-war-in-workshop').setValue(0);        
         Ext.getCmp('nb-war-prod').setValue('');
         Ext.getCmp('nb-war-prod').clearInvalid();
         Ext.getCmp('nb-war-model').setValue('');
         Ext.getCmp('nb-war-ser-num').setValue('');
         Ext.getCmp('nb-war-fac-num').setValue('');
         Ext.getCmp('nb-war-guar').setValue('');
-        Ext.getCmp('nb-war-cat').setValue('2');
+        //в новому замовленні проставляємо категорію, якщо вона вибрана в дереві продуктів
+        var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {                    
+        	Ext.getCmp('nb-war-cat').setValue(selCat.get('id').replace(/[^0-9]/,''));
+        }
+        else {
+        	Ext.getCmp('nb-war-cat').setValue('2');
+        }                
         Ext.getCmp('nb-war-cust').setValue('');
         Ext.getCmp('nb-war-cust').clearInvalid();
         Ext.getCmp('nb-war-cust-info').setValue('');
@@ -348,7 +381,9 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-wphone').setValue('');
         Ext.getCmp('nb-war-phone').setValue('');
         Ext.getCmp('nb-war-date-notif').setValue('');
-        Ext.getCmp('nb-war-cust-state').setValue('1');
+		Ext.getCmp('nb-war-done-label').update('не выполнен');        
+        //blacklist
+        //Ext.getCmp('nb-war-cust-state').setValue('1');
         Ext.getCmp('nd-war-compl').setValue('');
         Ext.getCmp('nb-war-pref').setValue('');
         Ext.getCmp('nb-war-notes').setValue('');
@@ -423,6 +458,44 @@ Ext.define('Notebook.controller.Warranty',{
         else {
             Ext.Msg.alert('Сообщение','Выдача не принятого заказа не возможна');            
         }
+    },
+    toggleDoneWarranty: function () {
+    	var warId=Ext.getCmp('nb-war-id').getValue();
+	    	if (warId!='' && warId!=undefined) {
+	    		thisController=this;
+	    		ajaxConf={};
+	    		ajaxConf.url='notebook/done_order';
+	    		ajaxConf.method='GET';
+	    		ajaxConf.params={};
+	    		ajaxConf.params.id=warId;
+	    		ajaxConf.success=function (resp,opts) {
+	    			var json=Ext.decode(resp.responseText);
+	    			if (json.success) {	    				
+	    				if (json.done==1) {
+	    					Ext.getCmp('nb-toggle-done-warranty').setText('Отменить');
+	    					Ext.getCmp('nb-war-done-label').update('выполнен');
+	    				}
+	    				else {
+	    					Ext.getCmp('nb-toggle-done-warranty').setText('Выполнить');
+	    					Ext.getCmp('nb-war-done-label').update('не выполнен');
+	    				}
+	    	    		//перезавантажуємо відкриту категорію
+	    				if (Ext.getCmp('nb-prod-filter').pressed) {
+	    					thisController.getStore('Product').load({node: thisController.getStore('Product').getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())});
+	    				}
+	    			}
+	    			else {
+	    				Ext.Msg.alert('Сообщение',json.message);
+	    			}
+	    		};
+	    		ajaxConf.failure=function () {
+	    			Ext.Msg.alert('Сообщение','Ошибка при AJAX запросе');
+	    		}
+	    		Ext.Ajax.request(ajaxConf);
+    	}
+	    else {
+	    	Ext.Msg.alert('Сообщение','Установка отметки о выполнении//не выполнении не принятого заказа не возможна');
+	    } 	
     },
     saveWarranty: function () {
         //збереження можливе лише коли стоїть відмітка про те, що замовлення не нове
@@ -513,7 +586,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-id').setValue(json.order.id);
                     Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
                     Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
-                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+                    //Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
                     Ext.getCmp('nb-war-prod').setValue(json.order.product);
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
@@ -527,7 +600,14 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
                     Ext.getCmp('nb-war-phone').setValue(json.order.phone);
                     Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
-                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
+    				if (json.order.done==1) {
+    					Ext.getCmp('nb-war-done-label').update('выполнен');
+    				}
+    				else {
+    					Ext.getCmp('nb-war-done-label').update('не выполнен');
+    				}                    
+                    //blacklist
+                    //Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
@@ -563,72 +643,74 @@ Ext.define('Notebook.controller.Warranty',{
             Ext.Msg.alert('Сообщение','Копировать можно только существующий заказ');
         }
     },
-    copyCustInfo: function () {
-        if (!this.isNew) {
-            var ajaxConf={};
-            ajaxConf.url='notebook/fill_customer';
-            ajaxConf.method='POST';
-            ajaxConf.params={};
-            ajaxConf.params=this.fillAjaxParams('copy_cust');
-            if (!ajaxConf.params) {
-                return;
-            }  
-            ajaxConf.success=function (resp,opts) {
-                var json=Ext.decode(resp.responseText);
-                if (json.success) {
-                    Ext.getCmp('nb-war-id').setValue(json.order.id);
-                    Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
-                    Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
-                    Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
-                    Ext.getCmp('nb-war-prod').setValue(json.order.product);
-                    Ext.getCmp('nb-war-model').setValue(json.order.model);
-                    Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
-                    Ext.getCmp('nb-war-fac-num').setValue(json.order.factorynum);
-                    Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
-                    Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
-                    Ext.getCmp('nb-war-cust').setValue(json.order.customer);
-                    Ext.getCmp('nb-war-cust-info').setValue(json.order.personaldata);
-                    Ext.getCmp('nb-war-adr').setValue(json.order.address);
-                    Ext.getCmp('nb-war-hphone').setValue(json.order.hphone);
-                    Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
-                    Ext.getCmp('nb-war-phone').setValue(json.order.phone);
-                    Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
-                    Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
-                    Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
-                    Ext.getCmp('nb-war-pref').setValue(json.order.performance);
-                    Ext.getCmp('nb-war-notes').setValue(json.order.notes);
-                    Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
-                    Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
-                    Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
-                    Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
-                    Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
-                    if (json.order.id2Masters!=undefined && json.order.id2Masters!='' && json.order.id2Masters!=1) {
-                        Ext.getCmp('nb-war-sec-mas-container').show();    
-                    }
-                    else {
-                        Ext.getCmp('nb-war-sec-mas-container').hide();
-                    }
-                    Ext.getCmp('nb-war-mas-sec').setValue(json.order.id2Masters);
-                    Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
-                    Ext.getCmp('nb-war-det').setValue(json.order.details);
-                    Ext.getCmp('nb-war-trans').setValue(json.order.transportation); 
-                    Ext.getCmp('nb-war-total-price').setValue(json.order.total);
-                    //оновлюємо дерево...
-                    Ext.getCmp('nb-product-tree').getStore().load(); 
-                }
-                else {
-                    Ext.Msg.alert('Сообщение',json.message);
-                }
-            }
-            ajaxConf.failure=function () {
-                Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
-            }        
-            Ext.Ajax.request(ajaxConf);             
-        }
-        else {
-            Ext.Msg.alert('Сообщение','Копировать можно только существующий заказ');
-        }        
-    },
+    //copy client button
+    //copyCustInfo: function () {
+    //    if (!this.isNew) {
+    //        var ajaxConf={};
+    //        ajaxConf.url='notebook/fill_customer';
+    //        ajaxConf.method='POST';
+    //        ajaxConf.params={};
+    //        ajaxConf.params=this.fillAjaxParams('copy_cust');
+    //        if (!ajaxConf.params) {
+    //            return;
+    //        }  
+    //        ajaxConf.success=function (resp,opts) {
+    //            var json=Ext.decode(resp.responseText);
+    //            if (json.success) {
+    //                Ext.getCmp('nb-war-id').setValue(json.order.id);
+    //                Ext.getCmp('nb-war-date-start').setValue(Ext.Date.parse(json.order.date_start,'Y-m-d'));
+    //                Ext.getCmp('nb-war-date-end').setValue(Ext.Date.parse(json.order.date_end,'Y-m-d'));        
+    //                //Ext.getCmp('nb-war-in-workshop').setValue(json.order.type);        
+    //                Ext.getCmp('nb-war-prod').setValue(json.order.product);
+    //                Ext.getCmp('nb-war-model').setValue(json.order.model);
+    //                Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
+    //                Ext.getCmp('nb-war-fac-num').setValue(json.order.factorynum);
+    //                Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
+    //                Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
+    //                Ext.getCmp('nb-war-cust').setValue(json.order.customer);
+    //                Ext.getCmp('nb-war-cust-info').setValue(json.order.personaldata);
+    //                Ext.getCmp('nb-war-adr').setValue(json.order.address);
+    //                Ext.getCmp('nb-war-hphone').setValue(json.order.hphone);
+    //                Ext.getCmp('nb-war-wphone').setValue(json.order.wphone);
+    //                Ext.getCmp('nb-war-phone').setValue(json.order.phone);
+    //                Ext.getCmp('nb-war-date-notif').setValue(Ext.Date.parse(json.order.notified,'Y-m-d'));
+    //                //blacklist
+    //                //Ext.getCmp('nb-war-cust-state').setValue(json.order.idBlacklist);
+    //                Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
+    //                Ext.getCmp('nb-war-pref').setValue(json.order.performance);
+    //                Ext.getCmp('nb-war-notes').setValue(json.order.notes);
+    //                Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
+    //                Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
+    //                Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
+    //                Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
+    //                Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
+    //                if (json.order.id2Masters!=undefined && json.order.id2Masters!='' && json.order.id2Masters!=1) {
+    //                    Ext.getCmp('nb-war-sec-mas-container').show();    
+    //                }
+    //                else {
+    //                    Ext.getCmp('nb-war-sec-mas-container').hide();
+    //                }
+    //                Ext.getCmp('nb-war-mas-sec').setValue(json.order.id2Masters);
+    //                Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
+    //                Ext.getCmp('nb-war-det').setValue(json.order.details);
+    //                Ext.getCmp('nb-war-trans').setValue(json.order.transportation); 
+    //                Ext.getCmp('nb-war-total-price').setValue(json.order.total);
+    //                //оновлюємо дерево...
+    //                Ext.getCmp('nb-product-tree').getStore().load(); 
+    //            }
+    //            else {
+    //                Ext.Msg.alert('Сообщение',json.message);
+    //            }
+    //        }
+    //        ajaxConf.failure=function () {
+    //            Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
+    //        }        
+    //        Ext.Ajax.request(ajaxConf);             
+    //    }
+    //    else {
+    //        Ext.Msg.alert('Сообщение','Копировать можно только существующий заказ');
+    //    }        
+    //},
     uploadFile: function () {
         if (!this.isNew) {
             var uploadForm=Ext.getCmp('nb-war-file-upload-form').getForm();
@@ -669,14 +751,39 @@ Ext.define('Notebook.controller.Warranty',{
         }
     },
     warPrint: function () {
-        var selWar=Ext.getCmp('nb-war-id').getValue();
-        if (selWar!=undefined && selWar!='') {
-            this.ptplWin=this.getView('warranty.Ptemplate').create();
-            this.ptplWin.show();
-        }
-        else {
-            Ext.Msg.alert('Сообщение','Выберите заказ, или сохраните текущий');
-        }
+    	//ігноруемо вибір темлейта...так треба, так простіше
+    	if (ignore_logic_no_template_select) {
+    		window.open(print_url+Ext.getCmp('nb-war-id').getValue(),'_blank');
+    	}
+    	else {
+	        var selWar=Ext.getCmp('nb-war-id').getValue();
+	        if (selWar!=undefined && selWar!='') {
+	            this.ptplWin=this.getView('warranty.Ptemplate').create();
+	            this.ptplWin.show();
+	        }
+	        else {
+	            Ext.Msg.alert('Сообщение','Выберите заказ, или сохраните текущий');
+	        }
+    	}
+    },
+    backupDb: function () {
+    	//робимо бекап бд
+    	Ext.Ajax.request({    		
+    		url: 'notebook/backup',
+    		method: 'get',
+    		success: function (resp,opts) {
+    			var json=Ext.decode(resp.responseText);
+    			if (json.success) {
+    				Ext.Msg.alert('Сообщение',json.message+' (<a href="'+json.link+'">Скачать</a>)');
+    			}
+    			else {
+    				Ext.Msg.alert('Сообщение',json.message);
+    			}
+    		},
+    		failure: function () {
+    			Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
+    		}
+    	});
     }
 });
 

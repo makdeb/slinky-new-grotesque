@@ -23,14 +23,15 @@ Ext.define('Notebook.store.Product',{
                 if (newNode.get('id').substr(0,1)=='c') {
                     newNode.set('leaf', false);
                     newNode.set('expandable', true);
+                    newNode.set('text',newNode.get('name'));
                     if (newNode.get('id')=='c1') {
                         newNode.set('icon',icons_path+'cat-bin.png');
                     }
                 }
                 else {
                     newNode.set('leaf', true);
-                }
-                newNode.set('text',newNode.get('name')); 
+                    newNode.set('text',newNode.get('name')+' ('+newNode.get('id').replace(/[^0-9]/,'')+')');
+                }                 
             }
         }
     }
