@@ -19,7 +19,7 @@ Ext.define('Notebook.controller.Product', {
         //this.getStore('SearchField').load();
         this.control({
         	'product-list button#nb-prod-filter': {
-        		click: this.toggleFilter
+        		click: this.refreshCat
         	},
             '#nb-add-cat': {
                 click: this.editCatList
@@ -62,21 +62,27 @@ Ext.define('Notebook.controller.Product', {
             }
         });
     },
-    toggleFilter: function (button) {
-    	if (button.pressed) {
+    refreshCat: function (button) {
+    	button.disable();
+    	if (Ext.getCmp('nb-prod-filter-all').getValue()) {
     		this.getStore('Product').getProxy().extraParams={};
-    		this.getStore('Product').getProxy().extraParams.filter=1;
-            if (Ext.getCmp('nb-prod-is-done-filter').pressed) {
-            	this.getStore('Product').getProxy().extraParams.done=1;
-            }
-            else {
-            	this.getStore('Product').getProxy().extraParams.done=0;
-            }
     	}
     	else {
-    		this.getStore('Product').getProxy().extraParams={};    		
+        	this.getStore('Product').getProxy().extraParams={};
+        	this.getStore('Product').getProxy().extraParams.filter=1;
+        	if (Ext.getCmp('nb-prod-filter-in-ws').getValue()) {
+        		this.getStore('Product').getProxy().extraParams.done=0;
+        	}
+        	else {
+        		this.getStore('Product').getProxy().extraParams.done=1;
+        	}
     	}
-    	this.getStore('Product').load();
+        var prodLoadParams={};
+        prodLoadParams.scope=this;
+        prodLoadParams.callback=function(records, operation, success) { 
+        	button.enable();
+        }    	
+    	this.getStore('Product').load(prodLoadParams);
     },
     editCatList: function (button) {
         //створюємо екземпляр вюшки для додання\редагування категорії
