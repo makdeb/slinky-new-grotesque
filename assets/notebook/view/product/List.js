@@ -14,18 +14,22 @@ Ext.define('Notebook.view.product.List', {
                 tbar: {
                 	items: [
                 		{
-                			icon: icons_path+'ord-filter.png',
-                			tooltip: 'Применить\\Снять фильтр',
-                			id: 'nb-prod-filter',
-                			enableToggle: true
+                			icon: icons_path+'cat-refresh.png',
+                			tooltip: 'Обновть',
+                			id: 'nb-prod-filter'
                 		},
-                		'-',
                 		{
-                			icon: icons_path+'ord-is-done.png',
-                			tooltip: 'Показать только в ремонте\\Показать выданые',
-                			id: 'nb-prod-is-done-filter',
-                			enableToggle: true	
-                		}                		
+                			xtype: 'checkbox',
+                			boxLabel: 'Все',
+                			margin: '0 5 0 10',
+                			id: 'nb-prod-filter-all',
+                			checked: true
+                		},
+                		{
+                			xtype: 'checkbox',
+                			boxLabel: 'В ремонте',
+                			id: 'nb-prod-filter-in-ws'
+                		}               		
                 	]
                 },
                 flex: 1,

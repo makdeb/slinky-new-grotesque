@@ -480,7 +480,7 @@ Ext.define('Notebook.controller.Warranty',{
 	    					Ext.getCmp('nb-war-done-label').update('не выполнен');
 	    				}
 	    	    		//перезавантажуємо відкриту категорію
-	    				if (Ext.getCmp('nb-prod-filter').pressed) {
+	    				if (!Ext.getCmp('nb-prod-filter-all').getValue()) {
 	    					thisController.getStore('Product').load({node: thisController.getStore('Product').getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())});
 	    				}
 	    			}
