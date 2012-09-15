@@ -3,20 +3,20 @@ Ext.define('Notebook.controller.Dictionary',{
     models: [
         'Master',
         'Seller',
-        'Notetpl',
-        'Status'
+        'Notetpl'//,
+        //'Status'
     ],
     stores: [
         'Master',
         'Seller',
-        'Notetpl',
-        'Status'
+        'Notetpl'//,
+        //'Status'
     ],
     views: [
         'dictionary.Master',
         'dictionary.Seller',
-        'dictionary.Notetpl',
-        'dictionary.Status'        
+        'dictionary.Notetpl'//,
+        //'dictionary.Status'        
     ],
     init: function () {
         this.control({
@@ -68,11 +68,11 @@ Ext.define('Notebook.controller.Dictionary',{
                 this.table='notestpl';
                 this.dictWin=this.getView('dictionary.Notetpl').create();
                 break;  
-            case 'Statuses':
-                this.store='Status';
-                this.table='blacklist';
-                this.dictWin=this.getView('dictionary.Status').create();
-                break;                 
+            //case 'Statuses':
+            //    this.store='Status';
+            //    this.table='blacklist';
+            //    this.dictWin=this.getView('dictionary.Status').create();
+            //    break;                 
             default:
                 this.store='Master';
                 this.table='masters';

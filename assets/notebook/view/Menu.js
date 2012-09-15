@@ -46,12 +46,12 @@ Ext.define('Notebook.view.Menu',{
                         text: 'Шаблоны заметок',
                         id: 'nb-dict-notetpl',
                         icon: icons_path+'dir-templ.png'
-                    },
-                    {
-                        text: 'Статусы владельца',
-                        id: 'nb-dict-status',
-                        icon: icons_path+'dir-stat.png'
-                    }                    
+                    }//,
+                    //{
+                    //    text: 'Статусы владельца',
+                    //    id: 'nb-dict-status',
+                    //    icon: icons_path+'dir-stat.png'
+                    //}                    
                 ]
             }            
         },
