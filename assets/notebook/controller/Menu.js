@@ -19,12 +19,12 @@ Ext.define('Notebook.controller.Menu',{
                 click: function () {
                     this.getController('Dictionary').dictCreateWin('Notetpls');
                 }
-            },
-            'main-menu #nb-dict-status': {
-                click: function () {
-                    this.getController('Dictionary').dictCreateWin('Statuses');
-                }
-            }            
+            }//,
+            //'main-menu #nb-dict-status': {
+            //    click: function () {
+            //        this.getController('Dictionary').dictCreateWin('Statuses');
+            //    }
+            //}            
         });
     }    
 });
