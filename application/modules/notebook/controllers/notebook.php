@@ -737,7 +737,7 @@ class Notebook extends CI_Controller {
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
 		$data['personaldata'] = $this->input->post('personaldata');
-		$data['blacklistID']  = $this->input->post('blacklistID');
+		//$data['blacklistID']  = $this->input->post('blacklistID');
 		
 		// обновляем данные заказчика
 		$query = $this->customers_model->update_blackid('',$new['customer'],$data);
