@@ -737,7 +737,7 @@ class Notebook extends CI_Controller {
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
 		$data['personaldata'] = $this->input->post('personaldata');
-		$data['blacklistID']  = $this->input->post('blacklistID');
+		//$data['blacklistID']  = $this->input->post('blacklistID');
 		
 		// обновляем данные заказчика
 		$query = $this->customers_model->update_blackid('',$new['customer'],$data);
@@ -1245,7 +1245,7 @@ class Notebook extends CI_Controller {
 		// вывод json-строки
 		echo '{"success":true,"done":"' .$data['done'] .'"}';	
 	}
-	
+/*	
 	// функция backup() осуществления резервного копирования базы данных
 	public function backup()
 	{	
@@ -1256,7 +1256,7 @@ class Notebook extends CI_Controller {
                 'filename'    => 'base_' .date("d-m-Y"),
                 'add_drop'    => TRUE,
                 'add_insert'  => TRUE,
-                'newline'     => "\n" 
+                'newline'     => "\r\n" 
               );
 			  
 		// Load the DB utility class
@@ -1271,6 +1271,26 @@ class Notebook extends CI_Controller {
 			echo '{"success":false,"message":"Ошибка сохранения базы"}';
 			return;
 		} else echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/base_' .date("d-m-Y") .'.zip"}';
+	}
+*/	
+
+	// функция backup() осуществления резервного копирования базы данных
+		public function backup()
+	{	
+			$backup_file_path='C:/www/site6.ru/backup/';
+
+			$backup_file_name='base_' .date("d-m-Y");
+			
+			$mysqldump='C:/www/site6.ru/dump/bin/mysqldump.exe';
+			
+			$res = 0;
+			system($mysqldump." -u root dda >" .$backup_file_path .$backup_file_name .'.sql',$res);
+			if ((int)$res==0) {
+				echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/base_' .date("d-m-Y") .'.sql"}';
+			}
+			else {
+				echo '{"success":false,"message":"Ошибка сохранения базы"}';
+			}
 	}
 }
 
