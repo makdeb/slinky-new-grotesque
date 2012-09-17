@@ -675,10 +675,7 @@ class Notebook extends CI_Controller {
 		$data['categoryID']  = $this->input->post('categoryID');
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
-			return;
-		};
+		$data['product']  = $this->input->post('product');
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
 		//$data['guarantee']  = $this->input->post('guarantee');
@@ -769,10 +766,10 @@ class Notebook extends CI_Controller {
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
 		$data['personaldata'] = $this->input->post('personaldata');
-		if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
+		/*if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
 			$data['blacklistID'] = 1;
 		};
-				
+		*/		
 		$insert_id = $this->customers_model->insert_data($data);
 
 		if ($insert_id==FALSE) {
@@ -794,10 +791,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
-			return;
-		};
+		$data['product']  = $this->input->post('product');
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
 		//$data['guarantee']  = $this->input->post('guarantee');
@@ -914,10 +908,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
-			return;
-		};
+		$data['product']  = $this->input->post('product');
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
 		//$data['guarantee']  = $this->input->post('guarantee');
