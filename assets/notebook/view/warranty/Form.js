@@ -74,7 +74,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 labelWidth: 80,
                                 width: 535,
                                 //vtype: 'cyralphanumplus',
-                                allowBlank: false,
+                                //allowBlank: false,
                                 fieldStyle: 'color: #0B486B;font-weight: bold'
                             },
                             {
@@ -166,7 +166,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                 labelWidth: 80,
                                 width: 535,
                                 //vtype: 'cyralphanumplus',
-                                allowBlank: false
+                                //allowBlank: false
                             },
                             {   
                                 xtype: 'textfield',
