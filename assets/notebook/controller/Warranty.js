@@ -417,7 +417,12 @@ Ext.define('Notebook.controller.Warranty',{
                     //при успішному виконанні запиту встановлюємо id замовлення
                     Ext.getCmp('nb-war-id').setValue(json.id);
                     //оновлюємо дерево...
-                    Ext.getCmp('nb-product-tree').getStore().load(); 
+                    Ext.getCmp('nb-product-tree').getStore().load();
+                    var sellerComboBox = Ext.getCmp('nb-war-seller');
+                    //така от штучка...перегружаємо стор продавців...
+                    if (!Ext.isNumeric(sellerComboBox.getValue())) {
+                    	sellerComboBox.getStore().load();
+                    }
                     Ext.Msg.alert('Сообщение',json.message);  
                 }
                 else {
@@ -514,6 +519,11 @@ Ext.define('Notebook.controller.Warranty',{
                 if (json.success) {
                     //оновлюємо дерево...                    
                     Ext.getCmp('nb-product-tree').getStore().load();
+                    var sellerComboBox = Ext.getCmp('nb-war-seller');
+                    //така от штучка...перегружаємо стор продавців...
+                    if (!Ext.isNumeric(sellerComboBox.getValue())) {
+                    	sellerComboBox.getStore().load();
+                    }
                     Ext.Msg.alert('Сообщение',json.message);
                 }
                 else {
