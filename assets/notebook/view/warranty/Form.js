@@ -532,7 +532,7 @@ Ext.define('Notebook.view.warranty.Form',{
                         id: 'nb-war-upload-file',
                         text: 'Загрузить файл',
                         icon: icons_path+'file-upl.png',
-                        margin: '0 0 0 210'
+                        margin: '0 0 0 205'
                     },
                     {
                         xtype: 'form',

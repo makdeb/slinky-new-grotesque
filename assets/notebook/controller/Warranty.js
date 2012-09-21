@@ -354,19 +354,25 @@ Ext.define('Notebook.controller.Warranty',{
     newWarranty: function() {
         //вказуємо, що при доданні нового замовлення можливий лише його прийом, а не збереження
         this.isNew=true;        
-        //очищаємо форму
+        //очищаємо форму      
         Ext.getCmp('nb-war-id').setValue('');
         Ext.getCmp('nb-war-date-start').setValue('');
         Ext.getCmp('nb-war-date-end').setValue('');        
-        //Ext.getCmp('nb-war-in-workshop').setValue(0);        
-        Ext.getCmp('nb-war-prod').setValue('');
+        //Ext.getCmp('nb-war-in-workshop').setValue(0); 
+        //в новому замовленні додаємо назву категорії в назву продукту, якщо вона вибрана в дереві продуктів
+        var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {        	
+        	Ext.getCmp('nb-war-prod').setValue(selCat.get('name'));
+        }
+        else {
+        	Ext.getCmp('nb-war-prod').setValue('');
+        }          
         Ext.getCmp('nb-war-prod').clearInvalid();
         Ext.getCmp('nb-war-model').setValue('');
         Ext.getCmp('nb-war-ser-num').setValue('');
         Ext.getCmp('nb-war-fac-num').setValue('');
         //Ext.getCmp('nb-war-guar').setValue('');
-        //в новому замовленні проставляємо категорію, якщо вона вибрана в дереві продуктів
-        var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
+        //в новому замовленні проставляємо категорію, якщо вона вибрана в дереві продуктів        
         if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {                    
         	Ext.getCmp('nb-war-cat').setValue(selCat.get('id').replace(/[^0-9]/,''));
         }
