@@ -694,6 +694,13 @@ class Notebook extends CI_Controller {
 		$data['performance']  = $this->input->post('performance');
 		$data['notes']  = $this->input->post('notes');
 		$data['sellerID']  = $this->input->post('sellerID');
+		if(!preg_match("|^[\d]*$|", $data['sellerID'])) { 
+			 // .. заносим нового продавца в базу
+			  $secondary = array();
+			  $secondary['name'] =  $data['sellerID'];
+			  $query = $this->notebook_model->add_units('sellers',$secondary); 
+			  $data['sellerID'] =$this->db->insert_id();
+		}
 		$data['check']  = $this->input->post('check');
 		$data['comments']  = $this->input->post('comments');
 		$data['masterID']  = $this->input->post('masterID');
@@ -814,6 +821,13 @@ class Notebook extends CI_Controller {
 		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
 			$data['sellerID']  = 1;
 		}
+		if(!preg_match("|^[\d]*$|", $data['sellerID'])) { 
+			 // .. заносим нового продавца в базу
+			  $secondary = array();
+			  $secondary['name'] =  $data['sellerID'];
+			  $query = $this->notebook_model->add_units('sellers',$secondary); 
+			  $data['sellerID'] =$this->db->insert_id();
+		}
 		$data['check']  = $this->input->post('check');
 		$data['comments']  = $this->input->post('comments');
 		// проверка номера мастера,
@@ -927,7 +941,7 @@ class Notebook extends CI_Controller {
 		$data['complaints']  = $this->input->post('complaints');
 		$data['performance']  = $this->input->post('performance');
 		*/
-		$data['notes']  = $this->input->post('notes') .' (' .'Копия с заказа №' .$id .')'; // запись номера исходного заказа в заметки
+		$data['notes']  = $this->input->post('notes') .'*' .$id; // запись номера исходного заказа в заметки
 		// проверка номера продавца,
 		// если отсутствует - записываем значение по умочанию
 		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
