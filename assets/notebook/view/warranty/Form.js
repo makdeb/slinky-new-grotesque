@@ -68,15 +68,53 @@ Ext.define('Notebook.view.warranty.Form',{
                         padding: '0 5 0 5',                    
                         items: [
                             {
-                                xtype: 'textfield',
-                                id: 'nb-war-prod',
-                                fieldLabel: 'Изделие',
-                                labelWidth: 80,
-                                width: 535,
-                                //vtype: 'cyralphanumplus',
-                                //allowBlank: false,
-                                fieldStyle: 'color: #0B486B;font-weight: bold'
-                            },
+                                xtype: 'container',
+                                layout: {
+                                    type: 'column'
+                                },
+                                padding: '0 0 5 0',
+                                items: [
+                                    //{
+                                    //    xtype: 'textfield',
+                                    //    id: 'nb-war-guar',
+                                    //    fieldLabel: 'Гарантия',
+                                    //    labelWidth: 80,
+                                    //    width: 265//,
+                                    //    //vtype: 'cyralphanumplus'                                       
+                                    //},
+                                    {
+                                            xtype: 'textfield',
+                                            id: 'nb-war-prod',
+                                            fieldLabel: 'Изделие',
+                                            labelWidth: 80,
+                                            width: 265,
+                                            //vtype: 'cyralphanumplus',
+                                            //allowBlank: false,
+                                            fieldStyle: 'color: #0B486B;font-weight: bold'                                    	
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        id: 'nb-war-cat',
+                                        fieldLabel: 'Категория',
+                                        labelWidth: 80,
+                                        width: 265,
+                                        store: 'Category',
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        forceSelection: true
+                                    }                                    
+                                ]
+                            },                                 
+                            //{
+                            //    xtype: 'textfield',
+                            //    id: 'nb-war-prod',
+                            //    fieldLabel: 'Изделие',
+                            //    labelWidth: 80,
+                            //    width: 535,
+                            //    //vtype: 'cyralphanumplus',
+                            //    //allowBlank: false,
+                            //    fieldStyle: 'color: #0B486B;font-weight: bold'
+                            //},
                             {
                                 xtype: 'textfield',
                                 id: 'nb-war-model',
@@ -112,35 +150,7 @@ Ext.define('Notebook.view.warranty.Form',{
                                         //vtype: 'cyralphanumplus'                                        
                                     }                                    
                                 ]
-                            },
-                            {
-                                xtype: 'container',
-                                layout: {
-                                    type: 'column'
-                                },
-                                padding: '0 0 5 0',
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        id: 'nb-war-guar',
-                                        fieldLabel: 'Гарантия',
-                                        labelWidth: 80,
-                                        width: 265//,
-                                        //vtype: 'cyralphanumplus'                                       
-                                    },
-                                    {
-                                        xtype: 'combobox',
-                                        id: 'nb-war-cat',
-                                        fieldLabel: 'Категория',
-                                        labelWidth: 80,
-                                        width: 265,
-                                        store: 'Category',
-                                        displayField: 'name',
-                                        valueField: 'id',
-                                        forceSelection: true
-                                    }                                    
-                                ]
-                            }     
+                            }    
                         ]
                     }
                 ]
@@ -372,7 +382,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                         store: 'Seller',
                                         displayField: 'name',
                                         valueField: 'id',
-                                        forceSelection: true                                         
+                                        //для можливості додаваня продавців прямо з форми (без довідників)
+                                        forceSelection: false                                        
                                     },
                                     {   
                                         xtype: 'textfield',
