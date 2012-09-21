@@ -675,10 +675,7 @@ class Notebook extends CI_Controller {
 		$data['categoryID']  = $this->input->post('categoryID');
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
-			return;
-		};
+		$data['product']  = $this->input->post('product');
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
 		//$data['guarantee']  = $this->input->post('guarantee');
@@ -697,6 +694,13 @@ class Notebook extends CI_Controller {
 		$data['performance']  = $this->input->post('performance');
 		$data['notes']  = $this->input->post('notes');
 		$data['sellerID']  = $this->input->post('sellerID');
+		if(!preg_match("|^[\d]*$|", $data['sellerID'])) { 
+			 // .. заносим нового продавца в базу
+			  $secondary = array();
+			  $secondary['name'] =  $data['sellerID'];
+			  $query = $this->notebook_model->add_units('sellers',$secondary); 
+			  $data['sellerID'] =$this->db->insert_id();
+		}
 		$data['check']  = $this->input->post('check');
 		$data['comments']  = $this->input->post('comments');
 		$data['masterID']  = $this->input->post('masterID');
@@ -769,10 +773,10 @@ class Notebook extends CI_Controller {
 		$data['wphone']  = $this->input->post('wphone');
 		$data['hphone']  = $this->input->post('hphone');
 		$data['personaldata'] = $this->input->post('personaldata');
-		if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
+		/*if (!($data['blacklistID']  = $this->input->post('blacklistID'))) {
 			$data['blacklistID'] = 1;
 		};
-				
+		*/		
 		$insert_id = $this->customers_model->insert_data($data);
 
 		if ($insert_id==FALSE) {
@@ -794,10 +798,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
-			return;
-		};
+		$data['product']  = $this->input->post('product');
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
 		//$data['guarantee']  = $this->input->post('guarantee');
@@ -819,6 +820,13 @@ class Notebook extends CI_Controller {
 		// если отсутствует - записываем значение по умочанию
 		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
 			$data['sellerID']  = 1;
+		}
+		if(!preg_match("|^[\d]*$|", $data['sellerID'])) { 
+			 // .. заносим нового продавца в базу
+			  $secondary = array();
+			  $secondary['name'] =  $data['sellerID'];
+			  $query = $this->notebook_model->add_units('sellers',$secondary); 
+			  $data['sellerID'] =$this->db->insert_id();
 		}
 		$data['check']  = $this->input->post('check');
 		$data['comments']  = $this->input->post('comments');
@@ -914,10 +922,7 @@ class Notebook extends CI_Controller {
 		};
 		$data['model'] = $this->input->post('model');
 		// проверка заполнения поля "Виріб"
-		if (!($data['product']  = $this->input->post('product'))) {
-			echo '{"success":false,"message":"Поле "Изделие:" должно быть заполнено"}'; 
-			return;
-		};
+		$data['product']  = $this->input->post('product');
 		$data['serialnum'] = $this->input->post('serialnum');
 		$data['factorynum'] = $this->input->post('factorynum');
 		//$data['guarantee']  = $this->input->post('guarantee');
@@ -936,7 +941,7 @@ class Notebook extends CI_Controller {
 		$data['complaints']  = $this->input->post('complaints');
 		$data['performance']  = $this->input->post('performance');
 		*/
-		$data['notes']  = $this->input->post('notes') .' (' .'Копия с заказа №' .$id .')'; // запись номера исходного заказа в заметки
+		$data['notes']  = $this->input->post('notes') .'*' .$id; // запись номера исходного заказа в заметки
 		// проверка номера продавца,
 		// если отсутствует - записываем значение по умочанию
 		if (!($data['sellerID']  = $this->input->post('sellerID'))) {
