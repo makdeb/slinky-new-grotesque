@@ -175,7 +175,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
                     Ext.getCmp('nb-war-fac-num').setValue(json.order.factorynum);
-                    Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
+                    //Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
                     Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
                     Ext.getCmp('nb-war-cust').setValue(json.order.customer);
                     Ext.getCmp('nb-war-cust-info').setValue(json.order.personaldata);
@@ -236,7 +236,7 @@ Ext.define('Notebook.controller.Warranty',{
             '#nb-war-model,'+
             '#nb-war-ser-num,'+
             '#nb-war-fac-num,'+
-            '#nb-war-guar,'+
+            //'#nb-war-guar,'+
             '#nb-war-cust,'+
             '#nb-war-cust-info,'+
             '#nb-war-adr,'+
@@ -277,7 +277,7 @@ Ext.define('Notebook.controller.Warranty',{
         var warModel=Ext.getCmp('nb-war-model');
         var warSerNum=Ext.getCmp('nb-war-ser-num');
         var warFacNum=Ext.getCmp('nb-war-fac-num');
-        var warGuar=Ext.getCmp('nb-war-guar');
+        //var warGuar=Ext.getCmp('nb-war-guar');
         var warCat=Ext.getCmp('nb-war-cat');
         var warCust=Ext.getCmp('nb-war-cust');
         var warCustInfo=Ext.getCmp('nb-war-cust-info');
@@ -318,7 +318,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxParams.product=warProd.getValue();
             ajaxParams.serialnum=warSerNum.getValue();
             ajaxParams.factorynum=warFacNum.getValue();
-            ajaxParams.guarantee=warGuar.getValue();
+            //ajaxParams.guarantee=warGuar.getValue();
             ajaxParams.notified=Ext.Date.format(warNotifDate.getValue(),'d.m.Y');
             ajaxParams.complaints=warCompl.getValue();
             ajaxParams.performance=warPref.getValue();
@@ -364,7 +364,7 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-model').setValue('');
         Ext.getCmp('nb-war-ser-num').setValue('');
         Ext.getCmp('nb-war-fac-num').setValue('');
-        Ext.getCmp('nb-war-guar').setValue('');
+        //Ext.getCmp('nb-war-guar').setValue('');
         //в новому замовленні проставляємо категорію, якщо вона вибрана в дереві продуктів
         var selCat=Ext.getCmp('nb-product-tree').getSelectionModel().getSelection()[0];
         if (selCat!=undefined && selCat.get('id').substr(0,1)=='c') {                    
@@ -591,7 +591,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-model').setValue(json.order.model);
                     Ext.getCmp('nb-war-ser-num').setValue(json.order.serialnum);
                     Ext.getCmp('nb-war-fac-num').setValue(json.order.factorynum);
-                    Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
+                    //Ext.getCmp('nb-war-guar').setValue(json.order.guarantee);
                     Ext.getCmp('nb-war-cat').setValue(json.order.idCategories);
                     Ext.getCmp('nb-war-cust').setValue(json.order.customer);
                     Ext.getCmp('nb-war-cust-info').setValue(json.order.personaldata);
