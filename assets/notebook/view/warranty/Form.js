@@ -300,11 +300,12 @@ Ext.define('Notebook.view.warranty.Form',{
                         padding: '0 5 0 5',                    
                         items: [
                             {   
-                                xtype: 'textfield',
+                                xtype: 'textarea',
                                 id: 'nd-war-compl',
                                 fieldLabel: 'Жалобы',
                                 labelWidth: 80,
                                 width: 535,
+                                height: 35,
                                 fieldStyle: 'color: #0B486B;font-weight: bold'
                                 //vtype: 'cyralphanumplus'                                 
                             },
@@ -401,8 +402,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                 fieldLabel: 'Комментарии',
                                 labelWidth: 80,
                                 width: 535,
-                                height: 110,
-                                fieldStyle: 'color: #774F38'
+                                height: 90,
+                                fieldStyle: 'color: #774F38;font-weight: bold'
                             },
                             {
                                 xtype: 'container',
