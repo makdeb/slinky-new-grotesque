@@ -74,7 +74,7 @@ class Notebook_model extends CI_Model {
 	{	
 		// вибір тільки потрібних полів	і об'єднання з іншими таблицями
 	    $this->db->where('orders.id', $id); 
-		$this->db->select('orders.id,categories.id as idCategories,date_start,date_end,done,model,product,serialnum,factorynum,customers.name as customer,address,phone,wphone,hphone,personaldata,notified,complaints,performance,notes,sellers.id as idSellers,check,comments,masters.id as idMasters,master2ID as id2Masters,worksum,worksum2,details,transportation,total,gdate,file');
+		$this->db->select('orders.id,categories.id as idCategories,date_start,date_end,done,model,product,serialnum,factorynum,customers.name as customer,address,phone,wphone,hphone,personaldata,notified,complaints,performance,notes,sellers.id as idSellers,check,comments,masters.id as idMasters,master2ID as id2Masters,worksum,worksum2,details,transportation,total,sold,gdate,file');
 		$this->db->from('orders');
 		$this->db->join('categories', 'categories.id = orders.categoryID');
 		$this->db->join('customers', 'customers.id = orders.customerID');

@@ -711,7 +711,12 @@ class Notebook extends CI_Controller {
 		$data['details']  = $this->input->post('details');
 		$data['transportation']  = $this->input->post('transportation');
 		$data['total']  = $this->input->post('total');
-		
+		if (!$this->input->post('sold')) {
+			$data['sold'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('sold'));
+			$data['sold']  = $date->format('Y-m-d');
+		}
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
@@ -843,7 +848,12 @@ class Notebook extends CI_Controller {
 		$data['details']  = $this->input->post('details');
 		$data['transportation']  = $this->input->post('transportation');
 		$data['total']  = $this->input->post('total');
-		
+		if (!$this->input->post('sold')) {
+			$data['sold'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('sold'));
+			$data['sold']  = $date->format('Y-m-d');
+		}
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
@@ -963,7 +973,12 @@ class Notebook extends CI_Controller {
 		$data['details']  = $this->input->post('details');
 		$data['transportation']  = $this->input->post('transportation');
 		$data['total']  = $this->input->post('total');
-		
+		if (!$this->input->post('sold')) {
+			$data['sold'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('sold'));
+			$data['sold']  = $date->format('Y-m-d');
+		}
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {

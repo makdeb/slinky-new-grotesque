@@ -100,7 +100,7 @@ class Orders_model extends CI_Model {
 	public function search_id($field=FALSE,$terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0) 
 	{	
 		// если поля даты - преобразовываем дату в нужный формат
-		if (($field=='date_start')or($field=='date_end')or($field=='notified')or($field=='gdate'))
+		if (($field=='date_start')or($field=='date_end')or($field=='notified')or($field=='gdate')or($field=='sold'))
 		{
 			$date = DateTime::createFromFormat('d.m.Y',$terms);
 			$terms = $date->format('Y-m-d');
@@ -140,7 +140,7 @@ class Orders_model extends CI_Model {
 	public function search($field=FALSE,$terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0)  
 	{	
 		// если поля даты - преобразовываем дату в нужный формат
-		if (($field=='date_start')or($field=='date_end')or($field=='notified')or($field=='gdate'))
+		if (($field=='date_start')or($field=='date_end')or($field=='notified')or($field=='gdate')or($field=='sold'))
 		{
 			$date = DateTime::createFromFormat('d.m.Y',$terms);
 			$terms = $date->format('Y-m-d');
