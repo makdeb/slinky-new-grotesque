@@ -396,6 +396,14 @@ Ext.define('Notebook.view.warranty.Form',{
                                     }
                                 ]
                             },
+                            {
+                                xtype: 'datefield',
+        						id: 'nb-war-saledate',
+        						labelWidth: 80,
+        						width: 180,
+        						format: 'd.m.Y',
+        						fieldLabel: 'Дата прод.'
+                            },
                             {   
                                 xtype: 'textarea',
                                 id: 'nb-war-guar-comm',
@@ -521,12 +529,12 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'datefield',
-                        id: 'nb-war-gdate',
-                        labelWidth: 85,
-                        margin: '0 0 0 5',
-                        width: 180,
-                        format: 'd.m.Y',
-                        fieldLabel: 'Гарантия до'
+						id: 'nb-war-gdate',
+						labelWidth: 85,
+						margin: '0 0 0 5',
+						width: 180,
+						format: 'd.m.Y',
+						fieldLabel: 'Гарантия до'
                     },
                     {
                         xtype: 'button',
