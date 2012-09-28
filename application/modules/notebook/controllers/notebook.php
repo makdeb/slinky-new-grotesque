@@ -1297,20 +1297,23 @@ class Notebook extends CI_Controller {
 	// функция backup() осуществления резервного копирования базы данных
 		public function backup()
 	{	
-			$backup_file_path='C:/www/site6.ru/backup/';
-
-			$backup_file_name='base_' .date("d-m-Y");
-			
-			$mysqldump='C:/www/site6.ru/dump/bin/mysqldump.exe';
-			
-			$res = 0;
-			system($mysqldump." -u root dda >" .$backup_file_path .$backup_file_name .'.sql',$res);
-			if ((int)$res==0) {
-				echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/base_' .date("d-m-Y") .'.sql"}';
-			}
-			else {
-				echo '{"success":false,"message":"Ошибка сохранения базы"}';
-			}
+		$this->load->library('zip');
+		$backup_file_path = $_SERVER['DOCUMENT_ROOT'].'/backup/';
+		$backup_file_name='base_'.date("d-m-Y");
+		$sql = $backup_file_name.'.sql';
+		$zip = $backup_file_name.'.zip';
+		$mysqldump = $_SERVER['DOCUMENT_ROOT'].'/dump/bin/mysqldump.exe';
+		$res = 0;
+		system($mysqldump." -u root dda >" .$backup_file_path.$sql, $res);
+		
+		if ((int)$res==0) {
+		$this->zip->read_file($backup_file_path.$sql);
+		$this->zip->archive($backup_file_path.$zip);
+		unlink($backup_file_path.$sql);
+		echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/'.$zip.'"}';
+		} else {
+			echo '{"success":false,"message":"Ошибка сохранения базы"}';
+		}
 	}
 }
 
