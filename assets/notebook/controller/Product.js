@@ -282,7 +282,8 @@ Ext.define('Notebook.controller.Product', {
                 break;
             case 'date_start':
             case 'date_end':
-            case 'notified':            
+            case 'notified': 
+            case 'sold':
             case 'gdate':    
                 var srchInput=Ext.create('Ext.form.field.Date',{
                     id: 'nb-prod-srch-fval',
@@ -344,6 +345,7 @@ Ext.define('Notebook.controller.Product', {
                 case 'date_start':
                 case 'date_end':
                 case 'notified':
+                case 'sold':
                 case 'gdate':    
                     prodLoadParams.params.search_terms=Ext.Date.format(Ext.getCmp('nb-prod-srch-fval').getValue(),'d.m.Y');
                     break;

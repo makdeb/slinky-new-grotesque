@@ -199,7 +199,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
                     Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
                     Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
-                    Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.date_sale,'Y-m-d'));
+                    Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.sold,'Y-m-d'));
                     Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
                     Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
                     Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
@@ -328,7 +328,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxParams.notes=warNotes.getValue();
             ajaxParams.sellerID=warSeller.getValue();
             ajaxParams.check=warTicketPrice.getValue();
-            ajaxParams.saledate=Ext.Date.format(warSaleDate.getValue(),'d.m.Y');
+            ajaxParams.sold=Ext.Date.format(warSaleDate.getValue(),'d.m.Y');
             ajaxParams.comments=warGuarComm.getValue();
             ajaxParams.masterID=warMasPrim.getValue();       
             ajaxParams.worksum=warWorkPrim.getValue();        
@@ -634,7 +634,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
                     Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
                     Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
-                    Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.daledate,'Y-m-d'));
+                    Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.sold,'Y-m-d'));
                     Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
                     Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
                     Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
