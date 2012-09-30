@@ -415,6 +415,7 @@ Ext.define('Notebook.controller.Warranty',{
     recWarranty: function() {
         //прийом можливий лише, коли стоїть відмітка про те, що замовлення нове
         if (this.isNew) {
+        	thisController=this;
             var ajaxConf={};
             ajaxConf.method='POST';
             ajaxConf.url='notebook/create_order'; 
@@ -434,7 +435,8 @@ Ext.define('Notebook.controller.Warranty',{
                     if (!Ext.isNumeric(sellerComboBox.getValue())) {
                     	sellerComboBox.getStore().load();
                     }
-                    Ext.Msg.alert('Сообщение',json.message);  
+                    Ext.Msg.alert('Сообщение',json.message); 
+                    thisController.isNew=false;
                 }
                 else {
                     Ext.Msg.alert('Сообщение',json.message);  

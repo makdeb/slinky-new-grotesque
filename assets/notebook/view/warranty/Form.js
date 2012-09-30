@@ -383,6 +383,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                         store: 'Seller',
                                         displayField: 'name',
                                         valueField: 'id',
+                                        //допустимы символи для вводу...
+                                        maskRe: /[а-яіїєА-ЯІЇЄa-zA-Z\s]/,
                                         //для можливості додаваня продавців прямо з форми (без довідників)
                                         forceSelection: false                                        
                                     },
