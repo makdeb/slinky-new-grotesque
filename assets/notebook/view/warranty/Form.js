@@ -300,11 +300,12 @@ Ext.define('Notebook.view.warranty.Form',{
                         padding: '0 5 0 5',                    
                         items: [
                             {   
-                                xtype: 'textfield',
+                                xtype: 'textarea',
                                 id: 'nd-war-compl',
                                 fieldLabel: 'Жалобы',
                                 labelWidth: 80,
                                 width: 535,
+                                height: 35,
                                 fieldStyle: 'color: #0B486B;font-weight: bold'
                                 //vtype: 'cyralphanumplus'                                 
                             },
@@ -382,6 +383,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                         store: 'Seller',
                                         displayField: 'name',
                                         valueField: 'id',
+                                        //допустимы символи для вводу...
+                                        maskRe: /[а-яіїєА-ЯІЇЄa-zA-Z\s]/,
                                         //для можливості додаваня продавців прямо з форми (без довідників)
                                         forceSelection: false                                        
                                     },
@@ -395,14 +398,22 @@ Ext.define('Notebook.view.warranty.Form',{
                                     }
                                 ]
                             },
+                            {
+                                xtype: 'datefield',
+        						id: 'nb-war-saledate',
+        						labelWidth: 80,
+        						width: 180,
+        						format: 'd.m.Y',
+        						fieldLabel: 'Дата прод.'
+                            },
                             {   
                                 xtype: 'textarea',
                                 id: 'nb-war-guar-comm',
                                 fieldLabel: 'Комментарии',
                                 labelWidth: 80,
                                 width: 535,
-                                height: 110,
-                                fieldStyle: 'color: #774F38'
+                                height: 90,
+                                fieldStyle: 'color: #774F38;font-weight: bold'
                             },
                             {
                                 xtype: 'container',
@@ -520,12 +531,12 @@ Ext.define('Notebook.view.warranty.Form',{
                 items: [
                     {
                         xtype: 'datefield',
-                        id: 'nb-war-gdate',
-                        labelWidth: 85,
-                        margin: '0 0 0 5',
-                        width: 180,
-                        format: 'd.m.Y',
-                        fieldLabel: 'Гарантия до'
+						id: 'nb-war-gdate',
+						labelWidth: 85,
+						margin: '0 0 0 5',
+						width: 180,
+						format: 'd.m.Y',
+						fieldLabel: 'Гарантия до'
                     },
                     {
                         xtype: 'button',
