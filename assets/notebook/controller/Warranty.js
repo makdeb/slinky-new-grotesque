@@ -402,6 +402,7 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-saledate').setValue('');
         Ext.getCmp('nb-war-guar-comm').setValue('');        
         Ext.getCmp('nb-war-mas-prim').clearValue();
+        Ext.getCmp('nb-war-mas-prim').setValue('1');
         Ext.getCmp('nb-war-work-prim').setValue('');
         Ext.getCmp('nb-war-sec-mas-container').hide();
         Ext.getCmp('nb-war-mas-sec').clearValue();
@@ -797,12 +798,14 @@ Ext.define('Notebook.controller.Warranty',{
     		method: 'get',
     		success: function (resp,opts) {
     			var json=Ext.decode(resp.responseText);
-    			if (json.success) {
-    				Ext.Msg.alert('Сообщение',json.message+' (<a href="'+json.link+'">Скачать</a>)');
-    			}
-    			else {
-    				Ext.Msg.alert('Сообщение',json.message);
-    			}
+    			//if (json.success) {
+    			//	Ext.Msg.alert('Сообщение',json.message+' (<a href="'+json.link+'">Скачать</a>)');
+    			//}
+    			//else {
+    			//	Ext.Msg.alert('Сообщение',json.message);
+    			//}
+    			//виводити лынк на створений бекап БД не треба, тому виводимо просто меседж
+    			Ext.Msg.alert('Сообщение',json.message);
     		},
     		failure: function () {
     			Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
