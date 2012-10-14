@@ -2,7 +2,7 @@ Ext.define('Notebook.view.product.List', {
     extend: 'Ext.container.Container',
     alias: 'widget.product-list',
     id: 'nb-product-list',
-    width: 270,
+    width: 300,
     layout: {
         type: 'vbox',
         align: 'stretch'
