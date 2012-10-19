@@ -18,6 +18,20 @@ Ext.define('Notebook.controller.Product', {
         //this.getStore('SearchField').addListener('load',function () {alert('loaded');});
         //this.getStore('SearchField').load();
         this.control({
+        	'product-list #nb-product-tree': {
+        		itemexpand: function (x,y,z,c) {
+        			
+        			//var z=x.insertChild(0,new Notebook.model.Product({id:'999',name:'gggg'}));
+        			//return false;
+                    //z.set('leaf', true);
+                    //z.set('expandable', false);
+                    //z.set('text',z.get('name'));
+                    
+        			//alert(z.get('id'));
+        			//return false;
+        			//c.preventDefault();
+        		}
+        	},
         	'product-list button#nb-prod-filter': {
         		click: this.refreshCat
         	},
@@ -63,6 +77,8 @@ Ext.define('Notebook.controller.Product', {
         });
     },
     refreshCat: function (button) {
+    	//Ext.getCmp('nb-product-tree').on('itemexpand', function () {alert('ddd');})
+    	
     	button.disable();
     	if (Ext.getCmp('nb-prod-filter-all').getValue()) {
     		this.getStore('Product').getProxy().extraParams={};

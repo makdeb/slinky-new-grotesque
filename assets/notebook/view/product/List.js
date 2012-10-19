@@ -23,12 +23,13 @@ Ext.define('Notebook.view.product.List', {
                 			boxLabel: 'Все',
                 			margin: '0 5 0 10',
                 			id: 'nb-prod-filter-all',
-                			checked: true
+                			//checked: true
                 		},
                 		{
                 			xtype: 'checkbox',
                 			boxLabel: 'В ремонте',
-                			id: 'nb-prod-filter-in-ws'
+                			id: 'nb-prod-filter-in-ws',
+                			checked: true
                 		}               		
                 	]
                 },

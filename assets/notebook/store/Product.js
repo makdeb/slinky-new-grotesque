@@ -10,7 +10,11 @@ Ext.define('Notebook.store.Product',{
         reader: {
             type: 'json',
             root: 'product'
-        }        
+        },
+        extraParams: {
+        	filter: 1,
+        	done: 0
+        }
     },
     root: {
         expanded: true,
@@ -18,7 +22,9 @@ Ext.define('Notebook.store.Product',{
         leaf: false
     },
     listeners: {
-        append: function (thisNode, newNode, nodeIndex, eOpts){            
+        append: function (thisNode, newNode, nodeIndex, eOpts){
+        	//if (newNode.get('id')!=999) {
+        	console.log('append');
             if( !newNode.isRoot() ) {  
                 if (newNode.get('id').substr(0,1)=='c') {
                     newNode.set('leaf', false);
@@ -33,6 +39,16 @@ Ext.define('Notebook.store.Product',{
                     newNode.set('text',newNode.get('name')+' ('+newNode.get('id').replace(/[^0-9]/,'')+')');
                 }                 
             }
+        	//}
+        },
+        load: function (treeStore,node,recs,success,e) {
+        	//recs.push({id:'999',name:'gggg'});
+			var z=node.appendChild(new Notebook.model.Product({id:'999',name:'gggg'}));
+			//return false;
+            z.set('leaf', true);
+            z.set('expandable', false);
+            z.set('text',z.get('name'));        	
+        	console.log('load');
         }
     }
 });
