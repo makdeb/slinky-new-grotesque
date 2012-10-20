@@ -26,26 +26,45 @@ class Notebook_model extends CI_Model {
 	}	
 	
 	// функция возврата данных, необходимых для отображения боковой панели
-	// осуществляет выборку id и имен категорий и заказов на одном уровне дерева каталогов.
-		public function get_treeview($id=FALSE)
+	// осуществляет выборку id и имен категорий и заказов на одном уровне дерева каталогов
+	// с учетом размера "порции"($limit) и позиции первого заказа($from) 
+	public function get_treeview($id=FALSE,$from=0,$limit=0)
 	{
-		// sql-запрос, производящий выборку нужных полей из двух таблиц - категорий и заказов
-		$sql = "SELECT id,name FROM ".$this->db->dbprefix('categories')." WHERE parentID = ? UNION ALL SELECT id,product FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? ORDER BY id DESC";
-		$query = $this->db->query($sql, array($id, $id));   
-	
-		return $query->result();
+		$cat_list=array(); // вспомогательный массив
+		// если $from=0, то отображение и категорий и заказов в первой "порции", в противном случае - отображаем только заказы
+		if (!$from) {
+			// sql-запрос, производящий выборку нужных полей из таблицы категорий
+			$sql = "SELECT id,name FROM ".$this->db->dbprefix('categories')." WHERE parentID = ? ORDER BY id DESC";
+			$query1 = $this->db->query($sql, array($id));  
+			$cat_list = $query1->result();
+		}
+		// sql-запрос, производящий выборку нужных полей из таблицы заказов
+		$sql = "SELECT id,product FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? ORDER BY id DESC LIMIT ".$from .",".$limit;
+		$query2 = $this->db->query($sql, array($id));
+		
+		return array_merge($cat_list,$query2->result());
 	}
 	
 	// функция возврата данных, необходимых для отображения боковой панели
 	// осуществляет выборку id и имен категорий и заказов на одном уровне дерева каталогов, 
-	// с учетом того, в мастерской заказ($done=0) или уже выполнен ($done=1)
-		public function get_treeview_filtered($id=FALSE,$done=FALSE)
+	// с учетом того, в мастерской заказ($done=0) или уже выполнен ($done=1),
+	// а также с учетом размера "порции"($limit) и позиции первого заказа($from) 
+	public function get_treeview_filtered($id=FALSE,$done=FALSE,$from=0,$limit=0)
 	{
-		// sql-запрос, производящий выборку нужных полей из двух таблиц - категорий и заказов
-		$sql = "SELECT id,name FROM ".$this->db->dbprefix('categories')." WHERE parentID = ? UNION ALL SELECT id,product FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? AND done = ? ORDER BY id DESC";
-		$query = $this->db->query($sql, array($id, $id, $done));   
-	
-		return $query->result();
+		$cat_list=array();
+		// вспомогательный массив
+		// если $from=0, то отображение и категорий и заказов в первой "порции", в противном случае - отображаем только заказы
+		if (!$from) {
+			// sql-запрос, производящий выборку нужных полей из таблицы категорий
+			$sql = "SELECT id,name FROM ".$this->db->dbprefix('categories')." WHERE parentID = ? ORDER BY id DESC";
+			$query1 = $this->db->query($sql, array($id));  
+			$cat_list = $query1->result();
+		}
+		// sql-запрос, производящий выборку нужных полей из таблицы заказов
+		$sql = "SELECT id,product FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? AND done = ? ORDER BY id DESC LIMIT ".$from .",".$limit;
+		$query2 = $this->db->query($sql, array($id,$done));
+		
+		return array_merge($cat_list,$query2->result());
 	}
 	
 	// функция добавления данных в нужную таблицу
