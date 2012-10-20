@@ -27,7 +27,7 @@ Ext.application({
     launch: function() {
         //ініціалізація менеджера підказок
         Ext.tip.QuickTipManager.init();        
-        //типи валідації полів
+        //типи валідації полів        
         Ext.apply(Ext.form.field.VTypes, {
             cyralphanum:  function(val) {
                 return /^[а-яіїєА-ЯІЇЄa-zA-Z\d\s]{1,}$/.test(val);

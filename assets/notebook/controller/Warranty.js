@@ -199,6 +199,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
                     Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
                     Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
+                    Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.sold,'Y-m-d'));
                     Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
                     Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
                     Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
@@ -248,6 +249,7 @@ Ext.define('Notebook.controller.Warranty',{
             '#nb-war-pref,'+
             '#nb-war-notes,'+
             '#nb-war-ticket-price,'+
+            '#nb-war-saledate,'+
             '#nb-war-guar-comm,'+
             '#nb-war-work-prim,'+
             '#nb-war-work-sec,'+
@@ -293,6 +295,7 @@ Ext.define('Notebook.controller.Warranty',{
         var warNotes=Ext.getCmp('nb-war-notes');
         var warSeller=Ext.getCmp('nb-war-seller');
         var warTicketPrice=Ext.getCmp('nb-war-ticket-price');
+        var warSaleDate=Ext.getCmp('nb-war-saledate');
         var warGuarComm=Ext.getCmp('nb-war-guar-comm');
         var warMasPrim=Ext.getCmp('nb-war-mas-prim');
         var warWorkPrim=Ext.getCmp('nb-war-work-prim');
@@ -325,6 +328,7 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxParams.notes=warNotes.getValue();
             ajaxParams.sellerID=warSeller.getValue();
             ajaxParams.check=warTicketPrice.getValue();
+            ajaxParams.sold=Ext.Date.format(warSaleDate.getValue(),'d.m.Y');
             ajaxParams.comments=warGuarComm.getValue();
             ajaxParams.masterID=warMasPrim.getValue();       
             ajaxParams.worksum=warWorkPrim.getValue();        
@@ -395,8 +399,10 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-notes').setValue('');
         Ext.getCmp('nb-war-seller').setValue('1');
         Ext.getCmp('nb-war-ticket-price').setValue('');
+        Ext.getCmp('nb-war-saledate').setValue('');
         Ext.getCmp('nb-war-guar-comm').setValue('');        
         Ext.getCmp('nb-war-mas-prim').clearValue();
+        Ext.getCmp('nb-war-mas-prim').setValue('1');
         Ext.getCmp('nb-war-work-prim').setValue('');
         Ext.getCmp('nb-war-sec-mas-container').hide();
         Ext.getCmp('nb-war-mas-sec').clearValue();
@@ -410,6 +416,7 @@ Ext.define('Notebook.controller.Warranty',{
     recWarranty: function() {
         //прийом можливий лише, коли стоїть відмітка про те, що замовлення нове
         if (this.isNew) {
+        	thisController=this;
             var ajaxConf={};
             ajaxConf.method='POST';
             ajaxConf.url='notebook/create_order'; 
@@ -429,7 +436,8 @@ Ext.define('Notebook.controller.Warranty',{
                     if (!Ext.isNumeric(sellerComboBox.getValue())) {
                     	sellerComboBox.getStore().load();
                     }
-                    Ext.Msg.alert('Сообщение',json.message);  
+                    Ext.Msg.alert('Сообщение',json.message); 
+                    thisController.isNew=false;
                 }
                 else {
                     Ext.Msg.alert('Сообщение',json.message);  
@@ -629,6 +637,7 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
                     Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
                     Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
+                    Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.sold,'Y-m-d'));
                     Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
                     Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
                     Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
@@ -789,12 +798,14 @@ Ext.define('Notebook.controller.Warranty',{
     		method: 'get',
     		success: function (resp,opts) {
     			var json=Ext.decode(resp.responseText);
-    			if (json.success) {
-    				Ext.Msg.alert('Сообщение',json.message+' (<a href="'+json.link+'">Скачать</a>)');
-    			}
-    			else {
-    				Ext.Msg.alert('Сообщение',json.message);
-    			}
+    			//if (json.success) {
+    			//	Ext.Msg.alert('Сообщение',json.message+' (<a href="'+json.link+'">Скачать</a>)');
+    			//}
+    			//else {
+    			//	Ext.Msg.alert('Сообщение',json.message);
+    			//}
+    			//виводити лынк на створений бекап БД не треба, тому виводимо просто меседж
+    			Ext.Msg.alert('Сообщение',json.message);
     		},
     		failure: function () {
     			Ext.Msg.alert('Сообщение','Ошибка AJAX запроса');
