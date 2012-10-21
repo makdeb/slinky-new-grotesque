@@ -8,6 +8,8 @@ var print_url='http://dda.loc/print/';
 var empty_print_url='http://dda.loc/print/999999';
 //не выдображає вікно вибору темплейту для друку
 var ignore_logic_no_template_select= true; 
+//ліміт на к-сть замовлень, що виводяться в трівю
+var orders_limit=10;
 
 Ext.require([
     'Ext.window.MessageBox',

@@ -12,6 +12,10 @@ Ext.define('Notebook.store.Product',{
             root: 'product'
         },
         extraParams: {
+        	//встановлюємо обмеження на к-сть замовлень, що виводиться
+        	from: 0,
+        	limit: orders_limit,
+        	//за замовчуванням тепер виводяться лише замовлення, які на даний момент в ремонті
         	filter: 1,
         	done: 0
         }
@@ -23,8 +27,6 @@ Ext.define('Notebook.store.Product',{
     },
     listeners: {
         append: function (thisNode, newNode, nodeIndex, eOpts){
-        	//if (newNode.get('id')!=999) {
-        	console.log('append');
             if( !newNode.isRoot() ) {  
                 if (newNode.get('id').substr(0,1)=='c') {
                     newNode.set('leaf', false);
@@ -39,16 +41,14 @@ Ext.define('Notebook.store.Product',{
                     newNode.set('text',newNode.get('name')+' ('+newNode.get('id').replace(/[^0-9]/,'')+')');
                 }                 
             }
-        	//}
         },
         load: function (treeStore,node,recs,success,e) {
-        	//recs.push({id:'999',name:'gggg'});
-			var z=node.appendChild(new Notebook.model.Product({id:'999',name:'gggg'}));
-			//return false;
-            z.set('leaf', true);
-            z.set('expandable', false);
-            z.set('text',z.get('name'));        	
-        	console.log('load');
+        	console.log('m'+node.get('id'));
+        	var magicalNodeId='m'+node.get('id');
+			var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее'}));
+			magicalNode.set('leaf', true);
+			magicalNode.set('expandable', false);
+			magicalNode.set('text',magicalNode.get('name'));        	
         }
     }
 });

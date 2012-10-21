@@ -18,20 +18,6 @@ Ext.define('Notebook.controller.Product', {
         //this.getStore('SearchField').addListener('load',function () {alert('loaded');});
         //this.getStore('SearchField').load();
         this.control({
-        	'product-list #nb-product-tree': {
-        		itemexpand: function (x,y,z,c) {
-        			
-        			//var z=x.insertChild(0,new Notebook.model.Product({id:'999',name:'gggg'}));
-        			//return false;
-                    //z.set('leaf', true);
-                    //z.set('expandable', false);
-                    //z.set('text',z.get('name'));
-                    
-        			//alert(z.get('id'));
-        			//return false;
-        			//c.preventDefault();
-        		}
-        	},
         	'product-list button#nb-prod-filter': {
         		click: this.refreshCat
         	},
@@ -258,6 +244,18 @@ Ext.define('Notebook.controller.Product', {
         if (warId.substr(0,1)=='p') {
             //викликаємо метод контроллера, що заповнює форму
             this.getController('Warranty').fillForm(warId);
+        }
+        //якщо клікнули по ітему "Далее"
+        else if (warId.substr(0,1)=='m') {
+        	//отримуємо стор та ід-шку категорії
+        	var prodStore=Ext.getCmp('nb-product-tree').getStore();
+        	var catId=prodStore.getNodeById(warId).parentNode.get('id');
+        	prodStore.getProxy().extraParams.from=11;
+        	//перезавантажуємо стор
+        	prodStore.load({
+        		node: prodStore.getNodeById(catId)
+        	});
+        	console.log(catId);
         }
     },
     searchProd: function () {
