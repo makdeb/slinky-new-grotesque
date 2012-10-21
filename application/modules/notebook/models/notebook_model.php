@@ -39,7 +39,7 @@ class Notebook_model extends CI_Model {
 			$cat_list = $query1->result();
 		}
 		// sql-запрос, производящий выборку нужных полей из таблицы заказов
-		$sql = "SELECT id,product FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? ORDER BY id DESC LIMIT ".$from .",".$limit;
+		$sql = "SELECT id,product as name FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? ORDER BY id DESC LIMIT ".$from .",".$limit;
 		$query2 = $this->db->query($sql, array($id));
 		
 		return array_merge($cat_list,$query2->result());
@@ -61,7 +61,7 @@ class Notebook_model extends CI_Model {
 			$cat_list = $query1->result();
 		}
 		// sql-запрос, производящий выборку нужных полей из таблицы заказов
-		$sql = "SELECT id,product FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? AND done = ? ORDER BY id DESC LIMIT ".$from .",".$limit;
+		$sql = "SELECT id,product as name FROM ".$this->db->dbprefix('orders')." WHERE categoryID = ? AND done = ? ORDER BY id DESC LIMIT ".$from .",".$limit;
 		$query2 = $this->db->query($sql, array($id,$done));
 		
 		return array_merge($cat_list,$query2->result());
