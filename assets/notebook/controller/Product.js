@@ -250,7 +250,7 @@ Ext.define('Notebook.controller.Product', {
         	//отримуємо стор та ід-шку категорії
         	var prodStore=Ext.getCmp('nb-product-tree').getStore();
         	var catId=prodStore.getNodeById(warId).parentNode.get('id');
-        	prodStore.getProxy().extraParams.from=11;
+        	prodStore.getProxy().extraParams.from=record.get('misc');
         	//перезавантажуємо стор
         	prodStore.load({
         		node: prodStore.getNodeById(catId)

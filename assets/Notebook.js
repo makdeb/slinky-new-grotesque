@@ -11,6 +11,9 @@ var ignore_logic_no_template_select= true;
 //ліміт на к-сть замовлень, що виводяться в трівю
 var orders_limit=10;
 
+//шоб кешувалися скріпти... -_-
+Ext.Loader.config.disableCaching=false;
+
 Ext.require([
     'Ext.window.MessageBox',
     'Ext.grid.plugin.CellEditing'

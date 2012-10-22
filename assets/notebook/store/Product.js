@@ -43,12 +43,27 @@ Ext.define('Notebook.store.Product',{
             }
         },
         load: function (treeStore,node,recs,success,e) {
-        	console.log('m'+node.get('id'));
+        	//console.log('m'+node.get('id'));
+        	//console.log(treeStore.getProxy().getReader().rawData);
+        	//визначаємо чи треба додавати ітем "Далее"
+        	var from=0;
         	var magicalNodeId='m'+node.get('id');
-			var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее'}));
-			magicalNode.set('leaf', true);
-			magicalNode.set('expandable', false);
-			magicalNode.set('text',magicalNode.get('name'));        	
+        	var oldMagicalNode=node.findChild('id',magicalNodeId,false);        	
+        	if (oldMagicalNode!=null) {
+        		from=oldMagicalNode.get('from')+orders_limit;
+        		node.removeChild(oldMagicalNode,true);
+        	}
+        	
+        	var json=treeStore.getProxy().getReader().rawData;
+        	//json.catcount=0;
+            console.log(node.childNodes.length);
+            if ((node.childNodes.length-json.countc)<json.counto) {	        	
+				//var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее'}));
+				var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее',misc:from}));
+				magicalNode.set('leaf', true);
+				magicalNode.set('expandable', false);
+				magicalNode.set('text',magicalNode.get('name'));        
+            }
         }
     }
 });
