@@ -149,12 +149,12 @@ class Notebook extends CI_Controller {
 		if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"product":' .$data['records'] .',"count":"0"}';
+				$data['json'] = '{"success":false,"product":' .$data['records'] .',"countc":"0","counto":"0"}';
 		// якщо помилок немає і запис знайдено, то формуємо json-строку зі значенням true 		
 			} else { 
 				// если ошибок нет, компонируем нужную строку, заменняя id категорий на формaт "сID"
 		
-				$data['json'] = '{"success":true,"product":' .$data['records'] .',"count":"' .$data['count'] .'"}';
+				$data['json'] = '{"success":true,"product":' .$data['records'] .',"countc":"' .$data['count'] .'","counto":"0"}';
 					foreach ($data['categories'] as $category) {
 						foreach ($category as $field => $value) {
 							$data['json'] = str_replace('"id":"' .$value .'"','"id":"c' .$value .'"',$data['json']);
@@ -190,13 +190,13 @@ class Notebook extends CI_Controller {
 			if (($data['error1'] !== JSON_ERROR_NONE)) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"product":' .$data['records'] .',"count":"0"}';
+				$data['json'] = '{"success":false,"product":' .$data['records'] .',"countc":"0","counto":"0"}';
 				
 			} else  {
 				
 				// если ошибок нет, формируем нужную строку с заменой id категорий на формaт "сID",
 				// а id-заказов на формат "pID"
-				$data['json'] = '{"success":true,"product":' .$data['records'] .',"count":"' .$data['count_ord'] .'"}';
+				$data['json'] = '{"success":true,"product":' .$data['records'] .',"countc":"' .$data['count_cat'] .'","counto":"' .$data['count_ord'] .'"}';
 			
 			// добавление префикса к id категорий только в случае нулевого значения $from
 			if (!$from) {
