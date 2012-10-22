@@ -3,7 +3,7 @@ Ext.define('Notebook.store.Product',{
     requires: 'Notebook.model.Product', 
     model: 'Notebook.model.Product',
     autoLoad: true,
-    clearOnLoad: true,
+    clearOnLoad: false,
     proxy: {
         type: 'ajax',
         url: 'notebook/treeview',
@@ -43,27 +43,25 @@ Ext.define('Notebook.store.Product',{
             }
         },
         load: function (treeStore,node,recs,success,e) {
-        	//console.log('m'+node.get('id'));
-        	//console.log(treeStore.getProxy().getReader().rawData);
-        	//визначаємо чи треба додавати ітем "Далее"
-        	var from=0;
-        	var magicalNodeId='m'+node.get('id');
+        	var from=orders_limit;
+        	var magicalNodeId='m'+node.get('id');        	
         	var oldMagicalNode=node.findChild('id',magicalNodeId,false);        	
         	if (oldMagicalNode!=null) {
-        		from=oldMagicalNode.get('from')+orders_limit;
-        		node.removeChild(oldMagicalNode,true);
+        		//якщо в категорії вже є MagicalNode, то перед створенням нового старий видаляємо. також онолюємо значення параметру from
+        		from=oldMagicalNode.get('misc')+orders_limit;
+        		node.removeChild(oldMagicalNode);
         	}
-        	
         	var json=treeStore.getProxy().getReader().rawData;
-        	//json.catcount=0;
-            console.log(node.childNodes.length);
-            if ((node.childNodes.length-json.countc)<json.counto) {	        	
-				//var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее'}));
-				var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее',misc:from}));
+        	//визначаємо чи треба додавати ітем "Далее"
+            if ((node.childNodes.length-json.countc)<json.counto) {
+				var magicalNode=node.appendChild(new Notebook.model.Product({id: magicalNodeId,name:'Далее'}));
+				magicalNode.set('misc', from);
 				magicalNode.set('leaf', true);
 				magicalNode.set('expandable', false);
 				magicalNode.set('text',magicalNode.get('name'));        
             }
+            //для того, щоб при розгортанні категорії завантажувалися замовлення починаючи з першого
+            treeStore.getProxy().extraParams.from=0;
         }
     }
 });
