@@ -58,10 +58,15 @@ Ext.define('Notebook.store.Product',{
 				magicalNode.set('misc', from);
 				magicalNode.set('leaf', true);
 				magicalNode.set('expandable', false);
-				magicalNode.set('text',magicalNode.get('name'));        
+				magicalNode.set('text',magicalNode.get('name')); 
+				magicalNode.set('icon',icons_path+'cat-next-page.png');
             }
             //для того, щоб при розгортанні категорії завантажувалися замовлення починаючи з першого
             treeStore.getProxy().extraParams.from=0;
+            //якщо завантаження стору було викликане з параметром clearOnLoad=true, то змынюэмо його на false
+            if (treeStore.clearOnLoad) {
+            	treeStore.clearOnLoad=false;
+            }
         }
     }
 });
