@@ -95,12 +95,21 @@ class Notebook extends CI_Controller {
 	   
 	   В случае, если параметр $between задан, дополнительно проверяется, находятся ли заказы по дате приема 
 	   между $first_date и $second_date (данная проверка реализована в методе _search() данного контроллера).
+	   
+	   Параметр $filter отвечает за фильтрацию содержимого в боковой панели. Если он равен 1, то просматривается бинарное значение параметра $done(0 - заказы еще в ремонте, 1 - заказы ужже выполнены).
+	   
+	   Параметр $from указывает с какой позиции формировать выборку заказов. $limit отвечает за размер "порции" заказов.
 	*/
-	public function treeview($node=0,$search=0,$table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0) {
+	public function treeview($node=0,$search=0,$table='',$field='',$search_terms='',$between=0,$first_date='',$second_date='',$filter=0,$done=0,$from=0,$limit=0) {
 		$node = $this->input->get('node');	// принимаем параметр родительской категории из url
 		$search = $this->input->get('search'); // принимаем параметр поиска из url
 		$filter = $this->input->get('filter');
 		$done = $this->input->get('done');
+		$from = $this->input->get('from');
+		$limit = $this->input->get('limit');
+		
+		if (!$from) $from=0; // значения по умолчанию
+		if (!$limit) $limit=100; 
 		
 		// если параметр поиска задан и не равен нулю, переходим на вспомогательную функцию поиска _search(),
 		// в которую передаются критерии поиска из URL.
@@ -140,15 +149,15 @@ class Notebook extends CI_Controller {
 		if (($data['error'] !== JSON_ERROR_NONE)||($data['records'] === '[]')) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"product":' .$data['records'] .'}';
+				$data['json'] = '{"success":false,"product":' .$data['records'] .',"countc":"0","counto":"0"}';
 		// якщо помилок немає і запис знайдено, то формуємо json-строку зі значенням true 		
 			} else { 
 				// если ошибок нет, компонируем нужную строку, заменняя id категорий на формaт "сID"
-			
-				$data['json'] = '{"success":true,"product":' .$data['records'] .'}';
+		
+				$data['json'] = '{"success":true,"product":' .$data['records'] .',"countc":"' .$data['count'] .'","counto":"0"}';
 					foreach ($data['categories'] as $category) {
 						foreach ($category as $field => $value) {
-							$data['json'] = str_replace('"' .$value .'"','"c' .$value .'"',$data['json']);
+							$data['json'] = str_replace('"id":"' .$value .'"','"id":"c' .$value .'"',$data['json']);
 						}
 					}
 			}
@@ -164,16 +173,16 @@ class Notebook extends CI_Controller {
 		    // и подсчитываем ихнее количество
 				$data['categories'] = $this->category_model->get_id($node);
 				$data['count_cat'] = count($data['categories']);
-			
+				
 			// аналогично для заказов с CategoryID равным нашему параметру
 				$data['orders'] = $this->orders_model->get_id($node,$filter,$done);
 				$data['count_ord'] = count($data['orders']);
-				
+
 			// кодируем json-строку из результатов выборки
 			if ($filter) {
-				$data['records'] = json_encode($this->notebook_model->get_treeview_filtered($node,$done));
+				$data['records'] = json_encode($this->notebook_model->get_treeview_filtered($node,$done,$from,$limit));
 			} else {
-				$data['records'] = json_encode($this->notebook_model->get_treeview($node));
+				$data['records'] = json_encode($this->notebook_model->get_treeview($node,$from,$limit));
 			}
 			$data['error1'] = json_last_error();
 			
@@ -181,25 +190,29 @@ class Notebook extends CI_Controller {
 			if (($data['error1'] !== JSON_ERROR_NONE)) {
 				unset($data['records']);
 				$data['records'] = '[]';
-				$data['json'] = '{"success":false,"product":' .$data['records'] .'}';
+				$data['json'] = '{"success":false,"product":' .$data['records'] .',"countc":"0","counto":"0"}';
 				
 			} else  {
 				
 				// если ошибок нет, формируем нужную строку с заменой id категорий на формaт "сID",
 				// а id-заказов на формат "pID"
-				$data['json'] = '{"success":true,"product":' .$data['records'] .'}';
-
+				$data['json'] = '{"success":true,"product":' .$data['records'] .',"countc":"' .$data['count_cat'] .'","counto":"' .$data['count_ord'] .'"}';
+			
+			// добавление префикса к id категорий только в случае нулевого значения $from
+			if (!$from) {
 				foreach ($data['categories'] as $category) {
 						
 					foreach ($category as $field => $value) {
-							$data['json'] = preg_replace('"' .$value .'"','c' .$value,$data['json'],1);
+							$data['json'] = preg_replace('["' .$value .'"]','"c' .$value .'"',$data['json'],1);
 
 						}			
 				}
-
+			}
+			
+			//добавление префикса к id заказов во всех случаях
 				foreach ($data['orders'] as $order)	{
 						foreach ($order as $field => $value) {
-							$data['json'] = str_replace('"' .$value .'"','"p' .$value .'"',$data['json']);
+							$data['json'] = str_replace('"id":"' .$value .'"','"id":"p' .$value .'"',$data['json']);
 						}
 				}
 			}	
@@ -711,7 +724,12 @@ class Notebook extends CI_Controller {
 		$data['details']  = $this->input->post('details');
 		$data['transportation']  = $this->input->post('transportation');
 		$data['total']  = $this->input->post('total');
-		
+		if (!$this->input->post('sold')) {
+			$data['sold'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('sold'));
+			$data['sold']  = $date->format('Y-m-d');
+		}
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
@@ -843,7 +861,12 @@ class Notebook extends CI_Controller {
 		$data['details']  = $this->input->post('details');
 		$data['transportation']  = $this->input->post('transportation');
 		$data['total']  = $this->input->post('total');
-		
+		if (!$this->input->post('sold')) {
+			$data['sold'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('sold'));
+			$data['sold']  = $date->format('Y-m-d');
+		}
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
@@ -963,7 +986,12 @@ class Notebook extends CI_Controller {
 		$data['details']  = $this->input->post('details');
 		$data['transportation']  = $this->input->post('transportation');
 		$data['total']  = $this->input->post('total');
-		
+		if (!$this->input->post('sold')) {
+			$data['sold'] = NULL;
+		} else {
+			$date =	DateTime::createFromFormat('d.m.Y',$this->input->post('sold'));
+			$data['sold']  = $date->format('Y-m-d');
+		}
 		if (!$this->input->post('gdate')) {
 			$data['gdate'] = NULL;
 		} else {
@@ -1282,20 +1310,23 @@ class Notebook extends CI_Controller {
 	// функция backup() осуществления резервного копирования базы данных
 		public function backup()
 	{	
-			$backup_file_path='C:/www/site6.ru/backup/';
-
-			$backup_file_name='base_' .date("d-m-Y");
-			
-			$mysqldump='C:/www/site6.ru/dump/bin/mysqldump.exe';
-			
-			$res = 0;
-			system($mysqldump." -u root dda >" .$backup_file_path .$backup_file_name .'.sql',$res);
-			if ((int)$res==0) {
-				echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/base_' .date("d-m-Y") .'.sql"}';
-			}
-			else {
-				echo '{"success":false,"message":"Ошибка сохранения базы"}';
-			}
+		$this->load->library('zip');
+		$backup_file_path = $_SERVER['DOCUMENT_ROOT'].'/backup/';
+		$backup_file_name='base_'.date("d-m-Y");
+		$sql = $backup_file_name.'.sql';
+		$zip = $backup_file_name.'.zip';
+		$mysqldump = $_SERVER['DOCUMENT_ROOT'].'/dump/bin/mysqldump.exe';
+		$res = 0;
+		system($mysqldump." -u root dda >" .$backup_file_path.$sql, $res);
+		
+		if ((int)$res==0) {
+		$this->zip->read_file($backup_file_path.$sql);
+		$this->zip->archive($backup_file_path.$zip);
+		unlink($backup_file_path.$sql);
+		echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/'.$zip.'"}';
+		} else {
+			echo '{"success":false,"message":"Ошибка сохранения базы"}';
+		}
 	}
 }
 
