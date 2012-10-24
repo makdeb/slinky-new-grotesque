@@ -62,19 +62,21 @@ Ext.define('Notebook.controller.Product', {
             }
         });
     },
-    refreshCat: function (button) {
+    refreshCat: function (button) {   
     	button.disable();
+    	prodStore=this.getStore('Product');
+    	prodStore.clearOnLoad=true;
     	if (Ext.getCmp('nb-prod-filter-all').getValue()) {
-    		this.getStore('Product').getProxy().extraParams={};
+    		prodStore.getProxy().extraParams.filter=0;
+    		prodStore.getProxy().extraParams.done=0;
     	}
     	else {
-        	this.getStore('Product').getProxy().extraParams={};
-        	this.getStore('Product').getProxy().extraParams.filter=1;
+    		prodStore.getProxy().extraParams.filter=1;
         	if (Ext.getCmp('nb-prod-filter-in-ws').getValue()) {
-        		this.getStore('Product').getProxy().extraParams.done=0;
+        		prodStore.getProxy().extraParams.done=0;
         	}
         	else {
-        		this.getStore('Product').getProxy().extraParams.done=1;
+        		prodStore.getProxy().extraParams.done=1;
         	}
     	}
         var prodLoadParams={};
@@ -82,7 +84,7 @@ Ext.define('Notebook.controller.Product', {
         prodLoadParams.callback=function(records, operation, success) { 
         	button.enable();
         }    	
-    	this.getStore('Product').load(prodLoadParams);
+        prodStore.load(prodLoadParams);
     },
     editCatList: function (button) {
         //створюємо екземпляр вюшки для додання\редагування категорії
@@ -128,6 +130,7 @@ Ext.define('Notebook.controller.Product', {
         this.catEdtWin.show();
     },
     catEdtWinSave: function () {
+    	var parentCat=false;
         //отримуємо nb-cat-win-container крнтейнер
         var catEdtWinCont=this.catEdtWin.getComponent('nb-cat-edt-win-container');    
         //перевіряємо на валідність поле вводу назви категорії
@@ -149,7 +152,9 @@ Ext.define('Notebook.controller.Product', {
             if (this.catEdtWin.catAdd){
                 //якшо при доданні не вибрана батьківська категорія, то передаємо в parent значення 0
                 if (this.catEdtWin.selCat!=undefined && !catEdtWinCont.getComponent('nb-cat-edt-win-no-parent').getValue()) {
-                    ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
+                	//отримуємо батьківську категорію (щоб не перезавантажувати весь стор)
+                	parentCat=this.catEdtWin.selCat;
+                	ajaxConf.params.parent=this.catEdtWin.selCat.get('id');
                 }
                 else {
                     ajaxConf.params.parent=0;
@@ -157,6 +162,10 @@ Ext.define('Notebook.controller.Product', {
             }
             else {
                 if (this.catEdtWin.selCat!=undefined) {
+                	//отримуємо батьківську категорію (щоб не перезавантажувати весь стор)
+                	parentCat=Ext.getCmp('nb-product-tree').getStore()
+                    									   .getNodeById(this.catEdtWin.selCat.get('id'))
+                    									   .parentNode;                	
                     ajaxConf.params.id=this.catEdtWin.selCat.get('id');
                 }
                 else {
@@ -168,7 +177,13 @@ Ext.define('Notebook.controller.Product', {
                 //якшо серввер повернув повідомлення про успішне виконання
                 if (json.success) {    
                     //перезавантажуємо Store...
-                    Ext.getCmp('nb-product-tree').getStore().load();                                       
+                	Ext.getCmp('nb-product-tree').getStore().clearOnLoad=true;
+                	if (parentCat) {                		
+                		Ext.getCmp('nb-product-tree').getStore().load({node: parentCat});	
+                	}
+                	else {
+                		Ext.getCmp('nb-product-tree').getStore().load();	
+                	}                                                           
                     Ext.getCmp('nb-war-cat').getStore().load();                     
                     Ext.Msg.alert('Сообщение',json.message);
                 }
@@ -205,6 +220,10 @@ Ext.define('Notebook.controller.Product', {
         }
     },
     catDelWinOk: function () {
+    	//отримуємо батьківську категорію (щоб не перезавантажувати весь стор)
+    	var parentCat=Ext.getCmp('nb-product-tree').getStore()
+    	                                           .getNodeById(this.catDelWin.selCat.get('id'))
+    	                                           .parentNode;
         //якщо видалення категорії підтверджено, то відправляємо запит на видалення
         var ajaxConf={
             method: 'GET'
@@ -216,7 +235,8 @@ Ext.define('Notebook.controller.Product', {
         ajaxConf.success=function (resp,opts) {
             var json=Ext.decode(resp.responseText);
             if (json.success) {    
-                Ext.getCmp('nb-product-tree').getStore().load(); 
+            	Ext.getCmp('nb-product-tree').getStore().clearOnLoad=true;
+                Ext.getCmp('nb-product-tree').getStore().load({node: parentCat}); 
                 Ext.getCmp('nb-war-cat').getStore().load();
                 //відміняємо вибір категорії
                 Ext.getCmp('nb-product-tree').getSelectionModel().deselectAll(false);
@@ -242,6 +262,18 @@ Ext.define('Notebook.controller.Product', {
         if (warId.substr(0,1)=='p') {
             //викликаємо метод контроллера, що заповнює форму
             this.getController('Warranty').fillForm(warId);
+        }
+        //якщо клікнули по ітему "Далее"
+        else if (warId.substr(0,1)=='m') {
+        	//отримуємо стор та ід-шку категорії
+        	var prodStore=Ext.getCmp('nb-product-tree').getStore();
+        	var catId=prodStore.getNodeById(warId).parentNode.get('id');
+        	prodStore.getProxy().extraParams.from=record.get('misc');
+        	//перезавантажуємо стор
+        	prodStore.load({
+        		node: prodStore.getNodeById(catId)
+        	});
+        	console.log(catId);
         }
     },
     searchProd: function () {
@@ -359,6 +391,7 @@ Ext.define('Notebook.controller.Product', {
                 prodLoadParams.params.first_date=Ext.Date.format(Ext.getCmp('nb-prod-srch-fdate').getValue(),'d.m.Y');
                 prodLoadParams.params.second_date=Ext.Date.format(Ext.getCmp('nb-prod-srch-sdate').getValue(),'d.m.Y');
             }
+            this.getStore('Product').clearOnLoad=true;
             this.getStore('Product').load(prodLoadParams);
             this.prodSearchWin.close();
         }
@@ -367,6 +400,7 @@ Ext.define('Notebook.controller.Product', {
         this.prodSearchWin.close();
     },
     searchProdReset: function () {
+    	this.getStore('Product').clearOnLoad=true;
         this.getStore('Product').load();
     }
 });
