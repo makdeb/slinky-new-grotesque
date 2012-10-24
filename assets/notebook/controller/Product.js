@@ -391,6 +391,7 @@ Ext.define('Notebook.controller.Product', {
                 prodLoadParams.params.first_date=Ext.Date.format(Ext.getCmp('nb-prod-srch-fdate').getValue(),'d.m.Y');
                 prodLoadParams.params.second_date=Ext.Date.format(Ext.getCmp('nb-prod-srch-sdate').getValue(),'d.m.Y');
             }
+            this.getStore('Product').clearOnLoad=true;
             this.getStore('Product').load(prodLoadParams);
             this.prodSearchWin.close();
         }
@@ -399,6 +400,7 @@ Ext.define('Notebook.controller.Product', {
         this.prodSearchWin.close();
     },
     searchProdReset: function () {
+    	this.getStore('Product').clearOnLoad=true;
         this.getStore('Product').load();
     }
 });
