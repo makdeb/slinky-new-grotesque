@@ -197,11 +197,11 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
-                    Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
+                    Ext.getCmp('nb-war-seller').setValue(parseInt(json.order.idSellers));
                     Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
                     Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.sold,'Y-m-d'));
                     Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
-                    Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
+                    Ext.getCmp('nb-war-mas-prim').setValue(parseInt(json.order.idMasters));
                     Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
                     if (json.order.id2Masters!=undefined && json.order.id2Masters!='' && json.order.id2Masters!=1) {
                         Ext.getCmp('nb-war-sec-mas-container').show();    
@@ -209,7 +209,7 @@ Ext.define('Notebook.controller.Warranty',{
                     else {
                         Ext.getCmp('nb-war-sec-mas-container').hide();
                     }
-                    Ext.getCmp('nb-war-mas-sec').setValue(json.order.id2Masters);
+                    Ext.getCmp('nb-war-mas-sec').setValue(parseInt(json.order.id2Masters));
                     Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
                     Ext.getCmp('nb-war-det').setValue(json.order.details);
                     Ext.getCmp('nb-war-trans').setValue(json.order.transportation); 
