@@ -535,12 +535,20 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
-                    //оновлюємо дерево...                    
+                    //оновлюємо дерево...  
+                	//перевримо чи не змінював користувач категорыю пыдчас редагування                	
                     var prodStore=Ext.getCmp('nb-product-tree').getStore()
+                    var orderCat=prodStore.getNodeById('p'+Ext.getCmp('nb-war-id').getValue()).parentNode;
+                    if (orderCat.get('id')!=('c'+Ext.getCmp('nb-war-cat').getValue())) {
+	                    prodStore.clearOnLoad=true;
+	                    prodStore.load({
+	                    	node: prodStore.getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())
+	                    });
+                    }
                     prodStore.clearOnLoad=true;
                     prodStore.load({
-                    	node: prodStore.getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())
-                    });
+                    	node: orderCat
+                    });                    
                     var sellerComboBox = Ext.getCmp('nb-war-seller');
                     //така от штучка...перегружаємо стор продавців...
                     if (!Ext.isNumeric(sellerComboBox.getValue())) {
