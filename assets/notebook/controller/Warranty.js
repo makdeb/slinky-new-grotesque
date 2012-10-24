@@ -197,11 +197,11 @@ Ext.define('Notebook.controller.Warranty',{
                     Ext.getCmp('nd-war-compl').setValue(json.order.complaints);
                     Ext.getCmp('nb-war-pref').setValue(json.order.performance);
                     Ext.getCmp('nb-war-notes').setValue(json.order.notes);
-                    Ext.getCmp('nb-war-seller').setValue(json.order.idSellers);
+                    Ext.getCmp('nb-war-seller').setValue(parseInt(json.order.idSellers));
                     Ext.getCmp('nb-war-ticket-price').setValue(json.order.check);
                     Ext.getCmp('nb-war-saledate').setValue(Ext.Date.parse(json.order.sold,'Y-m-d'));
                     Ext.getCmp('nb-war-guar-comm').setValue(json.order.comments);        
-                    Ext.getCmp('nb-war-mas-prim').setValue(json.order.idMasters);
+                    Ext.getCmp('nb-war-mas-prim').setValue(parseInt(json.order.idMasters));
                     Ext.getCmp('nb-war-work-prim').setValue(json.order.worksum);
                     if (json.order.id2Masters!=undefined && json.order.id2Masters!='' && json.order.id2Masters!=1) {
                         Ext.getCmp('nb-war-sec-mas-container').show();    
@@ -209,7 +209,7 @@ Ext.define('Notebook.controller.Warranty',{
                     else {
                         Ext.getCmp('nb-war-sec-mas-container').hide();
                     }
-                    Ext.getCmp('nb-war-mas-sec').setValue(json.order.id2Masters);
+                    Ext.getCmp('nb-war-mas-sec').setValue(parseInt(json.order.id2Masters));
                     Ext.getCmp('nb-war-work-sec').setValue(json.order.worksum2);
                     Ext.getCmp('nb-war-det').setValue(json.order.details);
                     Ext.getCmp('nb-war-trans').setValue(json.order.transportation); 
@@ -535,12 +535,20 @@ Ext.define('Notebook.controller.Warranty',{
             ajaxConf.success=function (resp,opts) {
                 var json=Ext.decode(resp.responseText);
                 if (json.success) {
-                    //оновлюємо дерево...                    
+                    //оновлюємо дерево...  
+                	//перевримо чи не змінював користувач категорыю пыдчас редагування                	
                     var prodStore=Ext.getCmp('nb-product-tree').getStore()
+                    var orderCat=prodStore.getNodeById('p'+Ext.getCmp('nb-war-id').getValue()).parentNode;
+                    if (orderCat.get('id')!=('c'+Ext.getCmp('nb-war-cat').getValue())) {
+	                    prodStore.clearOnLoad=true;
+	                    prodStore.load({
+	                    	node: prodStore.getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())
+	                    });
+                    }
                     prodStore.clearOnLoad=true;
                     prodStore.load({
-                    	node: prodStore.getNodeById('c'+Ext.getCmp('nb-war-cat').getValue())
-                    });
+                    	node: orderCat
+                    });                    
                     var sellerComboBox = Ext.getCmp('nb-war-seller');
                     //така от штучка...перегружаємо стор продавців...
                     if (!Ext.isNumeric(sellerComboBox.getValue())) {
