@@ -1,4 +1,7 @@
 Ext.define('Notebook.model.Master',{
     extend: 'Ext.data.Model',
-    fields: ['id','name']
+    fields: [
+       {name: 'id',type: 'int'},
+       'name'
+    ]
 });

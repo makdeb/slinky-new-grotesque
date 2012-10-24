@@ -386,7 +386,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                         //допустимы символи для вводу...
                                         maskRe: /[а-яіїєА-ЯІЇЄa-zA-Z\s]/,
                                         //для можливості додаваня продавців прямо з форми (без довідників)
-                                        forceSelection: false                                        
+                                        forceSelection: false,
+                                        typeAhead: true
                                     },
                                     {   
                                         xtype: 'textfield',
@@ -431,7 +432,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                         store: 'Master',
                                         displayField: 'name',
                                         valueField: 'id',
-                                        fieldStyle: 'color: #0B486B;font-weight: bold'
+                                        fieldStyle: 'color: #0B486B;font-weight: bold',
+                                        typeAhead: true
                                     },
                                     {   
                                         xtype: 'textfield',
@@ -466,7 +468,8 @@ Ext.define('Notebook.view.warranty.Form',{
                                         width: 265,
                                         store: 'Master',
                                         displayField: 'name',
-                                        valueField: 'id'                                        
+                                        valueField: 'id',
+                                        typeAhead: true
                                     },
                                     {   
                                         xtype: 'textfield',
