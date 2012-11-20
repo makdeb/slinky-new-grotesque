@@ -402,7 +402,7 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nb-war-saledate').setValue('');
         Ext.getCmp('nb-war-guar-comm').setValue('');        
         Ext.getCmp('nb-war-mas-prim').clearValue();
-        Ext.getCmp('nb-war-mas-prim').setValue('1');
+        Ext.getCmp('nb-war-mas-prim').setValue(1);
         Ext.getCmp('nb-war-work-prim').setValue('');
         Ext.getCmp('nb-war-sec-mas-container').hide();
         Ext.getCmp('nb-war-mas-sec').clearValue();
