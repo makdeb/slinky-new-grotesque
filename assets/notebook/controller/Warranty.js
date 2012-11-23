@@ -397,7 +397,7 @@ Ext.define('Notebook.controller.Warranty',{
         Ext.getCmp('nd-war-compl').setValue('');
         Ext.getCmp('nb-war-pref').setValue('');
         Ext.getCmp('nb-war-notes').setValue('');
-        Ext.getCmp('nb-war-seller').setValue('1');
+        Ext.getCmp('nb-war-seller').setValue(1);
         Ext.getCmp('nb-war-ticket-price').setValue('');
         Ext.getCmp('nb-war-saledate').setValue('');
         Ext.getCmp('nb-war-guar-comm').setValue('');        
