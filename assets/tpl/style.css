@@ -1,0 +1,46 @@
+table {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #000;
+}
+.logo {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 22px;
+	font-weight: bold;
+}
+.main td.logos {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 14px;
+	font-weight: bold;
+	/*font-style: italic;*/
+	padding: 15px 40px;
+}
+
+.main td {
+	padding: 4px 0;
+}
+.bordered {
+	border-bottom: 1px solid #BBB;
+}
+/*h2 {
+	font-weight: normal;
+}*/
+.info td {
+	padding: 4px 4px 4px 0;
+}
+.bottomtbl td.lbl {
+	width: 130px;
+	padding-right: 10px;
+	text-align: right;
+}
+.bottomtbl td.nbr {
+	width: 30px;
+}
+td.materials {
+	height: 55px;
+	overflow: hidden;
+}
+td.nwr {
+	overflow: hidden;
+	height: 20px;
+}

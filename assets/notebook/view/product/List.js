@@ -3,6 +3,8 @@ Ext.define('Notebook.view.product.List', {
     alias: 'widget.product-list',
     id: 'nb-product-list',
     width: 300,
+    resizable: true,
+    resizeHandles: "e",
     layout: {
         type: 'vbox',
         align: 'stretch'
