@@ -1311,8 +1311,15 @@ class Notebook extends CI_Controller {
 		public function backup()
 	{	
 		$this->load->library('zip');
-		$backup_file_path = $_SERVER['DOCUMENT_ROOT'].'/backup/';
-		$backup_file_name='base_'.date("d-m-Y");
+		$backup_file_path = 'D:/Backup/dda/';
+		
+		if (!is_dir($backup_file_path)) {
+			if (!mkdir($backup_file_path)) {
+    			die('Не удалось создать директории...');
+			}
+		} 
+		
+		$backup_file_name='base_'.date("d-m-Y_H-i");
 		$sql = $backup_file_name.'.sql';
 		$zip = $backup_file_name.'.zip';
 		$mysqldump = $_SERVER['DOCUMENT_ROOT'].'/dump/bin/mysqldump.exe';
@@ -1323,7 +1330,7 @@ class Notebook extends CI_Controller {
 		$this->zip->read_file($backup_file_path.$sql);
 		$this->zip->archive($backup_file_path.$zip);
 		unlink($backup_file_path.$sql);
-		echo '{"success":true,"message":"База успешно сохранена","link":"' .base_url() .'backup/'.$zip.'"}';
+		echo '{"success":true,"message":"База успешно сохранена!"}';
 		} else {
 			echo '{"success":false,"message":"Ошибка сохранения базы"}';
 		}

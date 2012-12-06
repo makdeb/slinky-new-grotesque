@@ -38,9 +38,9 @@
 |
 */
 
-$route['default_controller'] = "notebook";
+$route['default_controller'] = 'notebook';
 $route['404_override'] = '';
-$route['print/([a-z]+)/(\d+)'] = 'report/index/$1/$2';
+$route['print/(\d+)'] = 'report/index/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

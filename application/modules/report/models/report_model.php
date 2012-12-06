@@ -7,11 +7,11 @@ class Report_model extends CI_Model {
 	}
 	
 	function getReportData($order_id) {
-		$this->db->select('Orders.*, Customers.*, Masters.name as master_name');
-		$this->db->from('Orders');
-		$this->db->join('Customers', 'Orders.customerID = Customers.id', 'left');
-		$this->db->join('Masters', 'Orders.masterID = Masters.id', 'left');
-		$this->db->where('Orders.id', $order_id); // , false);
+		$this->db->select('orders.*, customers.*, masters.name as master_name');
+		$this->db->from('orders');
+		$this->db->join('customers', 'orders.customerID = customers.id', 'left');
+		$this->db->join('masters', 'orders.masterID = masters.id', 'left');
+		$this->db->where('orders.id', $order_id); // , false);
 		
 		$query = $this->db->get();
 		if ($query->num_rows() > 0)
